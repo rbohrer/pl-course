@@ -1,0 +1,366 @@
+
+Lecture 08: Scala, Part III: Interpreters
+
+- Review: The AST
+- Values
+- Environment
+- Interpreter
+- Output
+- Input
+- Complete implementation!
+
+
+* Review: The AST
+
+Recall that the AST (abstract syntax tree) for the following grammar
+of polynomials with "let" and variables:
+
+E ::= E OP E | N | X | let X = E in E
+OP ::= + | - | * | /
+
+is implemented by:
+
+sealed trait Expression
+final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
+final case class Number(value: Int) extends Expression
+final case class Variable(name : String) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression) extends Expression
+
+sealed trait Operator
+case object Plus extends Operator
+case object Minus extends Operator
+case object Times extends Operator
+case object Divide extends Operator
+
+We already talked about how to parse this language.  Today we will
+talk about how to interpret (run) it, and how to put the parser and
+interpreter together to build a full implementation of the language.
+We will begin by introducing some core, general PL  concepts that
+come up when writing interpreters.
+
+* Values
+
+Recall that a value is a program that's done running. In our current
+language, the only values are Number()s. An interpreter runs a program
+to its finish, so the expression it returns is a value. Some developers
+like to represent ASTs of values explicitly in the type system, to get more
+detailed type-checking. To do this, add a new trait Value which extends
+Expression, and update all the case classes for values so they extend Value
+instead of Expression directly:
+
+sealed trait Value extends Expression
+// ... Modify existing line...
+final case class Number(value: Int) extends Value
+
+I do not have a strong preference whether you do this or not. For today's toy
+language, adding a Value trait does not give us much, because it happens to be
+identical to the class Number.
+
+Note specifically that variables are not values. A variable means one of two
+things, depending whether it is mutable or immutable
+
+- Mutable variable(e.g. var):
+  A variable is a name that is assigned (and maybe reassigned) a value.
+
+- Immutable variable (e.g. val):
+  A variable is a name that ranges over values.
+
+Though variables are only one step removed from values, an interpreter would not
+be doing its job if it returned the name "x" when it is supposed to return the
+value of x.
+
+* Environment
+How then do we turn a variable x into a value v? The answer is that whenever we
+define or update a variable, we store its value in a data structure called an
+*environment*. The interpreter can access the environment at all times, so
+interpreting a variable is just looking up its value.
+
+An environment's job is to map names to values. Scala's standard library already
+provides (both mutable and immutable) map data structures, so we will reuse the
+standard library's maps.
+
+* Interpreter
+
+We create a new object (class with one instance) for the
+interpreter. I named mine PolynomialLetInterpreter. The heart of the
+interpreter is written as a function in that class. We name the
+function "apply" for reasons we will soon make clear.
+
+I present the code for the main interpreter function "apply" here,
+then elaborate on each case:
+
+def apply(env: Environment, e: Expression): Value = {
+    e match {
+      case value: Value => value
+      case Variable(name) => env(name)
+      case ApplyOp(op, left, right) => applyOp(op,apply(env,left),apply(env,right))
+      case Let(name, definition, body) =>
+        val v = apply(env, definition)
+        val env2 = env.+(name -> v)
+        apply(env2, body)
+    }
+  }
+
+The interpreter is written recursively on the expression e, so its
+body is a match on "e" with one case for each AST case class.
+
+** "Value"
+
+This line is an example of a "type" pattern. It matches all
+expressions that have type "Value", in this case all Numbers. They are
+returned directly - there is no additional computation necessary.
+
+
+** "Variable"
+
+This line looks up an existing variable from the environment and
+returns it. We can look up elements using function-style syntax "env(name)".
+
+** "ApplyOp"
+
+In PL design, it is incredibly common to define the meaning of a
+complex program in terms of the *values* of its subprograms. This is
+often called "compositionality," though the word "compositionality"
+can be more general.
+
+Because this pattern is so common, we break off a function applyOp
+which applies a given operation to given *values*. We revisit applyOp
+after the remaining case (Let).
+
+** "Let"
+
+The "Let" case first computes the value v of the variable name being
+defined.  Then it creates an environment env2 which is like env,
+except we add a name whose value is v. The syntax for this is
+env.+(name -> v) [See note]. We then compute the body of the let
+expression. Important, this recursive call uses env2 instead of env,
+meaning it can refer to the variable "name".
+
+This completes the main discussion of the main interpreter function.
+
+*** applyOp
+
+The code for applyOp is not conceptually deep but it does use a new
+Scala keyword:
+
+private def applyOp(operator: Operator, l : Value, r : Value): Value = {
+    (operator, l, r) match {
+      case (Plus,   nl : Number, nr : Number) => Number(nl.value + nr.value)
+      case (Minus,  nl : Number, nr : Number) => Number(nl.value - nr.value)
+      case (Times,  nl : Number, nr : Number) => Number(nl.value * nr.value)
+      case (Divide, nl : Number, nr : Number) => Number(nl.value / nr.value)
+    }
+  }
+
+The keyword "private", similarly to Java, makes it so "applyOp" can
+only be called within the current class. Helper functions are
+typically private. There is no corresponding "public" keyword for
+functions that are not private - public access is the default.
+
+We match on a triple (operator, l, r) and each pattern has three
+parts. Mainly, we match on the operator and apply the corresponding
+mathematical operator in each case, unpacking and packing the Number
+class as we go. It deserves mention why we use the type patterns "nl :
+Number" and "nr : Number" in each case. Although Value and Number are
+effectively the same at the moment, Scala treats them as separate
+types (specifically, Number is a subtype of Value but not vice versa)
+because we declared them that way. If we wish to use a Value like a
+Number, we must first check at runtime that it actually has type
+number. The pattern-match does exactly this, and uses the new names
+"nl" for "nr" to mean "l and r, but we know they're numbers".
+
+*** Wrapper function
+
+Though we need to know the environment inside the interpreter, most
+code that calls the interpreter would probably just use an empty
+environment, so we define a wrapper function that plugs in the empty
+environment (written Map()):
+
+def apply(e: Expression): Value = { apply(Map(), e) }
+
+It is arguable whether apply(Environment, Expression) should be
+considered a helper function or not. If you consider it a helper
+function, then it should be defined using the "private" keyword.
+
+*** IntelliJ Protip: match (exhaustive)
+
+You may have noticed that implementing PLs involves writing a lot of
+long "match" expressions. They will only get bigger - production-grade
+PLs typically have at least tens of cases.
+
+If you are using IntelliJ, there is a nice feature to help you with this.
+Write the beginning of the match expression, up through the "match" keyword,
+e.g., type
+
+"e match"
+
+and wait for the auto-complete menu to display. Go down the menu and
+select the "match (exhaustive)" option (shortcuts: down-arrow key,
+then enter key).  This will auto-generate a skeleton "match"
+expression by looking up the type of "e" and generating a line of code
+for each case class.
+
+*** advanced syntaxes:  "apply", "+", "->"
+
+Scala syntax is complex and highly customizable. This is both a
+blessing and a curse. Expert Scala programmers can develop libraries
+that provide concise powerful notations (to the point that some PL
+designers just implement new languages as Scala libraries), but
+Scala syntax can be quite overwhelming when you learn it at first.
+So let's take a minute to break apart some of the advanced syntax I
+am using today.
+
+- "apply"
+
+The method name "apply" has special meaning in Scala: if you define a
+method named "apply", then that method can be called using
+function-like syntax. To call the interpreter, someone can just write
+
+PolynomialLetInterpreter(e)
+
+where e is an expression, instead of
+
+PolynomialLetInterpreter.apply(e).
+
+Remember how we used function-like syntax to look up the value of a
+variable: env(name)? This is just a library feature, implemented by
+defining the "apply" method on the Map class.
+
+In Scala, operators like +, -, *, and / are just methods. You can call
+them using either infix syntax or method syntax.  Where we wrote "env
++(name -> v)," we could have just as well written
+"env.+(name.->(v))". As before, "+" and "->" are implemented as
+methods, which can have custom definitions in your own classes.  Here,
+the method "->" effectively just makes the pair (name,v), then the
+method "+" adds that name-value pair to the environment (Map).
+
+*** Error reporting
+
+There are at least two places in the interpreter that could
+potentially result in an error.
+
+- If I interpret the program "x", where x is a variable, then the
+  interpreter will fail to look "x" up in the environment, producing
+  an error.
+
+- If I interpret the program "1/0", this is a divide-by-zero error.
+
+There are several different ways to handle such errors:
+- The first, and worst, way is to not explicitly handle them at all.
+  Scala is smart enough to through exceptions for each of them.
+- The second way is to catch those exceptions and throw a more specific one.
+  This uses a new syntax: try-catch.
+  For example, we could define a class
+
+  class InterpException (orig : Exception) extends Exception
+
+  then update the "Divide" case of applyOp to be
+
+  try {
+    Number(nl.value / nr.value)
+  } catch { case e : ArithmeticException => throw new InterpException(e)}
+
+  and update the "Variable" case of "apply" to be:
+
+  try {
+    env(name)
+  } catch { case e : NoSuchElementException => throw new InterpException(e)}
+
+  Note that the "catch" keyword uses the same syntax as "match" and that
+  we match on a specific exception class, as a best practice.
+
+  I have gone with this approach for the example code distributed with the
+  lecture.
+
+- However, a purist might criticize *both* of the exception-based
+  versions of this code. This is because the traditional understanding
+  of exceptions is that they are meant to handle rare, unexpected
+  conditions, not frequently-used program control flow. If we are
+  giving arbitrary ASTs to "apply," then program errors are not really
+  "unexpected" for an interpreter, rather they're part of its job,
+  because its job is to run programs, even incorrect ones, thus the
+  return type of the interpreter should explicitly announce the
+  possibility of errors. This is traditionally handled using a new trait:
+
+  sealed trait Result
+  final case class Success(v: Value) extends Result
+  final case class Failure(e: Exception) extends Result
+
+  This is a good choice for serious production-quality code.  However,
+  the added trait can make code much verbose, so production-quality code
+  would contain even more helpful functions to recover pleasant syntax.
+  (Google "Error Monad" for information how). For a lecture, that would
+  be a bit much.
+ 
+Vocab Note: Interpreter / Evaluator.
+
+The word "interpreter" typically refers to a complete program that
+implements a language, in the same sense that "compiler" means a whole
+program that compiles a program. Thus, the interpreter includes
+parsing, output, etc., and the function "apply" is, strictly speaking,
+an evaluator: a function that evaluates expressions to values. But I
+am usually not so precise.
+
+Between the parser and evaluator, we have almost written a complete
+interpreter! At this point, all that remains is to perform input and
+output, then put the pieces together.
+
+* Output
+
+Recall the function println() prints a string with a newline at the
+end, so it suffices for us to build a String for our output.
+
+There are two common approaches to this. First, every class has a
+toString method that println uses by default, so it suffices to
+override the toString method of the Number case class
+(our first example of case classes with a custom methods!).
+We change the definition of Number to:
+
+final case class Number(value: Int) extends Value {
+  override def toString: String = {
+    value.toString
+  }
+}
+
+Now, when we call println(n) where n : Number, it directly prints out
+the value, without adding "Number()" around it.
+
+If you have a complex language with many classes, this approach would
+require overriding many different "toString" methods, which some
+programmers might dislike for style reasons. In this case, the
+alternative is to write a single recursive function as we did with
+the evaluator.
+
+* Input
+
+Now we just need to read programs in from the outside world. We can
+do this with either file-based I/O or command-line-based I/O.
+
+For file-based I/O:
+Add the following import line:
+import scala.io.Source
+
+then write Source.fromFile(fileName).mkString.  Usually, fileName is
+provided to the main function of your interpreter as a command-line
+argument.
+
+
+For command-line-based I/O:
+Add the following import line:
+import scala.io.StdIn.readLine
+
+then call the function readLine() to get a line of text from the user.
+
+* Complete implementation!
+
+To complete our interpreter, all we need to add is a main function!
+See the lecture code for a full implementation of a main function,
+supporting both command-line I/O (often called a REPL or
+read-eval-print loop) and file-based I/O.
+
+In each case, we just read the program using I/O, then parse it,
+the evaluate it, then print the result using println().
+  
+
+
+

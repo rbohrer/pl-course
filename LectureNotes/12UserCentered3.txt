@@ -1,0 +1,293 @@
+Lecture 10: User-Centered Programming Language Design, Part III
+
+Today focuses more on qualitative methods, starting with survey
+questions and then branching out.
+
+- Qualitative Data Sources
+  - In-depth, open-ended interviews
+  - Observational studies
+  - Written documents
+
+- Interviews
+
+Prepare a list of interview questions in advance. Interviews are often
+semi-structured, meaning that although you prepare a specific
+structure, you are not restricted to it. You want to learn the person's
+experiences and thoughts, which may take you off script
+
+** Writing your interview script.
+Your script should start by obtaining consent to record the interview.
+
+Next, it should start with the most general questions, proceeding to more specific
+ones later on.
+
+When writing questions, include follow-up questions, including probe questions, e.g.
+  "How do you mean that?"  "Tell me more about that" "Anything else?"
+
+These probe questions significantly increase the number of responses, often receiving
+more than the initial question.
+
+Questions should be phrased in a neutral tone, not implying one correct answer.
+
+Exercise: Take the following question and:
+1) rewrite it in a neutral tone
+2) write your own follow-up question
+3) write a probe to go with that question
+
+Exercise question:"What about C++ is better than Java?"
+
+- Observational Studies
+
+If you want to see how a user interacts with your software, there's no
+replacement for simply letting them interact with it and
+observing. This style of usability study is open-ended and often
+exploratory, helping identify new problems that you couldn't predict.
+Because of their open-ended nature, they're not "experiments" in the
+strict sense, but certainly are research.
+
+** Picking tasks
+
+This is perhaps the hardest part: what tasks will participants do?
+You will get this wrong the first time, and the only solution is to
+iterate and revise your task choices. In particular, iterate amongst
+your project team before trying out the tasks on the whole class.
+
+Example Starting Points:
+"Write a program that satsifies this specification"
+"Fill in the missing code to satisfy the specification"
+"Read this code. Are there bugs? If so, which?"
+"Here is a debugger. Debug this code"
+"This code does not compile. Modify it so that it compiles"
+Parsons problems: Given these code snippets, put them in right order.
+
+
+** Preparation
+- Identify whether your participants need training from you before study.
+  If so, be wary of using only written materials. People may not read the
+  materials, or may incorrectly assume they fully understood the contents.
+  If there is training, there should be assessment of the training.
+
+- Decide which tools will be used, such as paper/pencil, text editors,
+  compilers, debuggers, and/or test frameworks. If using paper/pencil, be
+  prepared as the interviewer to simulate any software that have not been
+  implemented yet.
+
+- Know how much information and help you're willing to provide, in very clear
+  terms, before you start.
+
+- Rehearse interviewing best-practices such as using probe questions, asking
+  one question at a time, speaking in clear, simple terms, and providing adequate
+  time to answer.
+
+- Bring a notetaking device in addition to any recordings, so that you can go
+  through the recordings "as-needed" rather than in their entirety.
+
+- Keep a timer/clock in view so that you can record timestamps in your notes
+
+** Revising Interview Tasks: Tips
+- Identify the most important point of your language design, design task for that
+- Task should be easy enough to be possible, hard enough to be meaningful
+- Don't give too many tasks
+- Minimize distractions, e.g., don't want to spend 30 minutes on whitespace questions
+  if the language is whitespace-insensitive.
+- Narrow task scope to only things you care about
+- For big monolithic tasks, consider breaking them down into small tasks
+  (unless your point is to assess integration of the smaller parts, big-picture thinking, etc.)
+ 
+** Collecting Data
+When observing a participant perform a task, there are multiple ways to collect data:
+
+- Audio + Video + Screen recordings
+- Eye tracking (expensive!!)
+- Post-study Surveys (see Survey lecture)
+- Think-aloud: have them think through thoughts out loud either after or during study.
+  Prompt them to keep talking.
+- Take lots of notes
+  
+
+- Additional Qualitative Methods
+
+-- Grounded Theory
+
+Motivation: If we don't want our preconceived hypotheses to guide the
+research too much, then let's just... not develop hypotheses in advance.
+
+Instead, observation of the study subject comes first. Record events
+that occur, then perform "coding"
+
+Here, "coding" is not "programming".  There are three steps to coding:
+"open", "axial", and "selective", nicely explained by this blog post
+by Tiffany Gallicano:
+
+https://prpost.wordpress.com/2013/07/22/an-example-of-how-to-perform-open-coding-axial-coding-and-selective-coding/
+
+To do open coding, read trough your data several times. Don't use an
+existing theory to assess the data, just look for patterns that emerge
+from these data, to come up with tentative labels for the data.
+
+Example from blog post:
+"Research question three: What irritates or upsets Millennials when receiving feedback on their work?"
+Open codes:
+ Getting called out
+ Not being heard
+ Mind reading and miracle-worker expectations
+
+For each code, the coder lists example of participants own words that
+were assigned that code, and recurring patterns/themes/experiences
+for each code.
+
+Next, to establish relationships among codes, generate "axial codes"
+which each apply to some set of the open codes.
+
+For example, "Not being heard" and "mind-reading" could both be
+axially coded as "communication failures" and "getting called out"
+might be axially coded as "public shaming".
+
+Lastly, selective coding is the process of putting categories into
+categories (core categories). Perhaps a selective code that combines
+"communication failures" and "public shaming" would be
+"absence of nurturing communication style."
+
+-- Ethnography
+
+In an ethnographic study, the research spends a significant period
+living among a population and writes about their experiences, often in
+a long-form format. Depending on the situation, ethnographic studies
+have significant risk of reinforcing reductive stereotypes about
+studied groups. In traditional ethnography, a researcher from outside
+a community speaks on its behalf and their words taken with authority.
+The risks of erasing a community's true nature is very real. Context
+does matter, however. The risks of studying StackOverflow users are
+not comparable to the risks of studying oppressed groups.
+
+Nonetheless, a thorough knowledge of research methods includes the
+following methods which can help sidestep limitations of ethnography.
+ 
+--- Research-Practice Partnership
+
+In a research-practice partnership, the external researcher takes on
+the "subjects" as proper partners, meaning that they get to
+participate equally in steps ranging from the identification of
+research questions to writing and publication, typically resulting in
+coauthor credit on publications.
+
+Example: Prof. Rose is an autistic instructor with neurodiverse students.
+Prof. Ben Pollard is researcher neurodiversity-inclusive education. Rose is
+a practicioner; Ben took her on as a research partner.
+
+--- Autoethnography
+
+Autoethnography is when a researcher applies ethnography to themself.
+Instead of overcoming the ethnographic power dynamic through teamwork,
+it is overcome by building a research team consisting of the subject
+group. Like all methods, it has limitations: if a sole author or
+internally homogenous group of authors attempt to speak on behalf of
+an entire identity group, they will fail to fully represent that
+identity group.
+
+An argument in favor of autoethnography would be to recognize that no
+sole method can fully represent issues of identity, and that research
+fields make their progress through the combination of methods by
+different researchers.
+
+Example: Prof. Bohrer is writing a memoir about gender and STEM academia.
+It is a work of autoethnography.
+
+Example: In 2020, a team of Black HCI researchers wrote
+autoethnographically about their lived experiences of racism within
+HCI
+
+Example: Prof. Zoe Reidinger at WPI has written authethnographically
+about queer issues.
+
+Because authoethnography means researchers writing about ourselves, it
+risks overemphasizing the importance of issues faced by researchers
+rather than the general public, yet it does excel at addressinsg those
+issues. For example, trans researchers have thoroughly cataloged trans
+issues in academic publishing and made significant progress to resolve
+them, but academic publishing only affects academics.
+
+Nonetheless, autoethnography provides a valuable tool for the work of
+diverse academics to be recognized as valuable by the broader research
+community. It is human to speak about our own experiences, and as
+educators, we end up frequently educating others on issues that affect
+us on a personal level. This speaking, with repetition, often achieves
+research quality. Autoethnographic scholarship is a route to give our
+polished lived experience their proper status as "part of our
+scholarship".
+
+Concluding remarks:
+We've talked about the division of study methods into quantitative vs. qualitative.
+It is also helpful to divide studies by role: formative vs. summative.
+A formative study helps guide the direction of research before the research is finished;
+A summative study helps assess research's success or failure at its conclusion.
+In this classroom setting, formative studies are far more important than summative, and
+we have prioritized methods suitable for such.
+
+
+Appendix: Example interview script from Aldrich's class:
+1.How long have you been programming professionally?
+2.Can you give an order of magnitude estimate of the size of the largest project you’ve
+made significant contributions on? Number of people, lines of code?
+3.In what programming languages do you consider yourself proficient?
+4.How did you get into software development? Do you have a computer science
+background?
+5.Let’s talk about changes that happen to state in software you’ve worked on. Many
+kinds of software maintain state, such as object graphs, files, or databases, but there’s
+a possibility of corruption during changes due to bugs. How do you make sure that
+state in running programs remains valid?
+1.Are there specific techniques do you use? If so, what are they?
+2.Do you sometimes want to make sure that some operations don’t change any state
+or don’t change certain state?
+1.Tell me about a recent time you did this.
+2.How often does this come up?
+3.Do you use language features to help?
+3.Do you sometimes want to make sure that some state never changes?
+1.Tell me about a recent time you did this.
+2.How often does this come up?
+3.Do you use language features to help?
+4.Do you sometimes want to make certain kinds of modifications to state impossible
+for some users of an API but not others? If so, how do you do that?
+6.How often do you work on concurrent aspects of software? What mechanisms do you
+use to control concurrency?
+1.Do you use immutability to help address or prevent concurrency issues?
+7.How much work have you done on security-related aspects of your software? Have
+you found or fixed any vulnerabilities?
+1.Do you use immutability to help address or prevent security issues?
+8.Can you recall a recent situation in which you created an immutable class or other
+data? If so, tell me about it.
+9.Can you recall a recent situation where you changed a class from immutable to
+mutable? If so, tell me about it.
+10.Can you recall a recent situation in which you changed a class from mutable to
+immutable. If so, tell me about it.
+11.Can you think of a bug you investigated or fixed that was caused by a data structure
+changing when it should not have? What was the problem and how did you solve it (if
+you solved it)?
+1.Would const have prevented the bug?
+12.Have you ever tried using an immutable class and had it not work? Why not?
+13.When you create a new class, how do you decide whether instances should be
+immutable?
+14.Have you ever been in a situation where you wanted to use const or final but it didn’t
+say what you wanted to say?
+1.or where you discovered you couldn’t use it? What was the situation and why
+couldn’t you use it?
+15.Have you been in a situation where you had to revise your plan because something
+you’d assumed could mutate state was disallowed from doing so due to const?
+16.Have you been involved in training new members of the team? What do you tell new
+members about immutability or ensuring invariants are maintained?
+17.Sometimes, though an object is mutable after creation, it only needs to be changed
+for a short amount of time. For example, when creating a circular data structure, the
+cycle must be created after allocating all the elements. After that, however, the data
+structure doesn’t need to be changed. Have you encountered situations like that? Do
+you think it would help if you could lock the object after all necessary changes were
+made?
+18.Now, I’d like to move on to API design in general. Think of a recent API you
+designed.
+1.Did you make any conscious design or implementation decisions, to make the API
+easier or more manageable for these users?
+2.Are there any recurring issues / challenges that users have had with your API? How
+did you handle those?
+3.How do you differentiate between users of your API? Are there parts of the API that
+you expose some users but not others? How do you manage that?
+4.Did you make any conscious design or implementation decisions to protect key data
+or data structures from modification (inadvertent or malicious) from your users?

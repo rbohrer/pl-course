@@ -1,0 +1,263 @@
+Lecture 05: Regular Expressions
+
+Today's lecture is about regular expressions. These notes are a
+derivative work of Prof. Dougherty's lecture notes, but add
+significant Scala specifics. We first present regular expressions,
+complete with Scala code, then explain the syntax after-the-fact.
+
+- Regular Expressions: Motivation and Intro
+Today we're getting into techniques that will help you design and
+implement the syntax of a programming language.
+
+Today we think about languages in a very narrow sense.  A language is
+just a set of strings. A *regular* language is a particularly simple
+kind of language, much simpler than any real PL. Regular expressions
+(abbrev. regex or RE) are just a notation for describing these regular
+languages, and have good tool support - once you write down a regex,
+Scala can automatically parse its language for you.
+
+If regular languages are simpler than PLs, why do we care about them?
+The answer is that we still use them *a lot* in PL design. We use
+regexes to define the "basic building blocks" of a language, also
+called "terminal symbols". In a future lecture, we will learn how to
+build complete PLs from these building blocks.
+
+
+- Regular Expressions: The different kinds
+
+Regular expressions are a programming language all their own. We'll
+introduce them by example today, not completely-formally. We explain
+the different regexes by explaining what languages they each recognize.
+I will use "r" or "r1" and "r2", and so on, as variables that stand
+for regexes, i.e., I will use them when I mean "any regex".
+
+* Core features:
+
+*** Parentheses
+We can use parentheses to clarify order of operations.
+
+*** Character expressions
+The most basic regular expression is any single character, such as
+'c'.  The only string it matches is the one-character string
+"c". Likewise, the expression 'a' only matches the string "a" and so
+on.  On its own, this regex is very boring. It becomes essential once
+combined with others.
+
+Detail: The literal parentheses characters are written \( and \)
+because () are already used for order of operations.
+
+*** Sequential composition
+We can put one expression after another. If r1 and r2 are regexes,
+then we write r1r2 for their sequential composition. It first matches
+r1, then r2 on the remaining string.
+
+For example, 'ab' matches the string "ab". We can compose expressions as
+many times as we want, so 'hello' matches the string "hello".
+
+*** Choice
+We write choice as r1|r2 where r1 and r2 are regexes.
+r1|r2 matches a string s if either r1 or r2 match s.
+
+Detail: If both r1 and r2 match s, r1|r2 still matches s.
+
+*** Repetition
+We write repetition as r* where r is a regex.
+Regex r* repeats r any number of times, sequentially, including zero.
+That means r* always matches the empty string "", no matter what r is.
+It also matches everything r matches, everything rr or rrr or rrrr match, and
+so on.
+
+For example, if r is 'ab' then '(ab)*' matches "", "ab", "ab", "abab"
+and so on.
+
+By combining repetition, choice, and sequential composition, we can
+start to express nontrivial patterns. For example, the regex
+'(A|B)(a|b|A|B)*' requires the first letter to be uppercase and allows
+all following letters to be either upper or lower-case, and there can
+be as many letters as we want.
+
+I personally consider the above features to be the "core" features of
+regex. The remaining features are certainly important, and some of
+them could be called "core" features in the sense that they truly do
+something the above features can't do. But the above regexes are my
+favorites.
+
+
+* Extended features:
+The following features are quite important in practical use too.
+
+*** Begin/End
+
+In some applications of regexes, we care about matching the beginning
+and end of a line of text. Though most modern programming languages
+don't need this, many text-based data formats and log file formats are
+line based, making beginning-and-end-of-line matching relevant.
+
+The character ^ means "beginning of line"[Note]. The character $ means "end of line".
+These are often used together to match an entire line. For any regex r, the regex
+^r$ means "r, but it can only match complete lines".  Imagine a log file format that looks like:
+
+info: CoolProgram initialized without error
+debug: CoolProgram version: v13
+debug: UncoolLibrary v420.69 loaded without error
+error: UncoolLibrary version cannot be newer than CoolProgram version
+
+If I search this log using the regex 'error', it will match three
+different lines.  If I only want to print the last line, i.e., error
+lines, I should search for '^error' instead. Coincidentally, the first
+and third lines end in "error" and so would be returned if we seach
+for 'error$', though I do not recommend it.
+
+Note: Except when it appears in a range. See Range section.
+
+*** Wildcard
+
+In a previous example, I wrote (a|b) to mean "either a or b". It is
+quite common to write regexes that allow arbitrary text in places.  It
+would be no fun at all to write out (a|b|c|d|e|f|g|...) for every
+character. This is doubly true when writing code for multi-lingual
+audiences - just imagine how many different characters exist in Unicode
+for the dozens of different writing systems used on computers!
+
+To fix this, there is a "wildcard" regex, written as a period, which matches
+any single character. That is, the expression '.' matches any single character,
+and if you wish to allow an arbitrary *string*, you just repeat it: '.*' means
+any string.
+
+*** Ranges and Sets
+Just as it's painful to write out every character, it's painful to
+write out every digit when we wish to match numbers: '(0|1|2|3|4|5|6|7|8|9)'.
+It's even more painful to write out every alphanumeric character:
+'(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z)'.
+
+Regexes alleviate this problem by letting you specify sets of
+characters in square brackets, typically using ranges.
+
+The regex '[0-9]' means "any digit"
+The regex '[a-z]' means "any lowercase Latin letter"
+The regex '[A-Z]' means "any uppercase Latin letter"
+
+We can put more than one range in square brackets, but in contrast to
+normal regex syntax, it does not mean sequential composition, instead
+it means choice, identically to '|' syntax in typical regexes.
+
+The regex '[a-zA-Z]' means "any Latin letter'.  Actually, we can
+include individual letters in ranges too: [!@#0-9] allows the special
+characters !@# in addition to digits.
+
+Occasionally, we want to say "all letters except ...". This is done by
+making the *first character after the opening bracket* a caret: [^0-9]
+means any non-digit. If you want to match an actual caret character,
+just put it *after* the first character, like [&*!@#$%^] for matching
+lots of special characters. I don't expect the [^...] syntax to come
+up often in your life, but I wanted to tell you about it once, so you
+know what's going if you use it *accidentally*.
+
+Localization note: Support for non-Latin characters is important,
+especially in production-quality code. For this, you should check the
+documentation for whichever regex library you're using. Many libraries
+have a special built-in wildcard symbol meaning 'any alphabetical
+character', and if the library is implemented well, it may include
+characters from all writing systems.
+
+Localization issues come up in programming language design. As of this
+writing, the dominant approach is for progammers to write their code
+using Latin letters, even if their native language does not use the
+Latin alphabet. At the same time, support for other character sets is
+greater than it used to be. Notably, Javascript variable names allow
+for non-Latin characters. Some language designers have also
+specifically avoided Latin letters in an expression of love for their
+own native languages. Several languages by Chinese designers have used
+Chinese characters for this reason, with at least one focusing on
+Classical Chinese in particular.
+
+Language designers should also be aware of the localization issue that
+many languages do not have a concept of case, and thus some
+programmers from those language communities have anecdotally expressed
+displeasure with the use of case changes as word separators in the
+camelCase style of variable naming. Though I cannot speak on behalf of
+whole langauge communities, it is good inclusivity practice to allow at
+least one separating punctuation mark in variable names, such as -, _, or
+for typesetting history aficionados, an interpunct.
+
+* Boring features
+
+A theoretician will (correctly) tell you that the structure of regexes
+is an *algebraic* structure, allowing manipulations similar to those done
+in (both grade-school and abstract) algebra. Some theoretical treatments
+of regular expressions include extra features that enrich this algebraic
+structure, but which are rarely or never used in actual libraries that
+actually implement regexes:
+
+- \0, the zero regex, matches no string at all. Not to be confused
+  with '0' which matches the digit 0.
+- the empty regex '' matches only the empty string.
+- r with a bar over it: the complement of r, matches strings that r
+  does not.
+- r1 intersect r2: matches a string iff the same match of it is simultaneously
+  a match for r1 and r2.
+
+ 
+- Regular Expressions: Practical examples
+
+The exercise section of checkpoint 2 asks for regular expressions that
+match particular languages of strings. We give some useful examples
+here, which overlap with those on homework:
+
+Nonempty repetition r+ is defined as  rr*
+Optional matching r? is defined as (r|)	
+
+Natural numbers: [1-9][0-9]*
+Decimal numbers: (-?)(0|[1-9][0-9]*)(\.[0-9]+)?
+Alphanumeric identifiers that start with alphabetical characters:
+[a-zA-Z][a-zA-Z0-9]*
+
+Discussion point: When is it better to solve a string-matching problem
+with regexes vs some other implementation strategy? My regex for
+decimal numbers is complex and hard to read. Is this "worth it" if it
+is much more concise than other implementation approaches?
+
+- Regular Expressions: Scala Code
+
+In Scala, you use the keyword "import" when you want to use libraries.
+Traditionally you write it at the top of a file.
+Today we write 
+import scala.util.matching.Regex
+to use the standard library for regular expressions.
+
+Like most object-oriented languages, the symbol "." is used to access
+the members of an object (fields, which store data values, and
+methods, which perform computation). For example, we will write
+"myRegularExpression".r to convert a string to a regular expression.
+This is a method named "r" with zero arguments.
+Method calls with arguments look like "object.method(arguments)," but
+parentheses are optional for zero-argument methods.
+To be safe, we would actually write raw"myRegularExpression".r, which
+delays the use of escape characters, the  \ character is interpreted
+directly as described in th regex documentation.
+
+The Scala syntax for regular expressions is the same as in Java:
+https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+
+The advice from this lecture mostly applies in Scala , but it is worth
+noting that () in Scala/Java regex notation means a *capturing* group,
+which allows extracting the information in parentheses from the string
+with a pattern match, if you wish.
+
+Example from the Scala documentation
+https://www.scala-lang.org/api/2.13.4/scala/util/matching/Regex.html:
+
+val date = raw"(\d{4})-(\d{2})-(\d{2})".r
+"2004-01-20" match {
+  case date(year, month, day) => s"$year was a good year for PLs."
+}
+
+If you wish to check whether a string matches a regex, but do not use
+the capture groups, then you can use a special "wildcard argument"
+pattern match, distinct from but sharing a common theme with the
+wildcard regex:
+
+//also from the above Scala documentation/
+"2004-01-20" match {
+  case date(_*) => "It's a date!"
+}

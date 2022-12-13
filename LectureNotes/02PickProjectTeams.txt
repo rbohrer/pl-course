@@ -1,0 +1,258 @@
+Lecture 02: Pick Project Teams
+
+Today's Outline:
+- Intro+Logistics
+- Current Status
+- Brainstorm
+  - Structure
+  - Examples
+  - Activity
+
+
+** Intro+Logistics
+
+This is a project-based course. If you have not already, you will form
+project groups, pick a topic, and submit regular checkpoints of your
+progress toward your project goal. The goal is to find project groups
+by the first due date. It's a small course - feel free to get 1-on-1
+help with this. Teams are at least 3 people. There is no upper limit.
+
+The default project type is "design and prototype a programming
+language".  But a project can be *literally anything*. If you don't
+like my course objectives, I am literally inviting you to substitute
+your own. Sky's the limit.
+
+** Current Status
+I will go around the room and learn who's teamed up so far.
+
+** Brainstorm
+
+Today's goal is to help you pick potential project topics, which will
+help you pick who you want to work with.
+
+**** Structure
+On checkpoint 1, you'll be asked to specify your project this way:
+
+"What’s the goal of your project?"
+It's helpful to have a single guiding focus. Is your project's goal
+to provide a certain feature, support a specific domain of software or
+hardware, etc.?
+
+"What’s does success mean to you?"
+Closely related to the previous question, but broader. What's
+important to you? Do you want to learn something specific? Do you want
+to serve a certain group of people with your work? Do you want your
+language to have a certainly mathematical property that ensures it's
+correct in some way?
+
+"What features does your project have?"
+I'm not asking for a complete list, nor a final list.  The goal is to
+get you to start thinking in this mode: 'Limiting the scope of a
+project is important. You'll probably want to pick just a few features
+that you really focus on doing well. Which ones would you most like to
+focus on?'
+
+"What paradigms, if any, does your project match up with?"
+e.g. imperative, functional, object-oriented, logic.  It's fine if you
+haven't heard these terms before. We'll talk about them (and the
+limitations of categorizing languages that way) soon.
+
+"Any topics on the schedule that would especially help?"
+I'm asking: how do I make this course useful *to you*?  Is there a
+certain lecture I should move up and teach earlier?  Is there a
+certain topic that you'd reallly love me to fit into the course
+schedule, even though I haven't listed it on the schedule?
+
+**** Examples
+Categories:
+  Programming-heavy
+  theory-heavy
+  balanced
+  social science
+  humanities
+
+Let's do one from each category, and describe it using the questions from the project checkpoint.
+
+**** Programming-heavy
+Title:"DOOM on a loom"
+"What’s the goal of your project?"
+The point of our project is to transpile ANSI C to Jacquard loom
+instructions. These languages are respectively for systems programming
+and textile manufacturing
+
+"What does success mean to you?"
+We run DOOM on a loom. Go big or go home.
+
+"What features does your project have?"
+ANSI C has a lot of features. In the first week, we will assess what
+minimal subset of C we can get away with. We need to learn what
+features the Jacquard loom has.
+
+"What paradigms, if any, does your project match up with?"
+They are both imperative, but their I/O systems differ.
+
+"Any topics on the schedule that would especially help?"
+We understand this is a high-risk project. We would like to spend
+class time talking about risk management and proposing backup plans.
+
+**** Theory-heavy
+Title:"Compiler Optimization for Computerized Sewing"
+
+"What’s the goal of your project?"
+We're using an existing language for computerized sewing machines.
+It expresses sewing instructions. Our project's point is to optimize
+programs in this language to take less time to sew.
+
+"What’s does success mean to you?"
+Each member wants different things. Success means we demonstrate
+functional programming skills, effectively reason about mathematical
+semantics of sewn objects, gain background knowledge in combinatorial
+optimization, and write up our work in a fun way that sewists can
+appreciate, both ones who program and ones who don't.
+
+"What features does your project have?"
+Needle-up/down, sew-to-point, load thread, switch needle.
+
+"What paradigms, if any, does your project match up with?"
+Imperative
+
+"Any topics on the schedule that would especially help?"
+Operational semantics is really important to our theory work.
+The Penrose, Twine, and Processing lectures might put us in a
+creative mood.
+
+**** Balanced
+Title:"A language for a Machine Learning course"
+"What’s the goal of your project?"
+To teach programmers machine learning
+
+"What’s does success mean to you?"
+My friend in the data science program gets a better grade
+after trying out our language.
+
+"What features does your project have?"
+We'll start with basic features like conditionals, loops,
+functions, and arrays. Then we'll add some new custom ones
+for classifiers and datasets. We're focusing on providing
+an interactive environment where users can type in commands
+and watch an animation of the training results.
+
+"What paradigms, if any, does your project match up with?"
+We're debating whether imperative vs. functional would be
+more user-friendly, but leaning toward functional since we
+already decided to use Scala.
+
+"Any topics on the schedule that would especially help?"
+User studies. We really want to make sure actual DS
+students' needs are met.
+
+**** Social science
+Title:"Culture-making in the Rust community"
+"What’s the goal of your project?"
+We want to learn how Rust programmers view their own culture
+and how they think it came to be that way.
+"What’s does success mean to you?"
+Success means that leadership of programming language communities
+could read our report and learn how to build the kind of community
+they want to have.
+"What features does your project have?"
+Rust's defining feature is affine typing, a substructural typing
+approach that allows safe, efficient manual memory management.
+"What paradigms, if any, does your language match up with?"
+Imperative, but it feels functional because of the types.
+"Any topics on the schedule that would especially help?"
+User studies and critical code studies.
+
+**** Humanities
+Title:"A Close Reading of How to Design Programs"
+"What’s the goal of your project?"
+
+How to Design Programs is widely used for teaching introductory level
+programming in Racket, and its contents a product of the cultural
+norms of the programming language research community. We will pull
+apart the book's contents in detail to unpack those cultural norms,
+how introductory-level CS education propagates them, and imagine
+alternate futures.
+
+"What’s does success mean to you?"
+I can give my report to WPI's CS Introductory Curriculum committee
+and they'll have a much more useful tool than if I just told them
+"1st-year undergrads hate Racket"
+
+"What features does your project have?"
+The book actually uses a series of teaching languages, which are
+basically mini-dialects of Racket. The idioms used in those languages
+are structured enough to serve as languages of their own. We will
+explore what this division into dialects and idoms says about
+programming language culture.
+
+"What paradigms, if any, does your project match up with?"
+Racket is functional; the teaching languages are arguably domain-
+specific languages, and our project follows the paradigm of
+close reading.
+
+"Any topics on the schedule that would especially help?"
+Critical Code Studies.
+
+**** Activity
+
+I give you a few minutes in class where everyone writes topics on the
+board, then you sort into groups, respond to the prompts for that
+topic, and shares with the class. It doesn't have to be your project
+group or your project topic.
+
+
+** Scala practice
+
+I'll spend some time doing a few more exercises in Scala to warm you up
+to the syntax. Don't worry, we'll have full lectures on Scala soon, but wanted
+to show you some bits and pieces early.
+
+Let's do these examples. One is from Tour of Scala, one is my own
+
+EXAMPLE 1:
+case class Person(firstName: String, lastName: String)
+val result: Person = Person("Leo", "Lion")
+
+EXAMPLE 2:
+val n : Int = someFunction()
+n match{ g
+   case 0 => 0
+   case n if n < 0 => -n
+   case n if n > 0 => n
+}
+
+
+
+
+** Your TODO List
+
+Notify me of your project teams (or seek my help with making teams) if
+you have not yet. We will start using Scala in class soon, so it's
+good to start reading Scala tutorials for basic syntax, if you have
+time.
+ 
+ 
+Appendix: Extended list of project topics:
+i.	Critical studies (part of Humanities)
+1.	How do languages exclude disabled programmers?
+2.	How do cultural norms of the PL research community reflect white-supremacist capitalist cisheteropatriarchy?
+3.	What would it mean for a programming language to be trans?
+ii.	Social sciences
+1.	When designing a list of key concepts + features for my language, how do I design them in a way that is easy for a new user to learn?
+2.	If I use surveys developed for clinical psychology to assess the emotional experience of a user, how can the results inform language design?
+3.	What role does language play in the formation of professional social hierarchies?
+iii.	CS, implementation-heavy
+1.	Find a language that has only been implemented with an interpreter, then implement it as a compiler. 
+2.	Design and evaluate some compiler optimizations for a language that doesn’t have  them.
+3.	Design and implement a relatively simple language, but write lots of example code with it
+iv.	CS, theory-heavy
+1.	“The Linear Logic of Pronouns” (ask instructor)
+2.	Add a type system to a language that doesn’t have one
+3.	Give a mathematical definition of what programs mean (semantics) in some language that doesn’t have that
+4.	Implement an advanced type system design from the research literature
+v.	CS, normal
+1.	Language for configuration files
+2.	Language for music
+3.	Language for specifying video game levels
+4.	Language for specifying security or privacy policies
