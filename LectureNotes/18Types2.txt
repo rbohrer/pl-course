@@ -1,0 +1,189 @@
+Lecture 18: Types, Part 2
+
+Outline:
+Main
+- Type Saftey: Proof by Rule Induction
+Time-permitting
+- More types (product, sum)
+- Inductive and coinductive constructions
+
+Intro:
+In the previous lecture, we talking about why static
+type systems are at the heart of PL Theory, and we
+developed and implemented a set of typing rules for our
+toy language. However, we skipped over the meat of a type
+theorist's job: proving that the language is type-safe.
+Today we will spend as much time as we need going over a
+type safety proof in detail, then spend any remaining time
+on fleshing out our language. 
+
+* What Are PL Proofs Like?
+There are many styles of mathematical proof with different
+levels of detail and rigor. PL proofs are known for being
+so detailed that they may even feel tedious.
+
+This downside of PL proofs, which I openly acknowledge, is
+born out of the positives:
+1) Type theory is intimately related to logic and the
+foundations of mathematics, so type theory proofs feel
+like we're playing with the very foundations of math!
+Low-level, but fun!
+2) When I do a proof in math, I feel like I'm doing a
+proof. When I do a PL proof, I feel more like I'm doing
+engineering. The proof does more than tell us that
+programs are type-safe, it tells the PL designer whether
+there's a bug in her design. Research-level proofs in this
+area thus consist of going back and forth: if my proof
+gets stuck, I revise the definition of my language.
+This kind of mathematical design/engineering is lots of
+fun and is most commonly found in PL proofs.
+
+** High-level Proof Architecture
+First we need to decide which kind of Type Safety theorem
+we want to prove. There are countless versions of the
+theorem, depending on whether you use big-step vs. small-step
+semantics, whether the language allows for exceptions and
+infinite loops, etc. 
+
+For small-step semantics, a standard theorem statement is:
+
+Theorem Statement [Small-Step Type Safety]
+If . |- e:t then either e value or e |-> e' where . |- e':t
+
+It is usually divided into two lemmas which are the heart of the proof:
+
+Lemma Statement [Progress]
+If . |- e:t then either e value or e |-> e' for some e'
+
+Lemma Statement [Preservation]
+If . |- e:t and e|-> e' then .|- e':t
+
+
+We do a big-step version, which largely ignores the question of
+progress and focuses on the heart of type safety: preservation.
+Note that the above theorem statement required an empty context.
+We will use a more general theorem statement: any context C is allowed,
+but the environment E needs to match up with C (they contain the same
+variables and each value in E has the type required by C).
+
+Theorem Statement [Big-Step Type Safety]
+If C |- e:t and E(x):C(x) for all x in C,
+and E |- e ↪ v, C |- v:t
+
+** Mid-level Proof Structure
+The structure of a PL proof, though intimidating at first, is
+systematic. Most PL proofs use a technique called rule induction, which
+is a (very general) generalization of a typical proof by mathematical
+induction.
+
+Let's review how to do proof by induction on natural numbers, then
+build up to rule induction.
+
+We use a proof by induction on natural numbers if we want to prove
+some property ("the induction predicate") for all natural numbers.
+Since our goal is merely to remember how induction works, let's prove
+a very boring property: squares are nonnegative. An inductive proof
+has the following parts:
+
+- State the theorem and/or state the induction predicate P(n)
+- Prove the base case P(0)
+- Assume the inductive hypothesis P(k) where k is any unknown natural
+  number
+- Prove the inductive step P(k+1) using the assumption P(k)
+- Conclude by induction that P(n) holds for all (n).
+
+Example proof "all squares are nonnegative".
+
+Theorem statement: "For all natural numbers n, n^2 >= 0"
+Predicate:  P(k) = "k^2 >= 0"
+
+Base case: Prove P(0) by equational reasoning.
+P(0) <-> 0^2 >= 0 <-> 0 >= 0 <-> true (by reflexivity).
+
+Inductive hypothesis: Let k be a natural number, assume P(k).
+Inductive step, prove P(k+1). Line-by-line proof:
+P(k+1)
+<-> (k+1)^2 >= 0   [definition]
+<-> k^2+2k+1 >= 0  [algebra]
+<-> (1) k^2 >= 0 and (2) 2k >= 0 and (3) 1 >= 0 [>=0 closed under sum]
+
+Claim (1) holds by the IH.
+Claim (2) holds iff k>=0, which holds because k is a natural number.
+Claim (3) holds trivially by arithmetic.
+Thus "P(k) -> P(k+1)" holds
+By induction, P(n) holds for all natural numbers n.
+
+Induction is all about proving base cases, then proving complex cases
+by building them up from base cases step-by-step. How would we do that
+for proofs about programming languages, when expressions and typing
+rules are far more complicated than natural numbers?
+
+One option is to convert programs and typing rules into natural
+numbers. If we look at the proof that C |- e:t
+(called a typing derivation), that proof has a tree shape, and every
+tree has a finite depth. So, we could do induction on the depth of
+the typing derivation. That works, but is a bit indirect. Instead,
+we do rule induction, which is induction *on the structure of proofs
+of form C |- e:t*
+
+How does that work? It follows this template:
+
+Induction predicate: P(TD) = "any statement about the typing derivation"
+
+Base cases:
+  **Look through allll your typing rules R. If the rule R has no typing
+    judgements among its premises (or has no premises at all), make
+    a base case for that rule.
+  Base case for rule R: Let TD be a typing derivation ending in rule R.
+  Prove P(TD) directly.
+
+Inductive cases:
+  **Look at all the remaining rules, i.e., the non-base cases. Write
+    an inductive case for each one.
+
+   Case for rule R:
+   For each typing judgement premise Pi of rule R:
+   Add an inductive hypothesis for Pi:
+     "IHi: Assume P(Pi), i.e., the predicate holds of the premise"
+   Inductive step: Prove "P(TD)" from the IHs.
+
+   This completes a proof by rule induction. As a hard exercise,
+   convince yourself that this is equivalent to proof by induction
+   on the depth of the TD.
+
+** The Proof
+Without any further ado, we prove the main type safety theorem
+by rule induction.
+
+Theorem [Big-Step Type Safety]
+If C |- e:t and E(x):C(x) for all x in C,
+and E |- e ↪ v, C |- v:t.
+Proof: By rule induction on the judgement e ↪ v.
+
+                 *
+               -----
+Case for rule  E|- v ↪ v   then C |- v:t by assumption.
+
+               E |- e1 ↪ v1  E |- e2 ↪ v2
+Case for rule  --------------------------
+              E |- e1 op e2 ↪ v1 _op_ v2
+
+By inversion on C |- e1 op e2 : num, obtain
+(1) C |- e1 : num and (2) C |- e2 : num, then apply IH1 and IH2 to get
+(3) C |- v1 : num and (4) C |- v2 : num.
+
+Proceed by cases on op: Integers are closed under addition,
+subtraction, and multiplication. We define _/_ to be integer division
+(producing an error on division by zero), thus C|- v1 _op_ v2 : num by
+(3) and (4).
+
+
+
+related
+
+
+
+v ::= n | true | false | ()
+e ::= v | x | e op e | f(e) | e;e | let d in e
+d ::= val x:t = e | def f(x:t):t = e
+t ::= bool | num | unit | t -> t

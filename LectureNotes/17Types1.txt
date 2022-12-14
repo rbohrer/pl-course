@@ -1,0 +1,303 @@
+Lecture 17: Types, Part 1
+
+In everyday use, programmers speak of both "static types,"
+checked at compile-time, and "dynamic types," checked at
+runtime. In type theory, however, the word "type" *always*
+means static types, unless otherwise specified.
+
+Why is this such an important point that I would start the
+Types lectures with it? Because it is at the heart of PL
+Thinking.
+
+PL Thinking is intimately related to proving correctnesss
+of a program. A PL designer from the Type Theorist school
+wants to think ahead, before their programmers even write
+programs, to help programmers write more-correct code
+"for free".
+
+"Types are Predictions" says the type theorist. Her most
+important theorem, which she proves for every language, is
+called Type Safety. This theorem looks a bit different in
+each language, but its most basic form is:
+
+"If a program has type t and the program returns a value,
+the value is of type t".
+
+This is what it means for a type to be a prediction:
+if a program has type t, we can reliably predict that the
+result will have type t.
+
+And that is what it means to be a type theorist. Think
+ahead, but also build tools that help programmers reliably
+think ahead. Build tools that let them write down clearly
+for themselves what they hope their code will do, and make
+sure their languages can reliably check whether the
+programmer's dreams are true.
+
+* Today's PL
+
+If the type theorist's goal sounds ambitious, that's
+because it is. There are whole conferences and journals
+on type theory, and you can do a whole PhD on it while
+barely scratching the surface. Since we're only spending
+a few lectures on types, we'll need to pick a language
+that's much simpler than Scala, let alone the kinds of
+languages that people develop in research conferences.
+
+However, I want to add a few features to our toy language.
+1) We should have functions
+2) We should have "statements"
+3) We should have more than one type
+
+There's not a deep fundamental reason I say this. Rather,
+I say it because this may be the last time we use
+inference rules in lecture, and I want you to see most
+of the "core" PL language features, to help you if you
+use them in your projects.
+
+Our syntax contains four parts:
+values (v), expressions (e), definitions (d), types (t).
+
+v ::= n | true | false | ()
+e ::= v | x | e op e | f(e) | e;e | let d in e
+d ::= val x:t = e | def f(x:t):t = e
+t ::= bool | num | unit | t -> t
+
+*** Values
+As before, numbers (n) are values. Today we add the
+Boolean type, so true and false are also values.
+We also add a type called "unit", which is well-known in
+functional programming languages but not imperative
+languages. Boolean is the type that has two values; unit
+is the typethat has one value. We use "unit" when we want
+to say "no interesting value". If you are familiar with C,
+unit serves a similar role to "void".
+
+Though we have functions today, we do not provide values
+for functions. In most functional languages, functions
+are values, but we're not there yet.
+
+*** Expressions
+Many of the expressions are standard from last time:
+every value is also an expression, variables, are
+expressions, and operators applied to operands are
+expressions. But we add several important expressions:
+function calls (f(e)), sequencing (e;e), and a more
+general version of "let" that takes a definition. Note
+that similarly to Scala, we treat statements as a special
+case of expressions, specifically the statement e;e is
+an expression.
+
+*** Definitions
+Because we do not treat functions as values, we need
+separate ways to define variables and functions.
+The definition "val x:t = e" defines the variable x of
+type t to be the value of expression e of type t.
+The definition "def f(x:t1):t2 = e" defines the variable
+"f" to stand for a function of type t1 -> t2 whose
+argument is x, of type t1, and whose body is e, of type t2
+
+*** Types
+Our basic (base) types are Booleans (bool), integers
+(num), and the unit type (unit), which has exactly one
+value, written (). But we can also build up bigger types
+from smaller ones, recursively. Specifically, the function
+type (t1 -> t2) represents functions from type t1 to type
+t2, and we can nest the -> if we want.
+
+Example function types:
+bool -> num
+unit -> num
+num -> num
+num -> (num -> bool)
+  ((num->num) -> (num->bool))
+->((num->num) -> (num->bool))
+
+* New Concept: Type Context
+We now move towards type-checking and typing rules, i.e.,
+checking whether a program is well-typed, both in code and
+in inference rules.
+
+Recall that the operational semantics required an
+environment E which kept track of the values of each
+variable. To implement type-checking, we will need
+a corresponding concept for types.
+
+A typing context is like an environment for types;
+it assigns types to variables. Just like E is the variable
+name for environments, the typical variable names for
+typing contexts are the uppercase Greek letters Gamma and
+Delta. However, because I write lecture notes in ASCII and
+because Greek letters can be hard to remember, I will use
+the letter C instead.
+
+Typing contexts are defined as:
+
+C ::= . | C,x:t
+
+Meaning . is the empty context, and you can always
+add another variable x and its type t to a context.
+We leave out the . when writing a nonempty context.
+
+* Scala Code
+See provided code for complete version including AST
+definitions. Here I just give the typechecking function
+and its helper functions:
+
+ject TypeChecker {
+  type Context = Map[String, Type]
+  case class IllTypedException(C:Context, e: Expression)
+    extends Exception
+
+  def apply(e: Expression): Type = apply(Map(),e)
+
+  def apply(C: Context, e: Expression): Type = {
+    e match {
+      case _: Number => Num
+      case _: BoolValue => Bool
+      case UnitTuple => Unit
+      case ApplyOp(op, left, right) =>
+        val tLeft = apply(C,left)
+        val tRight = apply(C,right)
+        (tLeft, tRight) match {
+          case (Num, Num) => Num
+          case _ => throw IllTypedException(C,e)
+        }
+      case Variable(name) => C(name)
+      case Let(definition, body) =>
+        val (name,t) = defType(C,definition)
+        apply(C + (name -> t), body)
+      case Seq(left, right) =>
+        apply(C, left);
+        apply(C, right)
+      case ApplyFun(f, arg) =>
+        (C(f), apply(C, arg)) match {
+          case (FunType(t1,t2), t3:Type) if t1 == t3 => t2
+          case _ => throw IllTypedException(C,e)
+        }
+    }
+
+    def defType(C: Context, d : Definition) : (String, Type) = {
+      d match {
+        case ValDef(name, rhs) => (name, apply(C,rhs))
+        case FunDef(name, argName, argType, rhs) =>
+          (name, FunType(argType,apply(C + (argName -> argType), rhs)))
+      }
+    }
+  }
+}
+
+As before, the main type-checking function is named "apply".
+It takes in a context C and expression e. If e is well-typed in context
+C, it returns the type of e, else it throws an IllTypedException
+specifying which context and expression failed. We discuss "apply"
+case-by-case.
+
+The first 3 cases assign types to values.
+The ApplyOp case is for numeric operators, so it requires that both
+operands have number type, and results in numeric type regardless of
+which operator was used. The Variable case looks up the type from C.
+The Let case uses a helper function to determine the defined name and
+its type, then adds that to the context while checking the body.
+The Seq case (e1;e2) requires that both e1 and e2 are well-typed,
+but discards the return value of e1 and uses e2's value as the return.
+The ApplyFun case looks up the type of the function, checks the type
+of the argument, and checks that the argument type matches the input
+from the function type. The type of the result of the function call
+is the return type from the function type.
+
+The defType helper function splits into cases for val and def.
+The val case is like last lecture's version of let.
+The def case adds the argument to the context while checking the body.
+Though we fully annotated types in the lecture notes, the code actually
+does one better and computes the return type of the function.
+
+* New Notation: Typing Judgement
+
+To talk about typing, we have one main new judgement.
+The judgement C |- e : t means "under context C,
+expression e has type t".
+
+If the judgement C |- e : t does not hold for any t,
+then we say e is ill-typed (in context C), i.e., not
+well-typed.
+
+The typing judgement for definitions is a bit different.
+A definition gives a type *to a name*, which is the same
+thing a context does. So, the "type" of a definition is
+actually a context, containing any name(s) and type(s) it
+introduced:   C1 |- d : C2
+
+* New Rules: Typing Rules
+
+
+
+** Values
+          *
+TyNum -------- (n is a literal integer)
+      C|- n:num
+
+          *     
+TyTrue -------------
+       C|- true:bool
+
+           *
+TyFalse -------------
+       C|- false:bool
+
+           *
+TyUnit  -------------
+        C|- () : unit
+
+** Expressions
+
+        C(x)=t
+TyVar  ---------
+        C |- x:t
+
+
+       C |- e1:t1    C |- e2:t2
+TySeq  ------------------------
+         C |- e1;e2 : t2
+
+       C |- e1 : num    C2 |- e2 : num
+TyOp   -------------------------------
+           C |- e1 op e2 : num
+
+        C(f)= t1 -> t2   C |- e : t1
+TyApp  ------------------------------
+           C |- f(e) : t2
+
+       C1 |- d : C2    C1,C2 |- e : t
+TyDef ---------------------
+       C1 |- let d in e : t
+
+In rule TyDef, the notation C1,C2 stands for appending all of C2 at
+the end of C1.
+
+** Definitions
+              C |- e : t
+DefVal --------------------------
+       C |- val x:t = e : (x:t)
+
+           C,(x:t1) |- e : t2
+DefFun --------------------------
+       C |- def f(x:t1):t2 = e : (f:t1->t2)
+       
+* Next Time: Type Safety proof 
+Today we covered a lot of new ground. We introduced notation
+for defining type rules, defined all the typing rules for a
+small language, and implemented the rules in Scala.
+
+However, we've only spoken briefly about type safety.
+Next time we'll talk about type safety in more depth.
+
+On a side note:
+I want to be clear that there is nothing "wrong" with
+dynamically-typed languages. There are real reasons that
+dynamically-typed languages that are popular, and people
+who do work on these languages are doing serious, real
+work. They're just doing a different style of work from
+what a type theorist does, and it is important to draw
+contrasts between these styles of work, to help you
+appreciate the breadth of PL studies.
