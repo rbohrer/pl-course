@@ -1,3 +1,6 @@
+TODO 1: Need to fully re-explain new operational semantics
+TODO 2: Should add proper mutable state.
+
 Lecture 18: Types, Part 2
 
 Outline:
@@ -152,11 +155,25 @@ Inductive cases:
    on the depth of the TD.
 
 ** The Proof
+
+The proof will use one very standard lemma called inversion.
+Lemma [Inversion] Consider every typing rule, which all have form
+     P1    ....    PN
+     ----------------
+             C
+Whenever the conclusion C holds, then all the premises P1 ... PN hold.
+Proof: A boring induction, standard, and left to the reader.
+
+This inversion lemma holds for most type rules in most type systems,
+but needs to be proved as a lemma, because there exist proof systems
+where this does not hold, for example, it does not hold when there are
+two rules that prove the same conclusion.
+
 Without any further ado, we prove the main type safety theorem
 by rule induction.
 
 Theorem [Big-Step Type Safety]
-If C |- e:t and E(x):C(x) for all x in C,
+If C |- e:t and E(x):C(x) for all x in C (written E:C for short),
 and E |- e ↪ v, C |- v:t.
 Proof: By rule induction on the judgement e ↪ v.
 
@@ -177,13 +194,50 @@ subtraction, and multiplication. We define _/_ to be integer division
 (producing an error on division by zero), thus C|- v1 _op_ v2 : num by
 (3) and (4).
 
+              E |- e1 ↪ v1     E,(x|->e1) |- e2 ↪ v2
+Case for rule --------------------------------
+             E |- let val x:t = e1 in e2 ↪ v2
+
+By inversion on C |- let val x:t = e1 in e2 : t2, obtain
+(1) C |-  e1 : t and (2) C,x:t |- e2 : t2, then apply IH1 and IH2* to get
+(3) C |- v1 : t and (4) C,x:t |- v2 : t2.
+*IH2 is applicable because (E,x|->e1)(y):(C,x:t1)(y) for all y in (C,x:t1).
+Fact (4) is what we wanted to show, completing the case.
 
 
-related
+             E,(f(x)|->e1) |- e2 ↪ v 
+Case for rule -----------------------------
+             E |- let def f(x:t1):t2 = e1 in e2  ↪ v
+By inversion on C |- let def f(x:t1):t2 = e1 in e2 : t, obtain
+(1) C,x:t1 |- e1:t2 and (2) C,f:t1->t2 |- e2 : t, then apply *IH1 and **IH2 to get
+(3) for all E' : (C,x:t1) s.t. E' |- e1 ↪ v1, C,x:t1 |- v1:t2, and
+(4) C,f:t1->t2 |- v:t. 
+By (3),  have (5) (f(x)|->e1):(f:t1->t2).
+Fact (4) is what we wanted to show, completing the case.
 
+* This is the general form of the IH, which we did not need to write out in the other
+cases, but do need here.
+**IH2 is applicable because (E,f(x)|->e1)(y):(C,f:t1->t2)(y) for all y in (C,x:t1->t2), see
+fact (5)
 
+             E |- e1 ↪ v1    E |- e2 ↪ v2
+Case for rule -----------------------------
+             E |- e1;e2 ↪ v2
+By inversion on C |- , obtain
+(1) C |- e1 : t1 and (2) C |- e2 : t2, then apply IH1 and IH2 to get
+(3) C |- v1 : t1 and (4) C |- v2 : t2.
+Fact (4) is what we wanted to show, completing the case.
 
-v ::= n | true | false | ()
-e ::= v | x | e op e | f(e) | e;e | let d in e
-d ::= val x:t = e | def f(x:t):t = e
-t ::= bool | num | unit | t -> t
+               E |- e1 ↪ v1   E(f(x)) = e2
+	       E,x|->v1 |- e2 ↪ v2
+Case for rule -----------------------------
+             E |- f(e1) ↪ v2
+By inversion on C |- , obtain
+(1) C |- e1 : t1 and  (2) C(f) = t1->t2.
+Recall the assumption that E(x):C(x) for all x in C, then by 2, have
+(3) C,x:t1 |- e2 : t2.
+
+By IH on (1) have (4) C |- v1 : t1. Then E,x|->v1 : C,x:t1, satisfying
+the IH on (3), so v2 : t2 as desired, completing the case.
+
+This completes the induction and the proof.

@@ -1,0 +1,369 @@
+Lecture 19: Critical Code Studies, Part 1
+
+[Much of today's lecture is based on the paper "Intersectionality Goes
+Analytical: Taming Combinatorial Explosion Through Type Abstraction"
+by Margaret Burnett, et. al. I encourage you to read that beforehand.]
+
+* Intro
+The next two lectures switch schools of thought, to the Critical
+Studies school. Critical studies is a broad term in the humanities
+that refers to rigorous critique of social, cultural, and/or political
+structures, typically with a goal of exposing the underlying systems
+of power and encouraging the dismantlement of those structures.
+
+The application of critical studies to CS, which I like to call
+Critical Code Studies, is a topic of burgeoning interest, especially
+among the younger generation of computer scientists, who have grown up
+with the negative social implications of computing very visible in your
+lives. Before we dig in, let's brainstorm.
+
+EXERCISE: Share one social impact of computing that you care about
+
+Looking through a list of social impacts , we can see that critical
+studies are useful in all subfields of computer science. Many of the
+most famous studies focus on AI systems, on social media systems, and
+on physical systems, and it is for good reason: those systems matter.
+But each subfield of CS has something unique to teach us when the
+critical lens is applied, and PL is no different.
+
+* Critical studies for PL
+To foreshadow what unique lessons PL critique will give us, let's look
+at the unique connections between PL and its sister fields in the
+humanities:
+- PL theory is *intimately* related to logic, which has a tight
+  relationship with philosophy, specifically structuralist, analytic
+  philosophy. Decades of critical theory have explored the limitations
+  of structuralist philosophy and its application to myriad social
+  phenomena; those criticisms transfer directly to criticisms of PL
+  theory's formalisms.
+- Programming languages are not natural languages, but in contrasting
+  the two, we learn about both. Thus linguistics is a sister field,
+  albeit one from which knowledge must be transferred thoughtfully.
+  Linguistics has an important role in critical thought. Critical
+  theorists have explored both how language carries culture, enabling
+  to change and challenge culture, as well as how exerting control over
+  language can lead to controlling which thoughts and which people are
+  accepted in society. These topics are all worthy subjects of study
+  for PLs as well.
+
+* Burnett's paper
+We start with this paper because it explicitly ties key ideas from PL
+to key ideas from critical studies that have already been applied
+successfully to CS.
+
+Key term: Intersectional population = A group of people that belong to
+multiple marginalized identities at once. Examples: Black women,
+low-SES Two-spirit people, physically disabled autistic trans women.
+
+The key question of the paper is: for HCI (human-computer interaction)
+researchers and practitioners, what design method could help reduce
+bugs that disproportionality impact the intersectional population of
+choice. The motivating example is the (in)efficacy of many AI-based
+systems for intersectional populations, especially Black femmes.
+
+The paper problematizes inclusive design for intersectional populations
+as a matter of combinatorial explosion: if there are N dimensions to
+our identity and if each dimension had only 2 values, there would
+already be 2^n different combinations to test. This exponential
+growth in identity groups makes fully-inclusive design a legitimate
+challenge, though the details of the challenge depend based on which
+style of design methods one wishes to apply
+
+** Key terms: Empirical vs. analytical 
+An *empirical* approach is one driven by data, typically data about
+users. Recruiting diverse users for user studies is key to inclusivity
+for empirical approaches. Researchers may cite this as a challenge,
+because certain intersectional populations are *very small*. More
+importantly, it is a problem for people in that intersectional
+population: because there are fewer of them, each one may be sought
+as a research subject more frequently, which could impose a
+disproportionate workload for them. This does not mean they should not
+be sought out, but rather that their participation time should be
+treated as a valuable resource, to be spent constructively and
+compensated fairly.
+
+An *analytical* approach (not to be confused with analytic philosophy)
+is an approach that is not driven by user data, but is focused on what
+the designers do on their own, in isolation from the user. Analytical
+approaches avoid the challenge of scarce participant time, but have
+significant problems of their own. With an analytical approach, a
+designer fundamentally does not get outside their own head, and cannot
+identify or address problems that would only be visible to a person
+from another demographic group. This problem is especially strong when
+the designer belongs to no marginalized groups, but applies to all,
+because nobody belongs to every marginalized group at the same time.
+
+For empirical approaches, intersectional datasets such as Buolamwini's
+dataset have provided a new tool. Burnett's paper seeks to instead
+provide a new *analytical method*. The proposed method centers on a
+reduction from identity dimensions to facets.
+
+** Key terms: Dimensions vs. facets
+A *dimension* is just any aspect of a person's identity that we might
+label, examples: race, gender, gender modality, money, sexuality,
+disability, neurotype, native language.
+
+*Facets* are the type system of dimensions proposed by the authors.
+Importantly, dimensions do not correspond one-to-one with facets;
+facets are abstract features of a person which are more directly tied
+in to their computing interactions than their demographics are. The
+example facets from the paper are: "Motivation", "Computer
+Self-Efficacy", "Attitude Toward Risk", "Information Processing Style",
+and "Learning by Process vs. Tinkering".
+
+The strength of facets lies in the strength of types, as abstractions.
+Just as a type system lays out the variety of data a program could
+need, these facets lay out the variety of usability concerns. At their
+best, facets could encourage a designer to ignore irrelevant details
+of a person in the same way that types encourage us to ignore
+irrelevant details of a value. Do I really need to know at compile-time
+whether x = 1 or x = 2? To treat all integers fairly, I should probably
+only concern myself with whether x is an integer or not. Likewise,
+users might not want designers to spend much time obsessing and
+fantasizing about aspects of their life that are completely irrelevant
+to the task at hand, and probably prefer that designers explore
+diversity of users through facets that are relevant to the design
+problem.
+
+** Structuralism
+Types are descended from an approach to philosophy named structuralism,
+which emphasizes identifying clear-cut categories and universal truths
+about them. Types are well-suited to a structuralist philosophy,
+because in the world of types, there *really are* lots of universal
+truths. It really is true that an expression e : int, when it produces
+a value, will produce an integer! It is true that type-safe programs
+don't produce memory errors, that garbage-collected programs do not
+contain memory-leaks, and so on for countless other theorems.
+
+The paper's approach is a structuralist one. Its boldest claim is that
+by representing a type (facet), we represent all dimensions (and all
+demographics) that make up that type. This is a universalist claim,
+that a single member of the group, or a single aspect of it, could
+stand in for the whole.
+
+The challenge of applying universalist reasoning to groups of people is
+that, unlike with programs, it is rare to find universal truths about
+humans*. Moreover, a structuralist must pick the *structure* of the
+object they analyze. The structures proposed in this paper are very
+specific. All dimensions and facets are conceptualized as
+one-dimensional, finite spectra, e.g., equivalent to the closed real
+interval [0,1]. Going a step further, the paper posits that only the
+most extreme values 0 and 1 are needed in design, and that all
+intermediate values (0,1) can be thrown out.
+
+*Death and taxes were long believed to be the two universal properties
+of humans. Recent discovery of non-tax-paying humans has left us with
+only a single confirmed universal.
+
+EXERCISE: Give some examples of people and kinds of people left out
+by these structures.
+
+The basic technique of the paper is to generate design personas by
+combining different sets of extremes (0,1) from the different facets.
+The selling point is that if the set of facets remains limited, then
+even if the number of dimensions were to grow large, the technique
+provides a dimension reduction that keeps the total number of personas
+tractable.
+
+** Comparisons: QuickCheck
+This paper has a strong parallel in the PL world: type-directed
+test case generation library. The most famous of these is the Haskell
+library QuickCheck, which has later been ported to a variety of typed
+functional languages. The QuickCheck library lets the programmer
+provide a correctness property and then follows the types to generate
+test cases, and tests whether the property holds on the test cases.
+
+For example, if a user wants to test that integer addition commutes:
+"test(x:Int,y:Int): Boolean = (x + y == y + x)"
+then a QuickCheck library would generate pairs of numbers (x,y).
+QuickCheck knows that it can't possibly hope to test all numbers, but
+also knows that it would be insufficient to let a single value stand
+in for all. Not unlike the use of personas, it has a "generator" for
+each type which tries to generate a diverse, but finite set of test
+values. For example, one set of test values for integers might be:
+{-12345, -64, -5, -2, -1, 0, 1, 2, 5, 64, 12345}. This set covers
+some of the most common "edge case" values and also some larger ones.
+Then, for tests with pairs of values, we draw pairs of values from the
+test set. We gave 11 integer test values, resulting in 11^2=121
+possible pairs, including both edge cases like (0,0) and general cases
+like (-5,64).
+
+QuickCheck navigates type abstraction in a non-trivial way. Because it
+runs concrete tests, it *cannot* test types in the abstract. It must
+test code on some specific integer, not "an integer" in general.
+However, type structure actually constrains which tests are needed.
+Parametric polymorphism, in particular, guarantees that program
+behavior is agnostic to certain changes in typing, a phenomenon that
+Philip Wadler popularized as "Theorems for Free".
+
+For example, consider the identity function id, which has type t -> t
+for all types t. Because the same function has type t -> t "for all t",
+its behavior cannot possibly depend on t, and so for testing, it
+suffices to test a simple type such as t = unit. Likewise, if a
+function works for all list types List[t], it suffices to test simple
+choices of t, drastically reducing the complexity of testing.
+
+* Criticism of Burnett's paper
+As much as this paper makes a lovely bridge from PL theory topics into
+discussions about critical studies, I am overall critical of it. At
+least, this critique is a productive one, that makes us aware of
+critiques we may need to use again in our careers as computer
+scientists. 
+
+** I am not a bug
+When we state the motivations for our work, we must think very
+carefully about the values reflected in our motivation statements. This
+paper is part of the GenderMag/InclusiveMag body of work, which frame
+non-inclusive aspects of software as "bugs," and specifically frames
+testing for intersectional "bugs" as a burden. This is not unique to
+InclusiveMag; it is common for inclusion to be framed as an
+"accommodation," as an extra and undue burden placed on those in
+positions of relative privilege. The term "bug" reflects another common
+framing, that exclusion is the exception and is peripheral, something
+that can be quickly patched, allowing a return to a norm of inclusion.
+
+But I am not an edge case, and I am not a bug, nor is my exclusion
+something so simple as a bug that can be patched away. When Buolamwini
+built a black-femme-inclusive dataset, it was no simple matter of a
+patch, but an extensive data collection effort that had to be paired
+with extensive real-world activism in order to effect a fix from
+software vendors. When I encounter gender-related "bugs" in software on
+a frequent basis, there is person emotional investment, I must validate
+my own existence to the dominant social structures before my bugs can
+be respected as such.
+
+In critical studies, I would be called a "queer subject". A queer
+subject need not literally be a queer person, but is any agent in a
+system which butts up against and breaks the assumptions of that
+system. Queer subjects are key to post-structuralist thought because we
+are the people that falsify and break the structures present in systems
+like InclusiveMag. A trans woman breaks the structural assumption that
+the universal "cis" applies to the category of woman, and nonbinary
+people break the assumptions even harder, breaking the assumption that
+one could be divided into "male" and "female". Mixed-race people break
+the assumptions of rigid racial classifiers. I break the binary
+distinction of abled and disabled, as well as the distinction between
+straight and lesbian.
+
+* Spectrum
+Within my own lifetime as a person in the US, I have seen lay people's
+thinking become significantly less structuralist. Most young people
+today intuitive understand that gender, sex, sexuality, race, ability,
+and economic status are all spectra. If you're not a  bisexual
+non-binary mixed-race person with a dynamic disability, you probably
+know one, and you certainly know people with more of those identities
+living openly than your grandparents did.
+
+InclusiveMag minimizes these spectra to the point that it ignores them.
+It states explicitly that it is the norm for the extremal values of a
+spectrum to be sufficient representation for the entire spectrum. This
+is complete erasure of all the middle-ground identities I listed above,
+many of which I personally belong to. Worse yet, its notion of what a
+spectrum *even is* imposes false structuralist limitations. 
+
+Recall that InclusiveMag treats spectra as intervals like [0,1]. This
+is not how any of the identities work. I draw particular note to the
+paper's brief reference to the autism spectrum, which it implies to be
+a one-dimensional line. This interpretation is thoroughly demonized in
+contemporary autistic subculture, for several reasons:
+1) It erases the *incredible* level of intra-group diversity. A common
+saying in the community is that if you've met one autistic person,
+you've met one autistic person.
+2) It erases how many different facets of our lives are affected by
+autism. My quirkiness and my social faux pas are highly visible aspects
+of my autism, but what about my poor handwriting awkward gait, and
+difficulty separating out multiple sounds in my environment? Those are
+no less autistic, but less stereotypical in the non-autistic eye.
+3) One-dimensional views make it too easy to divide and conquer people.
+Autistic people often get grouped into "high-functioning" and
+"low-functioning". Many of us dislike these labels, because they serve
+to divide us into "too successful to deserve sympathy or support" (high-functioning) and "too unsuccussful to deserve freedom or self-determination (low-functioning)".
+ 
+** Stereotype, Reductionism
+InclusiveMag's focus on extremal values of identity spectra is
+particularly concerning. Extreme identities have a name: stereotypes.
+It makes my stomach hurt to wonder what an "Inclusive"Mag user would
+guess the "most autistic" person looks like, what the "most trans"
+woman looks like, or what the "most disabled" Ehlers-Danlos syndrome
+person looks like.
+
+An abstraction is always a reduction. In PL, we often find useful,
+faithufl abstractons, in which case abstraction is justified. Most
+types in PLs are abstractions that work well for us. But abstracting
+away identities into stereotypes has a name: this is reductionism. My
+identity labels are important to me, but they are important because
+they are the starting points of my conversations with other people, not
+the *endpoints* of a conversation. Reducing us to stereotypes reduces
+away all the interesting complexity of our actual lives, and
+necessarily erases the exact richness that should be informing software
+design.
+
+** Intersectionality
+One of my biggest critiques of this work is that it erases true
+intersectionality. I intentionally defined the term "intersectional
+population" rather than "intersectionality" because the two are nothing
+alike.
+
+There is a bad habit in CS research: when we wish to assess that
+software works for an intersectional population, we often silo them off
+from all other populations. When we look at the effects of software on
+Black femmes, we view this as disconnected from the issues of Black
+women as a whole and of femmes as a whole. It is from this perspective
+that one could even come to view intersectionality as the source of a
+combinatorial explosion in sets of overlapping identities.
+
+This perspective fully ignores one of the major points made by
+Kimberle Crenshaw, the scholar who coined the term "intersectionality".
+One of the main points in her critical studies of the American legal
+system is that Black women have never been given the right to stand as
+representative of all Black people nor of all women. A civil rights
+victory for Black women would not be allowed to serve as precedent for
+Black men nor for non-Black women.
+
+InclusiveMag mostly falls into this exact same trap. It mentions in
+passing that a set of personas with good representaton for an
+intersectional group will have good representation of some single-axis
+groups as well, but never makes the key point that people at the
+intersections are proper representatives of each axis.
+
+When we speak of scalability and avoiding combinatorial complexity,
+this is an *incredibly* important point. In the trans community it is
+a common refrain that "Trans women are women. Trans men are men.
+Non-binary people are who they say they are." This is especially
+important for trans people because our very membership in single-axis
+groups is treated as a topic of debate, but it is also crucial in
+general for understanding how personas should be built, and how you
+should think about the users of your PL and of any software you build.
+The point is not to check every single box and build exponentially
+many different stereotypes. If you include personas (or people!) who
+are highly intersectional, you can go far with a modest number of us,
+because we can speak to many issues at once, and can speak for the
+dimensions of our identities.
+
+** Intersection types and product types
+Even type theory can distinguish true and fake intersectionality.
+Fake intersectionality is the product type: a value of type t1 * t2
+is a product of values of types t1 and t2. A trans woman is a pair of
+a trans person and, entirely separately, a woman.
+
+But identities are not separable. True intersectionality could probably
+never be fully captured by types, but if we tried, it would be far
+better captured by the intersection type t1 /\ t2. A value of type
+t1 /\ t2 is a single value that simultaneously is both a t1 and t2.
+A Black woman is simultaneously fully Black and fully a woman.
+
+Intersection types are closely tied to the concept of subtyping.
+t1 /\ t2 is a subtype of both t1 and t2. This is a rigorous
+type-theoretic way of saying that trans women are women!!
+
+Intersection types are not the only possible mathematical model of the
+richness of human identity. If you are bored and looking for extra
+enrichment reading, read Dagan Karp's paper about modeling
+intersectional feminism using fiber bundles. Fiber bundles are
+mathematical structures which locally look like products, but globally
+can be far more complex. Because at a glance we can be neatly divided
+into dimensions, but on a deep look, there is so much more.
+
+Extra extra readings if bored:
+- Feminist programming language
+- My book draft
