@@ -1,0 +1,172 @@
+Lecture 20: Critical Code Studies, Part 2
+
+Reading choices for today:
+(long, feel free to just read a few parts..)
+https://www.tandfonline.com/doi/pdf/10.1080/07370024.2018.1512413
+http://katta.mere.st/wp-content/uploads/2020/03/Individuality-over-function_revised.pdf
+
+The previous lecture broached general-purpose inclusive
+design strategies through metaphors that tied identity
+to type systems. Today we'll start from a more specific
+focus: disability issues in programming languages
+specifically, then work our way back out to the critical
+study of disability (Disability Studies)
+
+* Disability Studies for PL
+Among software, programming languages have unique accessibility
+concerns. Those concerns have unique impacts, yet are rarely given
+proper attention.
+
+** Importance
+I am hesitant to rank the importance of different accessibility
+concerns, because that lends itself too easily to treating us as second
+class citizens or treating accessibility as optional. However, it is
+worthwhile characterizing how I think about the accessibility concerns
+that matter to me personally, and worth giving qualitative distinctions
+in the impacts of different accessibility failures.
+
+When I think of accessibility, I like to think about infrastructure.
+When I walk around town, uneven broken sidewalks make me trip, and may
+make wheelchair-users unable to navigate town without a vehicle. Icy
+sidewalks and roads mean no leaving the house without my cane. I know
+where every handrail in Fuller is and I know they're a bit weird. On
+the mental side, old buildings with thin walls aggravate auditory
+sensory problems. All of these are infrastructure.
+
+
+Accessible infrastructure is the foundation of a livable life for a
+disabled person. If we wish to live inside, we need accessible
+housing, which is scarce. If we wish to do any daily computing task,
+we need accessible computing systems. If we wish to stay employed or
+fed, we need accessible transportation. Without accessible
+infrastructure, we have no job, home, or community.
+
+PLs are the infrastructure of software, and PL designers must carry
+the responsibility of accessible infrastructure. Programming is a huge
+part of modern life, for everyone from career developers to Excel users
+to children. Disabled people exist in all these spaces, and if we are
+not provided with infrastructure, then disabled people are erased from
+all these roles.
+
+** Invisibility
+In common discussion, disabilities are often divided into "visible"
+disabilities, where able people will notice you are disabled on first
+glance, vs. "invisible" disabilities, where they do not. This
+distinction is overly simplistic, because visibility is in the eye of
+the beholder. When I run into another member of my disability groups in
+public, we can often find one another based on the quirks that affect
+us - we are visible to each other. In other words, *positionality*
+matters; the disabled person sees things that an abled person will not
+see, and she sees them in a different way.
+
+Though no disability is universally invisible, it is true that many
+disability issues are invisible to those they don't affect.
+
+* A survey of PL accessibility issues
+In which case, let's take time to go through common accessibility
+issues for PLs
+
+** Visual accessibility
+Because programming languages are predominantly read through visual
+interfaces, visual disabilities are a major area of need.
+
+- Whitespace sensitivity:
+Invisible spaces on the screen are the home to an invisible issue!
+Some programming languages, most famously Python, are whitespace-
+sensitive. This is an issue for visually-disabled programmers, who
+typically rely on screen readers to read computer text aloud to them.
+Traditionally, screen readers do not read the whitespace aloud, leaving
+whitespace-sensitive code unreadable to screen reader users. Python's
+approach to including visually-disabled programmers is a half-measure:
+special "begin" and "end" keywords can be used to write whitespace-
+insensitive code. This half-measure is a great example of how
+accessibility measures rarely center the disabled person, because it
+leaves the following issues unresolved:
+- Reading other people's code is a huge part of programming. Abled
+Python programmers do not write screen-reader-compatible code, so
+visually-disabled Python programmers will still have to fight against
+the majority of code available.
+- By giving accessible code a distinctly different syntax from the
+inaccessible majority, Python asks visually-disabled programmers to put
+a target on their own back, advertising their difference to a public
+where it may not always be received with acceptance. They might have to
+deal with insults from other programmers telling them to write "real"
+Python instead.
+
+- Line Length
+Though indentation-sensitive syntax remains popular today, other space-
+sensitive languages have faded in popularity. Early languages like
+Fortran and COBOL assigned special meanings to certain columns of a
+line. In practice, certain programmers may still need to limit the
+number of columns (e.g., the culture of their programming language
+advocates for lines under 80 characters). As designers of language
+practices, we shouldbe mindful of the disability implications of line
+length. Longer lines typically correspond to smaller font sizes, so
+line limits, rather than being a mere relic of the past, are supportive
+of visual disabilities that require large-print text.
+
+- Imagery
+The assigned reading described a programming language Torino designed
+for visually-disabled children. Visual disability is especially
+important for languages aimed at children. This is because the most
+popular programming languages for children (e.g., Scratch) are all
+based on both visual input (block-based design) and visual output
+(e.g., animations). These languages, which aim to make coding more
+accessible to children, unwittingly make it *less* accesssible to
+visually-disabled children.
+
+There are several possible approaches to such a language. Mainstream
+progamming languages, being text-based, are accessible through screen-
+readers, but their reliance on verbal skills is only practical for
+populations which have developed those verbal skills. For younger
+children, an alternative approach is needed, and that is the one Torino
+takes: provide *tactile* interfaces.
+
+Tactile interfaces, similarly to protactile sign language, are
+particularly accessible to deafblind people; oral programming languages
+are a plausible approach for hearing blind people but not deafblind.
+
+** Musculoskeletal+Motor
+Motor disabilities, including musculoskeletal ones, arise largely on
+the input side of programming.
+
+EXERCISE: Have you ever had a repetitive strain injury (RSI)?
+Have you ever known someone who did? (Example: Carpal Tunnel Syndrome)
+
+RSIs are known as a major occupational hazard of programming. On their
+own, they are an injury rather than a disability, but can grow into a
+disability and certainly overlap with disability.
+
+If you have ever seen my keyboard, you know I use a bowled, split
+keyboard because typing pain is a disability symptom for me. And on
+some level, PL design actually plays into that pain, believe it or not!
+
+EXERCISE: In terms of the keyboard, how are PLs different from other
+text?
+
+Programming makes heavy use of punctuation, and one of the first rules
+of ergonomics is to minimize straining the fingers over long
+distances, especially if it require compressing the medial or ulnar
+nerves, for example when stretching the pinky to a distant
+region. Disabled coders can handle much of this on own - for years, I
+used the Programmer Dvorak keyboard layout because it minimized the
+distance covered to punctuation symbols, but poor support for the
+format led me back to less-ergonomic ones. PL designers could consider
+less reliance on out-of-the-way punctuation, which would reduce the
+need to build custom keyboard layouts.
+
+Not everything is about me, however, and the reliance on typing can be
+an ever bigger obstacle for programmers with other disabilities.
+One-handed keyboard layouts can support single amputees, but keyboard
+input can be completely impossible for disabilities such as muscular
+dystrophy and for multiple amputees. Some people in these groups use
+dictation with a person to program, but it is worth exploring the
+design of languages with good support for automated transcription, to
+provide greater programming autonomy.
+
+* Disability Studies for HCI
+
+* Disability as a Researcher
+
+
+Foreshadow penrose
