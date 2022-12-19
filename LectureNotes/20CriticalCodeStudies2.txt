@@ -165,8 +165,125 @@ design of languages with good support for automated transcription, to
 provide greater programming autonomy.
 
 * Disability Studies for HCI
+Most of the research on disability and CS comes from HCI, so we draw
+on that research, even if we apply it to humans interacting with PLs.
+The historical trend of disability in HCI follows broader social
+trends.  Older research tends to be performed by abled researchers
+with a focus on providing functionality to disabled subjects,
+especially functionalities that provide increased ability to live
+independently.
 
-* Disability as a Researcher
+Though much legitimately useful assistive technology has come out of
+older HCI research, there is a recent emphasis in bringing research
+into alignment with the contemporary disability rights movement.  See
+the CHI workshop "Nothing About Us Without Us" for a variety of such
+perspectives. As the workshop title suggests, the contemporary
+emphasis is on centering actual disabled people in the research
+process. This means listening to disabled researchers in particular,
+and also promoting the use of methods such as participatory design for
+abled researchers to provide greater agency to disabled people in
+their research.
 
+I've highlighted one paper from the CHI workshop as an assigned
+reading for this class: "Individuality over function: the role of
+technology in disability identity". This paper analyzes case studies
+in Kenya, Uganda, and Jordan. Their analysis highlights the importance
+of representing Global South nations in disability research: these
+three nations lack the legal protections for disabled people that are
+common in Global North countries, and study subjects reported levels
+of disability stigma in their daily lives that are beyond the typical
+levels found in countries such as the US. For this reason, the social
+aspects of disability took on a pronounced significance compared to
+the functional aspects.
 
-Foreshadow penrose
+Visually-impaired Kenyans highlighted the need for blending functional
+improvement with community education about disabled people's
+needs. For example, in a speculative design exercise, the
+best-received idea was an intelligent traffic light that alerted abled
+drivers to disabled pedestrians' need for extra time to cross the
+street safely. In a separate case study, Kenyan wheelchair users
+pointed to wheelchair aesthetics as key to improving their
+self-esteem. Jordanian and Uganda prosthetic wearers presented the
+flip-side to community education: because ableism is prominent in
+their lives, they expressed the need to blend in for
+safety. Aesthetics of prosthetics, such as matching the skin color and
+size of the wearer, *are* a practical concern, because they allow
+wearers to blend into abled society for their own safety.
+
+The paper frames these needs as a need for individuality over
+functionality. It is important to recognize that the notion of
+individuality is itself context-sensitive. In the US, individuality
+often corresponds to visibility, self-determination, and the freedom
+to ignore what the people around us think. In contrast, the study
+subjects called for a context-sensitive approach to accessibility
+which allows them to prioritize local, community-specific needs of the
+individual.
+
+** Comparison/Mini-Summary
+
+These concerns may seem abstract and detached from PL design at first,
+but they are actually quite relevant to the PL accessibility case
+studies I shared:
+
+- Whitespace in Python: Part of my criticism of Python is that its
+  accessibility features for visually disabled people require them to
+  visibly announce their disability. Control over whether or not to
+  blend in is the same concern cited by disabled Ugandans and
+  Jordanians.
+
+- Programming for Visually-Disabled Children: The use of tangible
+  rather than verbal programming in Torino serves in part to make the
+  activity fun for children. Given the stresses of ableism in a
+  child's life, this social aspect takes on pronounced importance.
+
+- Musculoskeletal Accessibility
+
+The only person I know who codes by voice is someone who did so
+because of RSI: http://www.rntz.net/talon/index.html. That person is a
+programming language researcher. Having *researchers* who have lived
+through these accessibility needs is important to the culture of
+academia, it escapes the trap of "nothing about us without us" and
+puts disabled knowledge in the position to create change.
+
+* Disability in Academia
+Content notice: the discussions of ableism in this section are a bit
+more personal.
+
+We are all in academia, so I want to take some course time to talk
+about disability and ableism in academia. This section is especially
+for any disabled students in the course: I believe it's important to
+talk about our own issues and feel seen. If abled students learn
+something in the process too, that's a bonus.
+
+Modern academia is defined by a stress culture. People compete on how
+tired they are and how little sleep they get. They compete to be the
+least healthy. This model fundamentally does not work for disabled
+people. In an average day, I lose multiple hours of good function to
+my disability, whether that's because of doctor appointments, physical
+therapy exercises, or waiting for symptoms to subside. I cannot work
+by the kinds of schedules that I am regularly asked to. When
+colleagues try to schedule work for weekends or evenings, or on short
+notice, I'm repeatedly forced to go on the defensive. Everybody
+deserves time to rest, but *I will break* if I let people make me work
+during those times. It is an exhausting culture where disabled people
+feel compelled to constantly defend basic needs. We feel this way
+because as soon as we ask for more than the basic right to exist in
+public, we are consistently ignored, spoken over, or worse.
+
+I only personally know of one other physically disabled person with a
+PhD in programming languages. I do not know whether that person is
+staying in academia or not. I know that disabled people get about
+1% of research grants in the US, and that is a lonely number.
+
+IN-CLASS: Make time if any disabled students wish to share their own
+experiences.
+
+* Foreshadowing: Autonomy and Views
+
+In a few lectures, we'll look at a language called Penrose which
+creates visual outputs. I personally believe such languages hold
+promise for accessibility work in the future. Part of accessibility as
+a PL designer is giving disabled programmers and users the right to
+impose their own semantics on code, their own views on the same data,
+which provide for their own needs. We might spend some time talking
+about how one would do this in Penrose when the time comes.
