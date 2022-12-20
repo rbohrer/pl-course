@@ -1,6 +1,312 @@
 Lecture 21: Processing
 
-Today's reading is: Processing: programming for the media arts.
+Today's reading is: Processing: programming for the media arts (2006).
 https://link.springer.com/content/pdf/10.1007/s00146-006-0050-9.pdf?pdf=button
+The main website for Processing is https://processing.org/
+
+Outline
+- Intro
+- Design Values
+- Continuity
+- PL Design is More Than PL Design
+- Play with Processing (if time)
 
 
+* Intro
+Processing is a programming environment and language, introduced
+around 2003, for visual arts/media arts. Because it targets a specific
+community of programmers, it can be considered a domain-specific
+language. More than anything, however, our discussion of Processing
+will blur the lines of what it means to be a new language vs. library
+vs. programming environment. I find Processing notable less for its
+differences from previous programming lannguages, and more notable for
+how it feels deeply related to them, yet it clearly succeeded in
+reaching new communities of programmers. That success points to the
+fact that there is more to a PL and its community than mere syntax and
+semantics.
+
+** An Example Program: "Saturation"
+from https://processing.org/examples/saturation.html
+
+We present an example program in Processing. I encourage you to open
+the program in your browser and play with it first, then read the code.
+Only read my explanation of the code after trying to read it.
+
+int barWidth = 20;
+int lastBar = -1;
+
+void setup() {
+  size(640, 360);
+  colorMode(HSB, width, height, 100); 
+  noStroke();
+}
+
+void draw() {
+  int whichBar = mouseX / barWidth;
+  if (whichBar != lastBar) {
+    int barX = whichBar * barWidth;
+    fill(barX, mouseY, 66);
+    rect(barX, 0, barWidth, height);
+    lastBar = whichBar;
+  }
+}
+
+This program is an exploration of color. In an HSB (aka HSV) color
+space, each color is represented by its hue, saturation, and
+brightness. Saturation is a number that is 0 when the color is
+completely gray and is at its maximum value when the color is as
+not-gray as possible. The program displays a rainbow pattern and 
+interactively updates the saturation of each column whenever you move
+the mouse.
+
+Processing uses a C-like syntax. Variables can be defined outside of
+functions, and must be given types. This program defines integer
+variables barWidth and lastBar, respectively for the width of bars to
+draw and the x-position of the most recent bar drawn.
+
+The most important functions in a Processing program are named setup()
+and draw(); the have no arguments or return values. setup() is called
+once at the beginning of the program to set up the drawing area, etc.
+draw() is run repeatedly to draw the screen, and is the main part of
+the program.
+
+Here, the setup function sets the canvas size, sets an HSB color space
+scaled to a maximum value of 100 and noStroke indicates not to draw the
+outlines of shapes.
+
+The main draw() function checks whether the mouse has moved. If so,
+it sets the fill color based on the Y coordinate of the mouse, draws
+a rectangle in that color, and remembers the mouse position.
+
+And that's it, that's the whole program. You now have a good feeling of
+what programming in Processing is like.
+
+* Design Values
+If you know C and you read a Processing program, you might feel that
+there is not even a language here, that Processing brings nothing new.
+From the perspective of syntax, and to a less extent, semantics, there
+would indeed be little new. However, it is also a historical fact that
+Processing achieved something C did not: it brought many new creatives
+into the fold of the programming world. There must be a reason that it
+succeeded in this goal. To explain the success of Processing, we should
+look at its design objectives, which differ greatly from those of C
+and make the *holistic experience* of programming in Processing wildly
+different from the experience of early-2000s-era C programming. The
+design objectives I list here are a mix of those explicitly stated by
+the authors and those I have put into my own words.
+
+** Visuality
+
+Processing is unapologetically focused on media, especially visual
+media, to the point that the "main" function of a program is a "draw"
+function. Common programs involve visual effects applied to external
+images, particle systems, and fractal systems.
+
+The visual focus is a serious accessibility problem for visually-
+disabled programmers, and this should not be ignored. Though projects
+like Torino have made progress in programming for disabled children, I
+am aware of no programming language that centers the education of
+older disabled students, and they deserve better than that. As Torino
+showed however, it is okay to have different languages for different
+people; we can call for the development of vision-accessible languages
+while celebrating the new populations of sighted programmers that
+Processing served.
+
+Why is visual progamming desirable?
+
+** Continuity with its target audience.
+The design of a domain-specific language should always be centered on
+the background and culture of its target audience. By centering visual
+media, Processing centers something its intended users already know.
+Drawing is treated as a foundational art form in traditional art
+education; even artists who work in other media typical know drawing.
+
+Even before Processing, visual programming has been a common focus for
+PLs that seek to bring in new programmers. Purely personal conjecture:
+I think I know why. As the saying goes, "the eyes are the window to
+the soul". When humans think of admiring artistic beauty, we think of
+beautiful visuals. Though texts, even mathematical texts can be
+admired, we do not admire them so universal, quickly, or easily as we
+do visuals. This point is not an empty one. It is a basic fact of
+psychology that people learn much better, and perform much better in
+general, when they have a clear motivation. The choice of visual beauty
+as a motivator is a culturally sound one, even if not unique.
+
+This is a particularly important point for communities that fear math.
+Among students, it is not uncommon to have literal psychological trauma
+related to mathematics education; it is a literal PTSD trigger for some
+people. For a population with increased math-related trauma, it is
+essential to give them frequent experiences that don't feel like math.
+
+** Remixable Openness
+The Processing paper talks about the open source community, and how
+open-source development had previously made major impacts in other
+areas of software, but not media software.
+
+I use the phrase "Remixable Openness" to point out that Processing is
+not merely a PL with an open-source implementation; it is doing
+something more. Artistic communities have had their own version of open
+source long before programmers did, because imitation is a fundamental
+part of art. The style of code-sharing in Processing is closer in
+practice to the use of StackOverflow to copy-paste code snippets,
+except (1) it predates StackOverflow by several years and (2) reuse is
+viewed positively, whereas the use of StackOverflow is sometimes viewed
+as a source of shame for other programmers. In short, open source for
+creative coding looks like copying others code, experimenting with it,
+and making it your own.
+
+This requires community effort and technical infrastructure (their
+website makes copy-pasting easy) but it also places implicit
+requirements on the PL design. If you have ever copy-pasted code from
+StackOverflow, you know that significant changes are often required
+to integrate it into your own program, because the languages and
+libraries involved are so complex and interdependent. For sharing to
+work, the language and its standard library must be, in some vague
+sense, simple.
+
+** Immediacy
+An essential but rarely-named aspect of the programming experience is
+immediacy. Immediacy means that a programmer can start programming in
+a very short period of time and see their first program outputs in a
+very short period of time. Immediacy is known to be important to
+student morale in educational settings, so it is a common feature among
+educational programming languages. For all its flaws, the Racket
+programming language is another example of a language used in
+educational settings that provides immediate output to a new user:
+program expressions like (+ 1 2) can be quickly evaluated to their
+outputs (in this case, 3). Processing achieves immediacy through a
+web-based editor (before they were popular), and through a highly
+visible library of short examples.
+
+Personal anecdote: In my youth, I got my start programming Flash games,
+which use a language very similar to JavaScript. In retrospect,
+immediacy was why I succeeded with Flash programming at the time. The
+Flash programming environment was good at allowing programmers to get
+a quick start manipulating visual objects with code, providing a quick
+sense of achievement. With both Flash and Processing, immediacy of
+publishing was also key to success: both made it easy to run code in
+the browser, opening it up to be run by anybody, anywhere. 
+
+** Continuity
+
+The C-like syntax is intentional, and it is a feature, not a bug.
+In design, "continuity" is a favorite word of mine. What this means is
+that whenever we design something new, it should never be entirely new,
+but its overlaps with existing work should be just as clear as its
+novelty.
+
+In mathematics, we can think of a function as being continuous from
+the left(-) or continuous from the right(+). In design, I likewise
+think of two kinds of continuity:
+
+Continuity with "before": Many of you probably knew C *before* you
+learned Processing. You experienced continuity with "before". Because
+you knew C, it was probably very easy to learn Processing. This kind
+of continuity is important when learning most new things. Even if a
+language contains many features, our goal is to add only a modest
+number of concepts to a person's mental map of programming. If we add
+too many new concepts (for example, by duplicating existing computing
+concepts using new terminology of our own) we increase the amount of
+learning required without providing new functionality. Many languages
+designed today target this style of continuity. 
+
+Continuity with "after": Processing actually targets a different kind
+of continuity. Recall that its intended audience are people who have
+never programmed before, so C-like syntax does not help them learn -
+there is no biological mechanism which makes humans learn C syntax
+faster than any other syntax.
+
+The designer's point is a far more ambitious one. Just because someone
+has never programmed *before* does not mean they will *never program
+again*! The designers recognize that there is not one future career
+path for their users, but multiple. In their future art careers, some
+of them may only ever need Processing. But others may find a day where
+they need general-purpose programming for an advanced project, and
+others may decide to become full-time software developers. For these
+latter categories, C-like syntax was important because it means that
+once someone has learned Processing as their first language, they can
+transfer their knowledge to other languages like C. The gap between
+the two languages is real: concepts like pointers are no easier to
+learn, but prior experience will allow these programmers to focus
+solely on these differences when learning C.
+
+This is a marked improvement over earlier programming languages used
+in education. Since the early days of programming, we have known that
+it is a difficult skill to learn and sought to make it easier. The
+first educational language is generally considered to have been
+released in 1964: the original BASIC.
+
+Consider "Hello World" programs in four languages used for teaching.
+(Source for all examples: RosettaCode.org)
+
+BASIC(initial release: 1964; example is BASIC256 dialect)
+clg			# Clear the graphics screen
+font "Arial",10,100	# Set the font style, size, and weight respectively
+color black		# Set the color...
+text 0,0,"HelloWorld!"	# Display in (x,y) the text HelloWorld!
+
+LOGO(initial relesae: 1967)
+print [Hello world!]
+
+Scheme(initial release: 1975; example is R7RS dialect)
+(import (scheme base)
+        (scheme write))
+(display "Hello world!")
+(newline)
+
+Racket(initial release: 1995)
+#lang racket
+(displayln "Hello world!")
+
+All of these are markedly different from C syntax. If you already know
+many programming languages, you probably read all of these without
+problem, so what's the big deal? The ease of reading is actually a side
+effect of your expertise. Once you have an extensive and well-connected
+mental model of programming, it is easy to rapidly integrate new
+information such as differences in syntax. For a student of one PL,
+however, this strong map of knowledge is not in place, and transferring
+information from your first language to second is much harder than
+transferring it from ninth to tenth. These languages cannot necessarily
+be faulted. Lisp was once popular, and is the ancestor of Scheme,
+Racket, and Logo. Basic had no good role models in its early days, and
+instead became one of the world's most popular languages in its own
+right.
+
+Contigency in design:
+When I was a student in PL courses, these comparative discussions of
+syntaxes across languages were proudly absent because they are trivial
+from the Type Theorist's perspective. In critical studies, however,
+there is a much better term to use: PL comparisons are *contingent*,
+meaning they did not have to be this way, but they are. There is no law
+of the universe that required C or any other language to be defined
+exactly the way they are. Even languages such as lambda calculi, which
+are often considered to embed universal mathematical truths, have only
+accidentally arrived at their modern notations. As you design and
+compare different languages, always keep an eye out for which design
+choices are contingent and which are not: is your design choice based
+on a new fundamental idea or on a historical accident? Both matter.
+
+* PL Design is More Than PL Design
+I hope today's lecture has shown that the creation of a successful PL
+is about more than the technical design of the PL in a narrow sense.
+Success is also based on the tooling, educational materials, community-
+building efforts, and holistic experience of using the language.
+
+** History - Timing Matters
+The history of PLs is also essential to understanding why different
+languages were important in their time and why programmers' opinions of
+languages shift throughout the ages. This is explicitly *not* to say
+that older perspectives are better, quite the contrary. But we should
+be aware of what each language added to the mix.
+
+I was writing my first graphical programs around the early years of
+Processing. To write even basic graphical programs in C would require
+either learning the dense, cryptic graphics APIs of each operating
+system or learning a portable library such as SDL which required
+several unstable addons to open a window, and which took a few hundred
+lines of code for very basic programs. Languages which have gotten past
+these steep learning curves have collectively done a great service.
+
+* Play with Processing (if time)
+If we have time, let's play with Processing example programs in our
+browsers.
