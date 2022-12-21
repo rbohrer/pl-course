@@ -1,11 +1,12 @@
 Lecture 22: Penrose
 
 Reading: https://dl.acm.org/doi/pdf/10.1145/3386569.3392375
-Authorship note: the first author's first name is Kai. Ignore the name in the paper. I looked for a version with the
+Authorship note: the first author's first name is Kai. 
+Ignore the name in the paper. I looked for a version with the
 correct name and could not find one.
 
 This paper is about Penrose, a domain-specific language
-for mathematical diagrams, published in 2020. In many ways
+for mathematical diagrams, published in 2020*. In many ways
 Penrose is the counterpart to Processing. Processing was
 about teaching visual artists to code for the purpose of
 making art, whereas Penrose is about teaching programmers
@@ -15,6 +16,7 @@ languages is that we might see how the difference in
 audience leads to major differences between the two PLs
 despite superficial appearance of similarity.
 
+*A preliminary paper was published in 2017.
 
 The paper opens with a motivating quote: 
 "Mathematicians usually have fewer and poorer figures
@@ -81,14 +83,226 @@ imagine different styles being used to support different devices,
 languages, and disabilities without changing content.
 
 * Informal syntax: Types, Predicates, Functions
+Before we can answer what a program means, we need to answer:
+what is the syntax of programs? Penrose content roughly corresponds
+to simply-typed first-order logic.
+
+"Simply-typed" has a precise technical meaning, and is not about
+being simple. "Simple typing" means thats types are neither polymorphic
+(no type parameters like List[Int]) nor dependent (no term parameters such
+as IntVec[5] for vectors of 5 integers). Penrose supports notions such as
+"Set" and "Point" but not "Set of points" nor "Set of three points".
+
+Similar to first-order logic, the core concepts in Penrose expressions are
+functions and predicates. Functions transform values into values, such as
+computing an angle out of several points. Predicates transform values into
+true/false Boolean truth values, such as the equality predicate "=" which
+is true exactly when its two arguments are the same. For our purposes, this
+is all the Penrose syntax we need to know. For using Penrose you would want
+to know some of the advanced syntax from the paper and also know its 
+standard library, which is substantial.
+
+The concrete syntax depicted in the paper is parsed and processed into a
+computation graph format. A computation graph is like an AST except that
+in need only be a directed graph and not a tree. For example, if the
+same variable appears twice in a given expression, both occurrences will
+be represented with a single shared node instead of two independent branches.
 
 * Informal semantics: Constraints
 When we want to know "what does the program do?" we typically
 look to the program semantics for answers. Penrose does not
 define a formal mathematical semantics such as an operational
-semantics, only an informal semantics.
+semantics, only an informal semantics. Even the informal semantics is
+insightful, however.
+
+The semantics of a program is a first order constrained optimization problem.
+Constrained optimization problems arise everywhere throughout CS, and are
+especially widespread in AI. In their most basic form, every constrained 
+optimization problem consists of three parts: variables, constraints, and an
+optimization objective.
+
+Variables: A solution to the problem consists of values for each variable
+Constraints: A solution must make all constraints true at the same time
+Objective: An optimal solution *should* make the objective value as optimal
+(either small or large, depending) as possible without breaking the constraints.
+
+Constraints and objectives come from the *style* langage, not the *content* language,
+and we have not yet discussed the style langauge. In short, it has two keywords
+"ensure" and "encourage," which respectively create constraints and objectives.
+
+Constrained Optimization Example:
+Suppose we have a diagram of a tree, consisting of circles depicting each node.
+Variables: Every basic graphical element in the diagram.
+Constraint: No two circles overlap
+Optimization goal: minimize the size of the diagram.
+
+The use of constrained optimization relies on the principle that there will exist
+optimization problems that align with what humans really want from diagrams. It is
+*not* to say that *everything* we want from diagrams can be reduced to optimization.
+Of course humans care about aesthetics in ways that don't reduce clearly to objectives.
+However, some of the core problems in diagramming do fit this framework.
+
+- Layout: This is arguably the killer app. Optimized layouts typically minimize space
+  usage or maximize alignment between different elements while preventing unwanted overlaps 
+  and/or ensuring minimum font sizes
+
+- Colorization: Another key application. Color schemes can be picked to maximize 
+  contrast, maximize obedience of color-theoretic laws, and/or provide accessibility
+  for colorblind users.
+
+There are likely others, but these two alone are reason enough.
+To learn more about the optimization method used in Penrose, look up "exterior point methods".
+One takeaway about the optimizer is that it is local but not global, meaning the results
+may not be globally optimal. For diagrams, this is arguably a feature rather than bug,
+
+*Style language
+
+An advantage of providing separate content and style languages is that each language can
+target a different programmer audience. The style language is meant to be used by a smaller
+group of developers with greater expertise, because each style is intended to be reused across
+many content files.
+
+The basic structure of a style program is a series of rules of the form:
+
+forall Type t {
+  t.field = expression;
+}
+
+where the clause "forall Type t" is a called a selector and the clause "t.field = expression" is
+called a declaration. In addition to this basic form, the selector section can contain a clause 
+"where predicate(t)" which restricts the selector to values t of the given Type which satisfy the
+given predicate. In addition to this basic form, the declaration section can include clauses
+"encourage predicate" and "ensure predicate" which respectively generate objectives and constraints.
+In simple terms, a selector decides "which things should I give style to?" and the declaration decides
+"how should I style them?"
+
+Example code, reduced from example in the paper; note that "--" begins an end-of-line comment:
+
+forall Vector u, VectorSpace U -- match any vector
+   where In(u, U) { -- in some vector space
+   u.arrow = Arrow {
+   startX : U.originX
+   startY : U.originY
+   endX : ?
+   endY : ?
+   color : Colors.mediumBlue
+ }
+
+This example says that for vectors u \in U (for any U), we define the vector's arrow by:
+- copying the start coordinates from the vector space's origin
+- telling the optimizer to solve for the end coordinates (this is what ? means)
+- setting the color to medium blue.
+
+Depending on which programming languages you know, the style language could seem very familiar.
+On that note, we're done describing the Penrose language now; let's look at some general PL
+ideas that showed up in Penrose.
+
+*Connections to Other CS Ideas
+
+Noteworthy PL ideas arise both in the language designs and in their implementation.
+
+** Cascading Style Sheets (CSS)
+
+The Penrose style language is heavily inspired by CSS, which is the standard language 
+for styling on the Web. The separation between content and presentation is such a key
+goal of modern HTML and CSS (respectively) that they are quite likely an inspiration
+for the content-presentation separation in Penrose. CSS should not be blindly admired
+for being a standard, but rather contains several core design insights that have 
+stood the test of time:
+- Styling is typically applied to entire batches of elements. Consistency is a core 
+  element of style, so it typical, e.g., to want all elements of a list to display
+  similarly, or all vectors, in a diagram. These batches need not always align 
+  directly with an element type (such as "list item" or "vector"), but can be tagged
+  as "classes" when needed
+
+  Thus, the notion of selectors is core to CSS. A selector determines which batch of
+  elements styling is applied to.
+
+- Styling is not monolithic. An individual element may have a huge variety of style
+  attributes, which may be determined from different sources. As a typical example
+  a single webpage might:
+  - Leave the margins unspecified, taking default values from the web browser
+  - Specify a certain justification style for all headings
+  - Set a special font for the heading used for the title of the page
+  In CSS, "cascading" refers to the ability to integrate styling from these different sources
+
+- Styling is declarative, not imperative. Though the word "declarative" is often ill-defined
+  in PL design, its meaning here is clear; semantically, a CSS declaration does not 
+  perform mutation, CSS has no notion of state, and stateful reasoning is not required to
+  reason about CSS code.
+
+** Constraint-Satisfaction Programming
+
+The first time you see constraint-solvers used in programming, they can seem like cheating,
+even magic. However, the use of constraint-solving in Penrose is but one instance of
+a general category of PLs called Constraint-Satisfaction Programming (CSP) languages,
+generally considered "declarative" languages.
+
+Informally, the distinction between CSP programs and traditional programs is that 
+most (imperative and functional) languages are about programming algorithms, about
+programming *solutions* to problems, yet CSP programming is about coding up
+*statements* of problems. As a rule, problem statements are typically shorter than 
+solutions, leading to concise CSP code. Yet there is no free lunch. In CSP, the
+challenge is to state problems that are solvable by the PL implementation. There is
+a whole subfield of algorithms devoted to such languages, many of which are simple
+enough that one hesitates to call them PLs, e.g.:
+
+- Linear programs
+- (Mixed) integer linear programs
+- Quadratic programs
+- (Propositional and first-order) logic programs
+
+CSPs are widely used. Linear programs and their cousins are widely used in
+AI and optimization; logic programs are widely used in experimental academic PLs,
+and CSPs in general are widely used in procedural generation of digital media.
 
 
-* Virtual Machines
-* Constraint-Satisfaction Programming
-* Cascading Style Sheets
+** Virtual Machines
+
+The Penrose paper describes the compilation process only informally, and that
+process could seem peculiar at first. It describes Penrose programs as compiling
+*to* CSPs, which must then be solved before execution. This serves to remind us
+that compilers can compile to or from *any* language, not just low-level, easily-
+executable machine languages. 
+
+A notable example of compiling to a non-machine language is the use of virtual 
+machine languages such as JVM or .NET bytecode or, in the academic world, 
+typed assembly (TAL). These are abstract, portable languages which are suitable
+either for rapid interpretation or for just-in-time (JIT) compilation to an
+executable machine language. Though much simpler than CSPs, virtual machine languages
+are another example of compiler outputs that require a second compilation stage.
+
+* Inferring design values
+
+I opened the lecture by proposing that Penrose's design values differ greatly
+from Processing's. Let's close the lecture by trying to infer those values from
+what we've seen:
+- Separation of concerns
+  In Penrose, we reuse content and style code by clearly separating those concerns 
+  from each other. In contrast, Processing encourages reuse by copying and remixing
+  existing code.
+- (Set) Abstraction
+  Styling is applied to entire sets of elements using selectors. This is abstract
+  in the sense that we do not know which elements will be selected when we write
+  the selector. In contrast, Processing prioritizes the concrete over abstract.
+
+Discussion: Any others?
+
+These differing values should not be surprising, given that mathematicians and
+computer scientists are the intended users, both groups that are typically
+comfortable working extensively with abstractions.
+
+In conclusion, though Penrose synthesizes many existing PL ideas, there is no
+shame in doing so. On the contrary, in combining old ideas, it does something
+new which would likely be difficul to a;ccomplish without such reuse.
+
+
+
+
+
+
+
+
+
+
+
