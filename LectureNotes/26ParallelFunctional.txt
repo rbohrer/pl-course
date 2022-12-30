@@ -1,0 +1,306 @@
+Lecture 26: Parallel Functional Programs
+Reading: https://dl.acm.org/doi/pdf/10.1145/3022670.2951935?casa_token=oBlhXU4JrjwAAAAA:GgfpPbPniBQMZZ5_p4h3-Rbd032OR6GZ72ewyNQH6x8JWOYohGSF9Zxi3gmweTq_PZ4X0ffvuEEwGw
+"Hierarchical Memory Management for Parallel Programs" by
+Ram Raghunathan, Stefan K. Muller, Umut A. Acar, and Guy Blelloch.
+
+* Introduction
+One long-standing goal in developing computer systems has been the pursuit of speed, which has radically
+impacted the design of both hardware and software. In recent years, as miniaturization seems to approach its
+limits, the pursuit of speed has increasing focused on parallelism, i.e., on running code on multiple processor
+cores at one time. How does PL design fit into this picture?
+
+"Parallelism" and "concurrency" are often used interchangeably, but for the purposes of this course, we use
+them with different, precise meanings:
+
+- Concurrency is interleaved execution, especially executing process calculus one-step-at-a-time, but can
+  also refer to, e.g., operating systems that switch between multiple user-level programs.
+- Parallelism is simultaneous execution, especially of a single program that involves multiple cores/CPUs.
+
+Concurrent programming is known to be exceptionally challenging because programs can interleave in 
+exponentially-many ways, e.g. exponential in the number of statements in a process calculus program. This
+produces a huge explosion in the number of cases which the programmer must analyze and assess for correctness.
+Some versions of parallel programming can be even more complex, with all of the complexity of interleaving
+compounded by the fact that two program statements could execute truly at the same time. However, there also 
+exist parallel PLs whose complexity is vastly lower than that of concurrent programming.
+
+Pure, strict-evaluation functional PLs, in particular, are particularly elegant for parallelism.
+This is because the greatest challenges in concurrency all come down to changing state  (or correspondingly, 
+communication dynamics), invisible dependencies, and the like. A pure functional PL makes state change 
+impossible, and in doing so, makes invisible dependencies impossible, i.e., a function's result depends only
+on arguments passed explicitly. If functional PLs make parallel programming easier in principle, what 
+obstacles remain to development of a practical parallel implementation of a functional PL? Some of the most
+notable implementation-related challenges are:
+
+- Granularity: How big should a problem be before it deserves its own core?
+- Scheduling: How do we decide which core runs which code, when?
+- Memory Management: When do we allocate and free memory, where, and how?
+
+These challenges can either be (a) treated as a PL implementation problem, (b) be treated as the programmer's
+problem, or (c) be addressed as a PL design/formalism problem. In this lecture, we will:
+
+- Make granularity the programmer's problem, i.e., (b) assume that programmers explicitly write down when 
+  they want to run a program in parallel.
+- Make scheduling a PL implementation problem (a). For detailed approaches to this problem, see Stefan K.
+  Muller's other work.
+- Make memory management a PL problem (c). Thus, we will focus on the details of memory managemnet.
+
+* Background: Parallel + Concurrent Garbage Collection
+
+Memory management can be either manual, where a programmer writes code to allocate and free memory, or 
+automatic, handled by the PL implementation. Today, we are only interested in automatic memory management,
+specifically garbage collection (GC), where the PL implementation automatically detects and reclaims memory 
+that is no longer used. 
+
+Garbage collection is a vast topic, with many collectors specialized to different use cases. For a survey, see
+https://flint.cs.yale.edu/cs421/papers/Wilson-GC.pdf. Garbage collectors for concurrent and parallel programs
+are particularly challenging to develop.
+
+Discussion: Why might that be?
+
+If garbage collection for concurrent and parallel programs is challenging, what approaches have been used?
+- Sequential stop-the-world garbage collectors:
+  The most basic approach is to treat parallel programs like sequential programs for simplicitly. Though the
+  correctness of this code is easy to show, it greatly limits the performance gains of parallel execution.
+- Parallel stop-the-world garbage collectors ("mostly-concurrent collectors"):
+  These collectors use a single shared heap of memory and, when that heap runs out of memory, all threads
+  work together to run a GC algorithm which is itself parallel. Though these algorithms are less wasteful of
+  CPU cycles than sequential collectors, they still stop *all* threads when memory is exhausted, which can
+  greatly increase latency, even latency of tasks that allocate no memory.
+- Single-heap truly-concurrent GCs:
+  These garbage collectors run at the same time as the same time as the program does, in a separate thread, on
+  the same heap. In some cases, specialized modern CPU features are used to make this possible 
+  (e.g., in the Chihuahua collector, see https://www.cs.cornell.edu/~jsarracino/files/chihuahua.pdf)
+  but truly-concurrent GC algorithms are typically quite difficult to design, analyze, or show correct.
+  As of this writing, I'm not aware of any GC algorithm which both runs concurrently with the program *and*
+  uses multiple of its own threads in parallel, because concurrency alone is already a great challenge.
+- Local-heap GCs:
+  These GCs make a key observation: if each processor (or each thread, etc.) has some of its own private 
+  memory, then one processor can keep running its program while a second processor collects its own memory.
+  This reduces latency, especially for tasks which use little memory. However, these GCs are mainly suited
+  to a flat model of parallelism, where one major task is split into parallel subtasks, but the subtasks cannot
+  be split any further, i.e., once a local heap is created, it cannot be subdivided further.
+
+Discussion: What use cases do local-heap GCs work for, what use cases do they not work for?
+
+** Today's paper: Hierarchical Memory Management
+
+Today's paper generalizes local-heap GCs with a fundamental insight: if parallelism can be nested, why not
+nest the heaps? Recursive heap structure provides a GC approach that scales to the complex recursive structure
+that is typical of functional code.
+
+In our example code, we will write par(e1, e2) to run expressions e1 and e2 in parallel, then return the pair
+of their results. This is the only program syntax needed to provide parallelism in a functional PL.
+
+Suppose a functional program of form:
+
+def add(x,y) = x+y
+def mul(x,y) = x*y
+
+def main = 
+  add(par(mul(par(e1,e2)),mul(par(e3,e4))))
+
+whose main function computes the expression  e1*e2 + e3*e4 in parallel.
+If we arrange the tasks of this program in a tree shape, we get
+
+
+               T1
+              /  \
+             T2   T3
+            / \   / \
+          T4  T5 T6  T7
+
+where T4,T5,T6, and T7 correspond respectively to e1,e2,e3, and e4, where T1 is the main/root task,
+and where T2 and T3 are intermediate tasks corresponding to the subexpressions mul(par(e1,e2)) and
+mul(par(e3,e4)) respectively. Though 7 nodes appear in the tree, at most 4 tasks perform any work at a time.
+For example, once the task T2 spawns its children T4 and T5, the children must complete before the parent task
+can do any work, specifically the work multiplying the results together. In this toy example, nesting the 
+parallelism is overkill because multiplication and addition are fast. Once all of e1,e2,e3, and e4 have been
+executed, little work remains. The nested structure is most useful when intermediate tasks (like T2 and T3) are
+significant.
+
+The key idea is that each node in the task tree Ti corresponds to a node in a tree of heaps Hi with the same
+shape as the task tree. However, the intermediate nodes remain important even when the leaf tasks are running,
+because the meaning of each heap is:
+
+H1 is shared globally between all tasks
+H2 is shared between T4 and T5 only
+H3 is shared between T6 and T7 only
+H4, H5, H6, H7 are local heaps for each leaf task
+
+and in functional programs, it is common for some data to be shared between tasks. Though T4 and T5 cannot
+modify memory, it is common for T2 to provide data which are *read* by both T4 and T5. Indeed, this tree-shaped
+design works best when most sharing follows this tree shape, with T4 sharing more with T5 than it does T7.
+
+Discussion: Suppose a value in memory is shared between T4 and T7? Where does it go?
+
+*** Heart of the GC algorithm
+
+In pseudocode, the heart of the GC algorithm is as follows:
+
+def collect(heap) =
+  while (heap.isFull()) {
+    val heaps = heap.descendants() + heap
+    val task = heap.task()
+    val tasks = heaps.map(_.task())
+    tasks.freezeAll()
+    val cores = tasks.map(_.whichCore())
+    runParallelCollector(cores, heaps)
+    if(heap.isFull() && heap.parent() == null) {
+      outOfMemoryError()
+    } else {
+      heap = heap.parent()
+    } 
+  }
+  
+That is, when a leaf task identifies that it is out of memory, it starts by collecting only its local heap.
+This collection requires only the single leaf task's core, i.e., all other cores can keep running indepedently.
+If this produces free memory, then execution resumes. If free memory is not produced, we move further and 
+further up the heap hierarchy. At each stage, we stop all descendant tasks, and use all their cores to perform
+a parallel collection algorithm. If memory is freed, we succeed. If we reach the root of the hierarchy and 
+still have not found memory, then the program is truly out of memory and terminates with an out-of-memory error.
+
+*** Formalization
+
+To formalize the collection algorithm, we first define a core functional programming language which explicitly
+describes parallel computations as well as memory heaps. The syntax is taken from Figure 4 of the paper.
+
+e ::=  x | l | v | e e | fst(e) | snd(e) | <e,e> | <|e,e|> | <#T,T#>
+*Note: <| and |> are my notation for hollow triangles and <# and #> are my notation for solid triangles.
+
+This language places a heavy emphasis on pairs, because pairs are how it models parallelism - two elements of
+a (parallel) pair are independent of each other and can thus be computed in parallel with one another.
+The expressions have the following, respective meanings:
+
+- x is a variable
+- l (LaTeX: \ell) is a *heap location*, the formal equivalent of a memory address
+- v is a value, such as a number
+- e1 e2 is function application, where e1 is the function and e2 its argument
+- fst(e), where e is a pair, produces the first element of the pair
+- snd(e), where e is a pair, produces the second element of the pair
+- <e1,e2> is a sequential pair containing e1 and e2.
+- <|e1,e2|> is a parallel pair containing e1 and e2. Its result will be the same as <e1,e2>, but it will
+  compute in parallel. 
+- <#T1,T2#> is an *active parallel tuple*, i.e., a parallel tuple which is currently running, with the 
+  components computed respectively by two tasks T1 and T2.
+
+Tasks are defined by the grammar:  
+T ::= H . e
+meaning a task consists of an expression and a heap on which to run it, where heaps are defined by
+
+H ::= 0 | H[l |-> v] 
+
+meaning that a heap is either the empty heap or the addition of a location |-> value pair to some heap.
+We will not need to consider the entire heap tree at once, rather it will suffice to consider a heap path (HP)
+of the current heap and any ancestors, written:
+
+P ::=  [] | H :: P
+
+What values v can make up the heap? That depends on which types we want to support. The paper only considers
+natural numbers, pairs, and (potentially recursive, named) functions:
+
+v ::= n | <l,l> | fun f x is e end
+
+more formally, these values v are called "large values," meaning values which only fit on the heap.
+In this heap-based representation, the elements of a pair are simply locations. The value on its own
+does not tell us the full meaning of the pair; for that, looking up the locations in the heap is needed.
+
+For the full treatment of the language, see the paper. The following sections show only selected highlights
+for the sake of time.
+
+**** Selected typing rules
+The type of the heap is encoded using a heap type Sigma, where Sigma(l) gives the type of value stored at each
+heap location l. The types of variables are given by a context Gamma, as usually. In all, the typing judgement
+for expressions is written  Gamma |-_Sigma e : t. 
+
+Only one rule cares about Sigma, the rule for locations, which simply looks the type up.
+
+           *
+S-Loc -----------------------	
+    Gamma |-_Sigma,l:t  l : t
+
+Note that the typing rules for sequential and parallel pairs are the same as one another:
+
+       Gamma |-_Sigma e1 : t1     Gamma |-_Sigma e2 : t2
+S-Pair -------------------------------------------------
+       Gamma |-_Sigma  <e1,e2> : t1 X t2
+
+       Gamma |-_Sigma e1 : t1     Gamma |-_Sigma e2 : t2
+S-Pair -------------------------------------------------
+       Gamma |-_Sigma  <|e1,e2|> : t1 X t2
+
+The rule for active parallel pairs is quite similar, but needs a helper judgement for task typing:
+
+       Gamma |-_Sigma T1 : t1     Gamma |-_Sigma T2 : t2
+S-ParA -------------------------------------------------
+       Gamma |-_Sigma  <#T1,T2#> : t1 X t2
+
+
+The helper judgement Gamma |-_Sigma T : t is defined by the single rule
+
+          |-_Sigma' H : Sigma    Gamma |-_Sigma,Sigma' e : t
+S-RunTask ----------------------------
+            Gamma |-_Sigma'  H.e : t
+
+In this rule, the heap type Sigma' captures any "surrounding" heap type, then Sigma captures the type of H,
+then e is typed using the heap type Sigma,Sigma', i.e., it can access both H and any surrounding locations.
+
+
+**** Selected operational rules
+
+The operational judgement is H;e ->P e';H' meaning that running e' on initial heap H at path P steps to a 
+new expression e' and new heap H'. Sequential pairs use similar rules to pairs in other functional languages.
+
+                 H;e1 ->P e1';H'  
+D-PairS1 -------------------------------
+            H;<e1,e2> ->P <e1',e2>;H'
+
+                 H;e2 ->P e2';H'
+D-PairS2 -------------------------------
+            H;<l1,e2> ->P <l1, e2'>;H'
+
+In D-PairS2, location l1 is a value, i.e., we wait until the first expression is a value before evaluating
+the second element of the pair.
+
+In contrast, parallel pairs are executed by turning them into active parallel pairs, with empty subheaps:
+
+                        *
+D-Activate  -------------------------------
+            H;<|e1,e2|> ->P <# 0.e1, 0.e2#>;H'
+
+Steps can then be taken on either element, using (and updating) the local heap:
+
+
+                   T1 ->H::P T1'
+D-ParAS1 -------------------------------
+           H;<#T1,T2#> ->P <# T1', T2>;H
+
+                   T2 ->H::P T2'
+D-ParAS2 -------------------------------
+           H;<#T1,T2#> ->P <# T1, T2'>;H
+
+Here the task stepping notation T ->P T' is short for H;e ->P H';e' where T = H.e and T' = H'.e'.
+These two rules mean that, when executing an element of an active pair, the current heap is push onto the
+path and the task's subheap is used as the current one. If allocation is performed on the subheap, that is
+remembered through T1' or T2', in the respective rules.
+
+When execution of an active parallel pair completes, it reduces to a (sequential) pair value as the last step.
+
+                             *
+D-ParAE  --------------------------------------
+         H;<# H1.l1, H2.l2 #> ->P <l1,l2>; H+H1+H2
+
+
+
+**** Theorem: Disentanglement
+
+Discussion: What should the theorem be for this language?
+
+Certainly, we wish to know that the source language is type-safe, but for correctness of the GC algorithm, we
+also want to know a property called disentanglement, roughly that programs in independent subheaps of the tree
+are independent of one another. How could that be formalized? 
+
+The paper uses an approach they call *flattening*, i.e., they systematically translate parallel programs into
+"flat" counterparts with no heap hierarchy, and show that they both behave equivalently.
+
+Bonus material: The paper contains rules for the garbage collector itself. We did not go over these in class
+for sake of time. See paper for details.
