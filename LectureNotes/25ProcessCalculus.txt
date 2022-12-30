@@ -1,0 +1,374 @@
+Lecture 25: Process Calculus
+
+To motivate today's lecture, let's review the toy PL we developed in
+the Operational Semantics and Types lectures.
+
+v ::= n | true | false | ()
+e ::= v | x | e op e | f(e) | e;e | let d in e
+d ::= val x:t = e | def f(x:t):t = e
+t ::= bool | num | unit | t -> t
+
+Discussion: What kind of programs *can't* we express in this PL?
+
+There are many answers, because the language is so small:
+- Imperative programs
+- Object-oriented programs
+- Dynamically-typed programs
+- Programs with input/output
+- Concurrent programs
+
+Today we focus on the last one: concurrent programs, such as programs
+involving multiple threads, processes, or computers. In doing this, the
+lesson is that the basic techniques from the Operational Semantics and Types
+lectures can be used to model a huge array of different languages, including
+all those from the list and thousands more. In fact, even today's topic of
+process calculi, which are formal PLs for distributed programs, includes
+probably hundreds of languages on which thousands of articles have been written.
+
+
+Pi Calculus (PC) is one of the most influential versions of Process Calculus,
+so today we will focus on PC.
+
+
+* Defining PC
+
+** Syntax
+
+The most basic programs in PC are *names*, which we write using the identifiers
+u,v,w,x,y, and z. The behavior of names will prove to be fundamentally 
+different from the mutable and immutable variables seen so far. Specifically,
+we will be able to generate new names dynamically and test whether two names
+are the same. We should expect that handling of "something new" is a necessity
+for distributed programs, because when a first subprogram receives data from a
+second, it could be receiving data it's never seen before.
+
+A program in PC is made of processes (variables: P, Q, R) which are named by 
+process IDs (variables: A, B, C).
+
+The language of processes is defined by
+
+P,Q,R ::=  0 | P1 + P2  | y(x).P | ~yx.P | t.P 
+         | (P1 |P2) | (x)P | [x=y]P | A(y1,...yn)
+
+* ~x.P is my ASCII notation for \bar{x} from the paper, likewise t for \tau
+
+Take a deep breath. To this day, I find PC syntax challenging.
+
+*** Sums 0 and P1 + P2
+The program 0, called inaction, is the program that cannot do anything at all.
+It is the unit of addition, i.e., 0 + P is the same as P for all processes P.
+
+The symbol "+" should be understood as "or". The program P1 + P2 either runs
+P1 or runs P2. This fact that a program might do two different things when we
+run it is called nondeterminism, and is a key characteristic of PC.
+
+*** Prefix forms y(x).P and ~yx.P and t.P
+In PC, the heart of computation is communication between processes, which is
+achieved using three programs collectively called the prefix forms, so named
+because each of them does one step of communication as a prefix, and then runs
+the rest of the program (written P).
+
+In the positive prefix form y(x).P and negative prefix form ~yx.P, name
+y is respectively understood as an input port or an output port for the 
+process. Process y(x).P reads a value (names are values, and the only values
+that we will really talk about today!) from
+y and binds that value to x. Program P can refer to x. In contrast, ~yx.P
+writes the value of x to y, then runs P. It does not bind any names.
+In process calculus, "reading y" and "writing y" are both called actions,
+and there is traditionally a do-nothing action called the silent action,
+which represents local computations in a process with no communication.
+The silent prefix form t.P represents doing the silent action, then P.
+
+
+*** Composition P1 | P2
+The compositon P1 | P2 should not be confused with the sum P1 + P2.
+Composition P1 | P2 means that both processes P1 and P2 are running in 
+parallel. There are two kinds of execution steps the program P1 | P2 can take.
+Firstly, the subprocesses P1 can P2 can synchronize, i.e., communicate with 
+each other by reading and writing to the same channel. When they do so, this
+computation is considered local to P1 | P2, i.e., the overall process P1 | P2
+takes the silent action because the input and output cancel out.
+The second kind of step is for a single subprocess to take a step while the
+other does nothing. When P1 or P2 takes such a step. Its action is also 
+considered to be the action taken by P1 | P2.
+
+*** Restriction
+
+The restriction (x)P is like P, but it cannot take an input or output action
+at name x. Notably, P can perform internal communications on x. For example,
+if P = P1 | P2, then P1 could write a message to x which is read by P2. The
+restriction is only against communications which are externally visible.
+Though this definition makes it sound like restriction deletes a name x, the
+common intuition is just the opposite: because restriction ensures x cannot
+be read or written externally, we think of it as creating a new local name
+out of nowhere.
+
+*** Matching
+
+The matching process [x=y]P tests whether the names x and y are the same or
+not. If so, it runs process P, else it runs process 0 (the process that cannot
+do anything). This is how conditional statements are implemented in PC: the 
+process [x=y]P can be read as an "if" statement if(x=y)P, with no "else" branch
+
+
+*** Named Processes
+We assume there exists some way to define named processes, which can have
+parameters and which can be recursive, i.e., definitions might have the 
+syntax:
+  A(x1,...,xn) == P    where P can mention x1,...,xn,A.
+
+This definition mechanism does not appear explicitly in the process syntax.
+But, once a process A(x1,...,xn) is defined, it can be instantiated using
+function call syntax:  A(y1,...,yn).
+
+* Example Code
+
+- Send one message, then stop
+
+(a)(b)(a(b).0 | ~ac.0)
+
+The example first defines names a and b. Name "a" is used as a channel. In 
+parallel, one process sends value b along channel "a", while the other reads
+value b and binds it to name c.
+
+- Link passing.
+Consider 3 agents P,R,Q. In this scenario, P has a link
+"x" to R which it passes to "Q" over a link "y".
+
+Let P be ~yx.0, let Q be y(z).0, and R be an arbitrary
+process. Then the program
+
+P | Q | R 
+
+faithfully models this scenario.
+
+
+- Scope Intrusion
+
+Variable scope management is one of the major technical subtleties of 
+process calculus, because sending links between processes requires careful
+scope management. Scope Intrusion and Scope Extrusion are two sides of this
+the same coin.
+
+For scope intrusion, consider four processes P,Q,R,S.
+Suppose that Q has a private link to S and P has a private link to R, and
+that both are named x. P has another link y to Q, and wants to send its x
+across link y.
+That is, let
+
+P be ~yx.0, Q be (y(z).0), and R and S be arbitrary, then consider the
+program
+
+(P | R | ((x)(Q | S)))
+
+In this case, we say (the communication from P) *intrudes* on the scope of
+the private link x between Q and S. Intrusion is resolved by (automatically)
+renaming the private variable to a fresh variable, e.g., to
+
+(P | R | ((z)(Q{x/z} | S{x/z})))
+
+where the notation {x/z} indicates renaming every z to x.
+
+
+- Scope Extrusion
+This example is like the Link Passing example, except the link x between
+P and R (which is sent to Q over y) is private. That is, P be ~yx.0, let
+Q be y(z).0, and R be an arbitrary process. Consider the program
+
+((x)(P | R) | Q)
+
+after one step of execution, this will become
+(x)(0 | R | 0{x/z})
+
+Because x is private to P and R, it is renamed to a fresh name z in Q, so
+that Q can never access it. The scope of x is extruded (expanded) so that
+x is now bound at the top level, i.e., it is no longer private to P and R.
+
+** Semantics
+The are several ways to develop the semantics of processes. As we have hinted
+in the examples, one way to understand the meaning of processes is through
+an operational semantics, i.e., which programs step to which other programs.
+Operational semantics does "work" for process calculus, but for several
+reasons, it is usually not the focus, e.g., because:
+
+1) Stepping is a very strong relationship. There are many programs that mean
+the same thing but do not step to each other.
+2) Processes are highly nondeterministic, and a single program might step to
+many others, leading to combinatorial explosion in complexity of operational
+reasoning.
+
+Instead, process calculus typically focuses on equational reasoning: when
+do two processes mean the same thing? We skip the formal definition of
+"mean the same thing" because it is fairly technical, but look up
+"strong bisimilarity" for more information. In the following rules, let
+P = Q mean that P and Q are strongly bisimilar, let P =_alpha Q mean that
+P and Q are alpha-equivalent (differ only by bound variable naming), let
+A(x1,...,xn) =_def P mean A(x1,...,xn) and P definition of A, and let
+variables alpha,beta stand for "prefixes", i.e., the beginnings of prefix forms.
+
+Then the semantics of pi calculus consists of the following rules. The rule
+names I use are from Milner, et. al's "A Calculus of Mobile Processes"
+
+
+   P =_alpha Q
+A -----------
+     P = Q
+
+Rule A says processes are "the same" when they "differ only in bound naming".
+The C0 rules are congruence rules, collectively meaning that equal processes
+remain equal when placed in (an evaluation) context.
+
+P = Q
+------
+t.P = t.Q
+
+P = Q
+------
+~xy.P = ~xy.Q
+
+P = Q
+------
+P + R = Q + R
+
+P = Q 
+------
+P | R = Q | R
+
+P = Q
+---------
+(x)P = (x)Q
+
+P = Q
+---------
+[x=y]P = [x=y]Q
+
+Congruence rule C1 
+P{z/y} = Q{z/y}
+-------------- (for all z \in {free names of P,Q} \union {y})
+x(y).P = x(y).Q
+
+The following rules characterize summation:
+
+         *
+S0  -----------
+     P + 0 = P
+
+         *
+S1  -----------
+     P + P = P
+
+         *      
+S2  -----------
+     P+Q = Q+P
+
+            *
+S3  -----------------
+    P+(Q+R) = (P+Q)+R
+
+Respectively:
+S0 means 0 is the unit of +
+S1 means self-addition cancels
+S2 means + is commutative
+S3 means + is associative
+
+The following rules characterize restriction
+
+        *
+R0 ----------- (if x not a free name of P)
+   (x)P = P
+
+           *
+R1 -----------------
+   (x)(y)P = (y)(x)P
+
+            *
+R2 ----------------------
+   (x)(P+Q) = (x)P + (x)Q
+
+             *
+R3 ---------------------- (x not in prefix alpha)
+   (x)alpha.P = alpha.(x)P
+
+             *
+R4 ---------------------- (x is the subject of prefix alpha)
+   (x)alpha.P = 0
+
+Respectively:
+R0 deletes a restriction if not needed
+R1 swaps order of restrictions
+R2 distributes restriction over addition
+R3 commutes restriction with prefixes when safe to
+R4 detects restricted prefixes and equates them to 0
+
+
+The following rules characterize matching
+
+       *
+M0 ----------- (if x and y are distinct)
+    [x=y]P = 0
+
+
+       *
+M1  ----------
+    [x=x]P = P   
+
+Meaning [x=y]P behaves as P when the test succeeds, 0 otherwise.
+
+The remaining rules are for expansion (E) and identifiers (I)
+The expansion rule is the most sophisticated we've seen yet. It assumes
+P and Q are organized as sums of prefix forms.
+
+   P = alpha1.P1 + ... + alphaN.PN
+   Q =  beta1.Q1 + ... + betaM.QM 
+E  ------------------------  (alphas and betas don't bind names from 
+   P | Q = 
+       (alpha1.(P1 | Q) + ... + alphaN.(PN | Q))
+     + (beta1.(P | Q1)  + ... + betaM.(P | QM))
+     + (t.Rij  for all ij such that i alphaI complements betaJ)
+
+where "complement" and "Rij" are defined by
+
+1.  Rij is Pi|Qj{u/v} 
+    when alphaI is ~xu and betaJ is x(v)
+2.  Rij is (w)(Pi{w/u} | Qj{w/v}) for fresh w  
+    when alphaI is ~x(u) and betaJ is x(v)
+3.  Rij is Pi{u/v} | Qj 
+    when alphaI is x(v) and betaJ is ~xu
+4.  Rij is (w)(Pi{w/v} | Qj{w/u}) for fresh w
+    when alphaI is x(v) and Bj is ~x(u).
+
+The high-level goal of rule E is to expand a composition-of-sums into
+a sum-of-compositions, which might have quadratically-many terms.
+The first two summands in the rule capture the simpler aspect of composition,
+where P|Q could act as a sum where each Pi runs in parallel with Q or each
+Qi runs in parallel with P.
+
+The "complement" terms capture more complex interactions, specifically they
+use variable binding to capture what happens when one branch of P|Q binds a 
+variable in parallel with the other.
+
+
+    A(x1,...,xn) =_def P
+I  -----------------------------------
+    Q(y1,...,yn) = P{y1/x1, ..., yn/xn}
+
+Rule I says that when a named actor is encountered, it should be expanded
+by substiting the arguments into its body.
+
+
+* Conclusion
+
+Pi calculus is one of the main versions of process calculus, a family of PLs
+for modeling concurrent programs. Process calculi formalize programs as
+systems of processes which can execute concurrently, using communication between
+themselves for synchronization, using names for their connections, and potentially
+sending connections to each other, providing mobility.
+
+We explored an equational semantics for pi calculus. We did not get to
+discussing its soundness proof, which would require a second, 
+"ground truth" semantics. The ground truth semantics for pi calculus
+typically defines programs by their externally-visible communications; two
+programs may differ as much as they want in their external behavior, but be
+considered equivalent so long as their external interactions are identical.
+
+
