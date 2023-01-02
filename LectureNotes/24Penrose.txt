@@ -1,4 +1,4 @@
-Lecture 22: Penrose
+Lecture 24: Penrose
 
 Reading: https://dl.acm.org/doi/pdf/10.1145/3386569.3392375
 Authorship note: the first author's first name is Kai. 

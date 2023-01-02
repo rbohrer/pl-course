@@ -1,4 +1,4 @@
-Lecture 24: Natural Language, from FLOW-MATIC Inform
+Lecture 26: Natural Language, from FLOW-MATIC Inform
 Sources: Inform (7) was developed by Emily Short and Graham Nelson, a wife-and-husband team. 
 This lecture is largely based on their work, especially 
 https://ganelson.github.io/inform-website/book/WI_1_1.html

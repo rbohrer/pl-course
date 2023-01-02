@@ -1,4 +1,4 @@
-Lecture 25: Process Calculus
+Lecture 19: Process Calculus
 
 To motivate today's lecture, let's review the toy PL we developed in
 the Operational Semantics and Types lectures.

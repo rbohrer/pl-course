@@ -1,4 +1,4 @@
-Lecture 26: Parallel Functional Programs
+Lecture 20: Parallel Functional Programs
 Reading: https://dl.acm.org/doi/pdf/10.1145/3022670.2951935?casa_token=oBlhXU4JrjwAAAAA:GgfpPbPniBQMZZ5_p4h3-Rbd032OR6GZ72ewyNQH6x8JWOYohGSF9Zxi3gmweTq_PZ4X0ffvuEEwGw
 "Hierarchical Memory Management for Parallel Programs" by
 Ram Raghunathan, Stefan K. Muller, Umut A. Acar, and Guy Blelloch.
