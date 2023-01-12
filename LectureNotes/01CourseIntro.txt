@@ -16,7 +16,15 @@ Today's Outline:
 
 ** Schedule
 We meet Tuesdays and Thursdays from 4:00-5:20pm, in Higgins 114.
-Attendance is not required.
+Attendance is not required, but I hope to make attendance desirable.
+Lectures are recorded on Echo360.
+
+** Office Hours
+For CS 536: Mondays, 4-5pm, in-person in FL 139
+I also have several other help hours each week for my other students. 
+They get priority at those times, but you are welcome to show up during those times if I’m free: 
+Wednesday 3pm-4pm (in-person in FL 139) and Thursdays, 3pm-3:50pm (on Zoom: https://wpi.zoom.us/j/4019031992)
+
 
 ** Waitlists
 I recognize that it's incredibly difficult to get into CS courses at
