@@ -1,0 +1,312 @@
+Lecture 26: Natural Language, from FLOW-MATIC Inform
+Sources: Inform (7) was developed by Emily Short and Graham Nelson, a wife-and-husband team. 
+This lecture is largely based on their work, especially 
+https://ganelson.github.io/inform-website/book/WI_1_1.html
+
+Truly-optional before-class exercise that could give you something fun to reflect on: don't learn
+anything about Inform in advance, just look up one of the example programs from the website. See
+how much you understand or not.
+
+* Intro
+We finish up the Domain-Specific Languages (DSL) module of the course with a particularly specific
+domain: text adventure games. Inform is the most prominent DSL for text adventure games, and I
+chose it for today's lecture because it is notable for its radical approach to syntax. Inform
+syntax is entirely natural-language-based, yet imbued with formal meaning like any other PL. But
+first, we take a detour on the history of natural language in PL design.
+
+* Natural Language Programming History
+
+Natural-language programming (abbreviated NLP, not to be confused with Natural Language Processing)
+is one of the oldest ideas in PL design, and has long been associated with efforts to make PLs more
+accessible to new audiences. The oldest known NLP it Grace Hopper's FLOW-MATIC, developed in 1955,
+the major legacy of which is its influence on COBOL. In Hopper's words:
+
+"I used to be a mathematics professor. At that time I found there were a certain number of 
+students who could not learn mathematics. I then was charged with ¨the job of making it easy 
+for businessmen to use our computers. I found it was not a question of whether they could 
+learn mathematics or not, but whether they would. [...] They said, ‘Throw those symbols out 
+- I do not know what they mean, I have not time to learn symbols.’ I suggest a reply to 
+those who would like data processing people to use mathematical symbols that they make 
+the first attempt to teach those symbols to vice-presidents or a colonel or admiral. I
+assure you that I tried it."
+
+The Wikipedia article on FLOW-MATIC provides the following example program
+
+INPUT INVENTORY FILE-A PRICE FILE-B ; OUTPUT PRICED-INV FILE-C UNPRICED-INV
+  FILE-D ; HSP D .
+  
+  IF EQUAL GO TO OPERATION 5 ; OTHERWISE GO TO OPERATION 2 .
+  TRANSFER A TO D .
+  WRITE-ITEM D .
+  JUMP TO OPERATION 8 .
+  TRANSFER A TO C .
+  MOVE UNIT-PRICE (B) TO UNIT-PRICE (C) .
+  WRITE-ITEM C .
+  READ-ITEM A ; IF END OF DATA GO TO OPERATION 14 .
+  JUMP TO OPERATION 1 .
+  READ-ITEM B ; IF END OF DATA GO TO OPERATION 12 .
+  JUMP TO OPERATION 1 .
+  SET OPERATION 9 TO GO TO OPERATION 2 .
+  JUMP TO OPERATION 2 .
+  TEST PRODUCT-NO (B) AGAINST ; IF EQUAL GO TO OPERATION 16 ;
+    OTHERWISE GO TO OPERATION 15 .
+  REWIND B .
+  CLOSE-OUT FILES C ; D .
+  STOP . (END)
+
+Discussion: What are your first reactions upon reading this code?
+
+My own reaction is that it seems very verbose compared to later PL syntaxes.
+The line
+
+COMPARE PRODUCT-NO (A) WITH PRODUCT-NO (B) ; IF GREATER GO TO OPERATION 10 ;
+
+would be written in C as something like:
+
+if(a>b) goto Op10;
+
+If I had to guess why NLP languages are not popular today, it is (1) because of their 
+reputations for verbosity and complexity, and (2) because they remain formal languages,
+not true natural languages. FLOW-MATIC's legacy was COBOL, and COBOL's legacy was verbose,
+complex, unmaintainable code. NLP code fails to meet its highest potential when we forget 
+that it is true code like any other, following the same formal restrictions and with the
+same ability to frustrate and confuse programmers. Because they emulate some of the
+complexities of natural language, their formal grammars tend to be far *more* complex
+than purely formal PLs. For example, COBOL has *hundreds* of distinct keywords, while
+modern professional PLs typically have a few *tens* of keywords.
+
+In fairness to NLP, however, it is essential to inspect the motivations of the language
+designers, as with any language. From the earliest days, the motivations behind most NLP
+languages are psychological, not purely technical. Just as with Processing and Twine, a
+key design goal was to avoid intimidating programmers who have a fear of math. 
+
+Instructor Opinions: I think NLP tends to succeed in domains where the psychological factor
+outweighs the others, and fail in domains where it does not. In COBOL, psychological factors
+were far outweighed by concerns of code complexity and verbosity. COBOL programmers were 
+(and still are! Maintenance of ancient COBOL code is an in-demand field) predominantly 
+professional programmers, meaning they would be willing to invest the time to learn more
+intimidating, but more concise and maintainable programming languages. For this audience, it
+is only natural that COBOL were relegated to the dustbin of history. 
+
+Discussion: Any languages come to mind where natural language won out?
+
+The only successful NLP languages that come to my mind are Inform and AppleScript, both of 
+which have user bses that value the low intimidation factor. I am somewhat surprised that
+there are not more successful examples.
+
+* Inform 7: Intro Example: "Disenchantment Bay 1"
+
+Let's right into one of the official example Inform programs, about chartering a
+boat. The source code follows (indented):
+
+  The Cabin is a room. 
+  "The front of the small cabin is entirely occupied with navigational instruments, 
+  a radar display, and radios for calling back to shore. Along each side runs a bench 
+  with faded blue vinyl cushions, which can be lifted  to reveal the storage space 
+  underneath. A glass case against the wall contains several fishing rods.
+  Scratched windows offer a view of the surrounding bay, and there is a door south 
+  to the deck. A sign taped to one wall announces the menu of tours offered by the 
+  Yakutat Charter Boat Company."
+
+
+  The Cabin contains a glass case. In the glass case is a collection of fishing rods.
+  The case is closed, transparent, and openable.
+  The bench is in the cabin. On the bench are some blue vinyl cushions.
+  The bench is enterable.
+  Test me with "examine case / get rods / open case / get rods / sit on bench / 
+  take cushions / get up"
+
+DISCUSS IN-CLASS: first impressions.
+
+One immediately visible aspect of Inform code is that it takes the natural language concept
+very seriously. In contrast to many other NLP languages, Inform code consists of 
+grammatically-correct English sentences. The section between quotes, which is the description
+text of a room, is entirely free-form natural language text, to be displayed directly to players.
+
+Even beyond the description text, I truly believe that this Inform code can be *read* by 
+non-programmers. Yet once one wants to *write* Inform code, there is a formal language that must
+be learned.
+
+* Toward Defining Inform 7
+
+We will not attempt a remotely-exhaustive nor truly formal definition of Inform, because the
+language is too complex to make such an exercise realistic for one lecture. We will however
+organize many of Inform's key concepts.
+
+In almost any programming language, definitions of data and definitions of algorithms are both
+essential and, to some extent, distinct. In Inform, this distinction is no less present. The
+Inform counterpart of defining program data is defining the game world, e.g., the nouns that 
+exist in it and their relationships to one another. In Inform, the counterpart to defining 
+algorithms is to define gameplay rules that help determine which actions occur in the game world.
+Our first program was heavy on defining data, both nouns and the relations between them.
+
+The nouns in this game are "Cabin, glass case, fishing rods, bench, blue vinyl cushions".
+The data provided about these nouns all have special in-game meaning. Words like
+"in", "on", "collection," "some," "closed," "transparent," "openable," and "enterable" can
+all be viewed as parts of an extensive library.
+
+Relations like "in" and "on" serve to construct a graph of in-game locations, where locations
+can have the following physical relations to each other:
+
+- Adjacency: east, west, north, south, up, down
+- Support (on/under)
+- Containment: one thing is inside another
+
+By default, the standard library provides Inform games with a standard set of movement commands,
+like "go north," "go up," "enter <place>," and so on. When the source code creates these physical
+relations between locations, the built-in movement commands let the player move between them without
+any added programming work. The "enterable" property relates to containment, indicating that the
+player can enter a location.
+
+The other properties, such as "openable," "closed," and "transparent" affect other core aspects
+of gameplay. If an item is "openable," it can switch between the states "open" and "closed," and
+things can be removed from it when open. If something is transparent, any items inside it can be
+viewed by the player.
+
+Let's briefly explore the "computation" side of Inform: rules.
+Typical rules consist of an event under which the rule applies and an action that takes place
+uon application of the rule.
+
+Example 1: "Report" rules. A reporting rule is applied after a given action takes place.
+The following code:
+   Report someone dancing:
+      say "[The actor] dances a few steps of [the noun] for you."
+
+Ensures that whenever someone dances, the above message will be displayed to the player.
+Implicitly, this rule has two parameters, named "the actor" (the one doing the action) and
+"the noun" (the direct object of the action), which are referenced in square brackets. For
+example, if Aditi dances Viennese Waltz, the message would be  
+"Aditi dances a few steps of Viennese Waltz for you"
+
+Example 2: "At <time>" (from Hohmann Transfer example):
+The following code:
+   
+   The time of day is 4:55 PM.
+
+   At 5 PM:
+       now the Eastern Hemisphere is dark;
+       now the Western Hemisphere is lit.
+
+Initializes the time-of-day to 4:55 PM and defines a rule which is activated once the time
+advances to 5pm. When that rule takes effect, the Eastern Hemisphere's lighting is set to
+"dark" and the Western Hemisphere's lighting is set to "lit".
+
+
+Example 3: "Instead" (from Introduction to Juggling example):
+
+The following code:
+   Instead of buying something:
+      say "You already have [a noun]."
+
+Means that whenever the player attempts to use the "buy" action, the action does not take place
+at all, and instead a "say" action takes place, e.g., "You already have a doughnut" if the player
+attempts "buy doughnut"
+
+
+** Key Language concepts
+
+The Inform homepage highlights the following language concepts:
+  Actions, Kinds, Verbs, Relations
+
+- Actions
+  Actions are things the player can do, such as "go," "say," "look," and "take".
+  Other notable built-in actions include the other senses beside sight: 
+    "listen," "smell," "touch," and "taste".
+
+- Verbs
+  Becaue we already have Actions, one might wonder about the need for verbs. In pratice, many
+  of the verbs in Inform are *stative verbs*, and are used to describe the current-by-changable
+  state of the game world. For example, the verb "have" is used to track that "you have <items>"
+  in your inventory, and the verb "[can] see" is used to track that "you can see a cute dog." The 
+  relation between actions and (stative) verbs is that verbs can be changed through actions. If  
+  I *take* the cake (action), now I *have* the cake (verb). If I [can] see the cute dog (verb), 
+  then looking at the cute dog (action) will succeed.
+
+- Kinds
+  These are the "type system" of nouns in Inform. Specifically, they follow a subtyping hierarchy.
+  The program:
+
+     A mammal is a kind of animal.
+     A human is a kind of mammal.
+     A big cat is a kind of mammal.
+     A Bengal Tiger is a kind of big cat.
+     A Nittany Lion is a kind of big cat.
+     An adult is a kind of human.
+     A child is a kind of human.
+
+   Would build the following tree of kinds:
+
+             Animal
+               |
+             Mammal
+            /       \
+       Human          Big cat
+     /       \       /        \
+  Adult  Child  Bengal Tiger  Nittany Lion
+
+This tree matters because rules can be applied to specific kinds.
+If a rule is written for humans, then Inform is smart enough to apply that rule to children but not
+to Nittany Lions.
+
+- Relations
+We have already encountered examples of built-in relations: Adjacency, Support, and Containment.
+Other major examples include visibility, touchability, possession, wearing, carrying, and 
+incorporation (X is a part of Y).
+
+The "relates" keyword is used to define new relations. A provided example defines monogamous love:
+
+   Loving relates various people to one person.
+
+Where multiple people can compete for love but cannot love multiple people at once. For polyamorous
+love, one can write instead:
+
+   Loving relates various people to various people.
+
+* In-class activities
+- Discuss your feelings about Inform
+- Play a game
+- Game jam: let's write a quick game together!
+
+* Conclusion
+
+I will not conclusively state whether NLP should be more widespread or not. Inform is successful,
+but text adventure programming is a bit of a niche subcommunity, and it's not what most programmers
+will spend their careers on. However I'm willing to call NLP and important part of the course since
+
+1) NLP is a great example of why audience matters and why design priorities matter. I would not use
+Inform syntax to write an operating system or compiler, and *that's ok*.
+
+2) NLP somewhat turns our understanding of PL-*learning* on its head. I truly believe that a person
+can read an Inform program and understand it a significant way even if they do not know how to 
+write code in Inform. PL education often places a strong emphasis on creation over reading - how 
+often have you been asked to program on an exam, and how often have you been asked merely to 
+remember core vocabulary? But Inform shows us that the reading can "come first," that you can learn
+a programming language by reading a full program, seeing its consistent whole, and then 
+experimenting and learning more as you go. In fact, there is no other way to learn Inform because
+its vocabulary is too huge to be learned in one go.
+
+Today's lecture was our last lecture on DSLs, all of which were focused on creative activities 
+of one kind or another. In reflecting on these past four lectures:
+
+- In designing DSLs, there is joy in studying your humans. Understanding of psychology, audience,
+  and motivation of everyone involved in key to latsing success
+- A PL does not have to be for everyone, rather "PL for everyone" is more likely to consist of 
+  embracing diversity of languages for diversity of audiences. Penrose and Processing, distant 
+  cousins they may be, visibly target incredibly different audiences. Twine prioritizes those who
+  do not program at all, while Inform prioritizes scriptwriters without telling them to avoid code
+  in the end. These subtle differences produce radical differences in language design
+- PL design is an act of creation. The creative part of my main that lights up when I write a story
+  in Inform lights up in just the same way when I design a new PL for a new domain.
+- PL design is alive. Traditional PL courses have a habit of emphasizing classic ideas that stood
+  the test of time, and their risk is that they may forget to show us all the PL design work that
+  goes on around us on a daily basis. 
+- Creative programming deserves intellectual respect: 
+
+Of all four DSLs I've shown you, I've never once told you that they will get you a job. 
+Instead, these are the sorts of languages that inspire a person to keep coding for the fun 
+of it after the work day ends. Programming for joy has inspired some of the most exciting 
+conversations in the modern PL design space. 
+
+So, whatever job means for you: May your code spark joy.
+
+As we near the end of semester, hold that thought in your heart.

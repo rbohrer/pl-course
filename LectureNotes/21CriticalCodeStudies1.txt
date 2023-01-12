@@ -1,4 +1,4 @@
-Lecture 19: Critical Code Studies, Part 1
+Lecture 21: Critical Code Studies, Part 1
 
 [Much of today's lecture is based on the paper "Intersectionality Goes
 Analytical: Taming Combinatorial Explosion Through Type Abstraction"
