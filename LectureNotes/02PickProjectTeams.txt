@@ -80,6 +80,8 @@ Categories:
   social science
   humanities
 
+In-class: Any more we want to add?
+
 Let's do one from each category, and describe it using the questions from the project checkpoint.
 
 **** Programming-heavy
@@ -103,6 +105,10 @@ They are both imperative, but their I/O systems differ.
 "Any topics on the schedule that would especially help?"
 We understand this is a high-risk project. We would like to spend
 class time talking about risk management and proposing backup plans.
+
+**** ACTIVITY: What feedback would you give on the above project?
+
+
 
 **** Theory-heavy
 Title:"Compiler Optimization for Computerized Sewing"
@@ -130,8 +136,7 @@ Operational semantics is really important to our theory work.
 The Penrose, Twine, and Processing lectures might put us in a
 creative mood.
 
-**** QUESTION: What feedback would you provide if this proposal were
-submitted to you?
+**** ACTIVITY: What feedback would you give on the above project?
 
 
 **** Balanced
