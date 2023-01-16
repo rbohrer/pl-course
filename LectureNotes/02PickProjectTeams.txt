@@ -30,6 +30,11 @@ I will go around the room and learn who's teamed up so far.
 Today's goal is to help you pick potential project topics, which will
 help you pick who you want to work with.
 
+**** Activity
+
+Everyone write some project ideas on the board.
+After a few minutes: Give positive comments on other people's ideas.
+
 **** Structure
 On checkpoint 1, you'll be asked to specify your project this way:
 
@@ -62,6 +67,10 @@ I'm asking: how do I make this course useful *to you*?  Is there a
 certain lecture I should move up and teach earlier?  Is there a
 certain topic that you'd reallly love me to fit into the course
 schedule, even though I haven't listed it on the schedule?
+
+**** Activity
+Let's pick one of the examples on the board and respond to all the prompts.
+
 
 **** Examples
 Categories:
@@ -120,6 +129,10 @@ Imperative
 Operational semantics is really important to our theory work.
 The Penrose, Twine, and Processing lectures might put us in a
 creative mood.
+
+**** QUESTION: What feedback would you provide if this proposal were
+submitted to you?
+
 
 **** Balanced
 Title:"A language for a Machine Learning course"
@@ -183,7 +196,7 @@ and they'll have a much more useful tool than if I just told them
 The book actually uses a series of teaching languages, which are
 basically mini-dialects of Racket. The idioms used in those languages
 are structured enough to serve as languages of their own. We will
-explore what this division into dialects and idoms says about
+explore what this division into dialects and idioms says about
 programming language culture.
 
 "What paradigms, if any, does your project match up with?"
@@ -194,12 +207,6 @@ close reading.
 "Any topics on the schedule that would especially help?"
 Critical Code Studies.
 
-**** Activity
-
-I give you a few minutes in class where everyone writes topics on the
-board, then you sort into groups, respond to the prompts for that
-topic, and shares with the class. It doesn't have to be your project
-group or your project topic.
 
 
 ** Scala practice
