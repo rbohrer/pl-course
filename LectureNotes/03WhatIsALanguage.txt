@@ -22,10 +22,11 @@ compilers for a living or if you do graduate-level research about PL
 theory for a living. I love those things, but a small number of people
 do this. So why the attention?
 
-Answer: Because "PL thinking" shows up everywhere. We'll define that soon. Here are some examples first.
+Answer: Because "PL thinking" shows up everywhere. 
+We'll define that soon. Here are some examples first.
 
-- Domain-specific languages (DSLs) are programming languages optimized
-for a certain application domain.
+- Domain-specific languages (DSLs) are programming languages 
+  optimized for a certain application domain.
 -- Shader languages like GLSL are designed for writing graphical
    shaders, used in video games and other digital media
 -- Permission policy languages are used to let users define complex
@@ -61,7 +62,7 @@ In this course, I often discuss how there are many "schools of
 thought" about PLs. What this means is that different communities of
 people think about programming languages in radically different
 ways. This course is not here to tell you which school of thought you
-should belong to. It's here to provide you breath, and see which
+should belong to. It's here to provide you breadth, and see which
 thoughts exist.
 
 Examples:
@@ -151,17 +152,20 @@ I left out one of the most common styles of PL courses. This arguably
 represents its own school of thought, but I think that school is
 fading in the research world.
 
-When you look up a PL on Wikipedia, it often comes with a list of language paradigms, such as:
+When you look up a PL on Wikipedia, it often comes with a 
+list of language paradigms, such as:
 - Imperative
 - Functional
 - Logical
 - Object-oriented
 
-I'm not criticizing Wikipedia. These are meaningful technical terms that can be given meaningful definitions:
+I'm not criticizing Wikipedia. These are meaningful technical terms 
+that can be given meaningful definitions:
 
 "Imperative:" The programmer's core mental abstraction is program state
 
-"Functional:" The programmer's core mental abstraction is the input-output behavior of mathematical functions
+"Functional:" The programmer's core mental abstraction is the input-output 
+behavior of mathematical functions
 
 "Logical:" The programmer's core mental abstraction is logical proof
 
@@ -263,10 +267,10 @@ Semantics:"I don’t care about compiler implementation details"
 Correctness:"I don’t care what program you write, as long as it does X"
 
 In C: divide program into procedures (like functions, but have state)
-In Java: divide program into objects Objects combine state and code,
+In Java: divide program into objects. Objects combine state and code,
 but hide some of it, making it abstract
 
-In Racket: divide main function into helper functions In Racket/Lisp:
+In Racket: divide main function into helper functions. In Racket/Lisp:
 all language features are nested lists with parentheses.  This enables
 *homoiconicity*, representing programs using the language's core
 datatypes.
