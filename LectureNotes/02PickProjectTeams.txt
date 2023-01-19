@@ -35,6 +35,17 @@ help you pick who you want to work with.
 Everyone write some project ideas on the board.
 After a few minutes: Give positive comments on other people's ideas.
 
+- Python on a microwave
+
+- Natural language for software synthesis (make chatgpt do the project)
+
+- pushdown automata for a context free grammar
+
+- testing language to visualize and conceptualize full capabilities of system
+  text -> visualization
+
+
+
 **** Structure
 On checkpoint 1, you'll be asked to specify your project this way:
 
@@ -71,6 +82,26 @@ schedule, even though I haven't listed it on the schedule?
 **** Activity
 Let's pick one of the examples on the board and respond to all the prompts.
 
+Prompts
+
+
+Example:
+
+- Python on a microwave
+
+Goals
+"Python runs on a microwave"
+"What’s does success mean to you?"
+Creating a functional interpreter that runs on the microwaves processor
+Features
+  - pretty-printeer
+  - parser
+  - popcorn
+  - garbage collection
+"What paradigms, if any, does your project match up with?"
+  object-oriented, imperative
+"Any topics on the schedule that would especially help?"
+  First half - parsing, interpreing, etc
 
 **** Examples
 Categories:
@@ -79,6 +110,7 @@ Categories:
   balanced
   social science
   humanities
+  
 
 In-class: Any more we want to add?
 
@@ -133,7 +165,7 @@ Imperative
 
 "Any topics on the schedule that would especially help?"
 Operational semantics is really important to our theory work.
-The Penrose, Twine, and Processing lectures might put us in a
+The Penrose, Twine, and Processing and Inform lectures might put us in a
 creative mood.
 
 **** ACTIVITY: What feedback would you give on the above project?
@@ -228,7 +260,7 @@ val result: Person = Person("Leo", "Lion")
 
 EXAMPLE 2:
 val n : Int = someFunction()
-n match{ g
+n match { 
    case 0 => 0
    case n if n < 0 => -n
    case n if n > 0 => n
