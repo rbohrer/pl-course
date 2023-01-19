@@ -8,8 +8,7 @@ Outline:
 - Other projects
 - Conclusion: Not everything is a PL
 
-Exercise: Write the names of some PLs on the board.
-Then discuss: for each of your projects, which of these languages
+Discuss: For your projects, what languages
 do you consider using, why, and what weaknesses come with that choice?
 
 ** Everything is a programming language (PL)?
@@ -73,14 +72,16 @@ analyzed mathematically. A "good PL" is a language that we can analyze
 in powerful ways. Typically, a "good PL" has a rich static type system
 that lets us prove a soundness theorem, which is something like:
 
-Theorem[Soundness]:
+Theorem[Type Safety]:
 "Any time your compiler accepts a program from you without giving an
 error message, that program will satisfy
 <some specific notion of correctness, chosen by the designers>"
 
-Example correctness notions are freedom from segmentation faults,
-freedom from data races and deadlocks, producing an output of the
-intended type, or freedom from memory leaks.
+What does correctness mean?
+-  If program has type t, then result has type t
+-  If program has a type, then no segfaults
+-  No data races and deadlocks
+-  No memory leaks
 
 I was trained in this school. Many of us joined this school because it
 appeals to our personal sense of mathematical beauty. That does not
@@ -247,7 +248,6 @@ certain kinds of errors, and if it terminates, it gives back an answer
 of the right type. Verification is an intimately-related school, but
 includes "What can I learn about correctness after I write the code
 and before I run it?".
-
 
 ** PL Thinking
 After our mini-tour of the Type Theorist school, I can now tell you
