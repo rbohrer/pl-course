@@ -8,13 +8,24 @@ Outline:
 - Toward Regular Expressions
 
 
+EXERCISE: This lecture introduces lots of new words.
+Make yourself a review sheet that defines the following:
+- Value, Expression, Statement, Definition
+- Syntax, Semantics
+and compares/contrasts:
+- Mutable vs. Immutable data
+- Static typing vs. dynamic typing
+- How type theorists vs. practitioners talk about types
+
+
+
 ** Why Scala
 
 I promised that I would make you better at picking which programming
 languages to use in your work, so I should tell you why I chose to use
 Scala code in my lectures.
 
-The boring reason is that I'm a Lay Praciticioner too, and that I'm an
+The boring reason is that I'm a Lay Practitioner too, and that I'm an
 experienced Scala coder. I know good Scala libraries for all the
 things I want to do in lecture. I know that if you choose to use Scala
 for your course project, you will have good tools ready-to-go and I'll
@@ -151,7 +162,7 @@ z = "My string"
 Scala is a statically typed language with type inference. Scala is
 also object-oriented, and it allows you to give a more specific type
 where a less specific one was expected (like subclasses in Java).
-Just like every value in Java has type "Object," every value in Scala
+Just like every object in Java has type "Object," every value in Scala
 has type "Any" - the key here is that a value can have multiple types,
 e.g., "Any" and "Int", at the same time.
 
@@ -168,15 +179,6 @@ You may remember that Java has special primitive types like boolean
 which work differently from Boolean (they're not objects).  For
 simplicity, Scala *does not* have those primitives. Even types like
 Int and Boolean are true objects in Scala.
-
-EXERCISE: This lecture introduced lots of new words.
-Make yourself a review sheet that defines the following:
-- Value, Expression, Statement, Definition
-- Syntax, Semantics
-and compares/contrasts:
-- Mutable vs. Immutable data
-- Static typing vs. dynamic typing
-- How type theorists vs. practitioners talk about types
 
 
 ** Toward Regular Expressions
