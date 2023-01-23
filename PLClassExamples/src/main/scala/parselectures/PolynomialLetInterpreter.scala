@@ -1,7 +1,7 @@
 package edu.wpi.rbohrer.plcourse
 package parselectures
 
-import dummy.dummy
+import fastparse._
 
 class InterpException (orig : Exception) extends Exception
 object PolynomialLetInterpreter {

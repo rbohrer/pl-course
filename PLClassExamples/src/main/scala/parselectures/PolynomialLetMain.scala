@@ -1,6 +1,10 @@
 package edu.wpi.rbohrer.plcourse
 package parselectures
 
+import fastparse._
+
+import scala.io.Source
+import scala.io.StdIn.readLine
 object PolynomialLetMain {
 
   private def parseStr(src: String): Expression = {

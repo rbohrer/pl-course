@@ -14,25 +14,26 @@ object TypeChecker {
       case _: BoolValue => Bool
       case UnitTuple => Unit
       case ApplyOp(op, left, right) =>
-        val tLeft = apply(C,left)
-        val tRight = apply(C,right)
+        val tLeft = apply(C, left)
+        val tRight = apply(C, right)
         (tLeft, tRight) match {
           case (Num, Num) => Num
-          case _ => throw IllTypedException(C,e)
+          case _ => throw IllTypedException(C, e)
         }
       case Variable(name) => C(name)
       case Let(definition, body) =>
-        val (name,t) = defType(C,definition)
+        val (name, t) = defType(C, definition)
         apply(C + (name -> t), body)
       case Seq(left, right) =>
         apply(C, left);
         apply(C, right)
       case ApplyFun(f, arg) =>
         (C(f), apply(C, arg)) match {
-          case (FunType(t1,t2), t3:Type) if t1 == t3 => t2
-          case _ => throw IllTypedException(C,e)
+          case (FunType(t1, t2), t3: Type) if t1 == t3 => t2
+          case _ => throw IllTypedException(C, e)
         }
     }
+  }
 
     def defType(C: Context, d : Definition) : (String, Type) = {
       d match {
@@ -41,6 +42,4 @@ object TypeChecker {
           (name, FunType(argType,apply(C + (argName -> argType), rhs)))
       }
     }
-  }
-
 }
