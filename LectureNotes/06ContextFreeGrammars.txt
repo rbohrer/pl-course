@@ -1,6 +1,5 @@
 Lecture 07: Context-Free Grammars
 
-
 * Intro
 Regular expressions brought up a deep new topic: "What languages
 should we use to define other languages?"  This is an essential
@@ -81,7 +80,6 @@ P --> N
 P --> I
 P --> LP P RP
 P --> P O P
-
 
 That is, numbers and identifiers are the base cases of polynomials,
 and compound polynomials are built by wrapping one polynomial in
@@ -222,5 +220,3 @@ thus  + takes precedence.
   "food is friend" *)
 (* EXERCISE: With your neighbors, come up with a grammar that generates funny
   sentences. Every group share one funny sentence when you're done! *)
-  
-
