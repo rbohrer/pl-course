@@ -4,15 +4,16 @@ Today gives a more practically-focused view on parsing with regexes
 and CFGs. We do two main things today:
 
 1) Introduce the "fastparse" library for parsing in Scala
-2) Introduce the "Precedence-Climbing" approach for parsing, and implement it using fastparse.
+2) Introduce the "Precedence-Climbing" approach for parsing, 
+   and implement it using fastparse.
 
 * Fastparse
 
 Fastparse is one of the most popular parsing libraries in Scala. As
 the name suggests, it is fast. I like it because it is also *fast to
 write*. If you would like to support Li Haoyi, the author of
-fastparse, check out his book "Hands-on Scala Programming: Learn Scala
-in a Practical, Project-Based Way"
+fastparse, check out his book "Hands-on Scala Programming: 
+Learn Scala in a Practical, Project-Based Way"
 
 https://www.handsonscala.com/
 
@@ -23,7 +24,8 @@ The source code for fastparse  is on GitHub:
 https://github.com/com-lihaoyi/fastparse
 
 * Getting Started
-If you use SBT for your Scala project, you need to add this line to your build.sbt file:
+If you use SBT for your Scala project, 
+you need to add this line to your build.sbt file:
 "com.lihaoyi" %% "fastparse" % "2.2.2" // SBT
 
 Then, at the top of your .scala file, add the line:
@@ -49,15 +51,16 @@ Thinking of parsers as functions, then, a parser combinator is just an
 operator that combines simpler parsers into more complex ones.
 
 The most important type family in fastparse is called P, short for parser.
-P takes in a type argument t: the notation P[t] means "a parser which, when
-it succeeds, returns a value of type t".
+P takes in a type argument t: the notation P[t] means "a parser which,
+when it succeeds, returns a value of type t".
 
 ** Base cases
-I lied a bit that the base cases of parser combinators were regular expressions.
-Rather, parser combinator syntax includes all the regular expression operators,
-so that regular expressions can be easily translated into parser combinators.
+I lied a bit that the base cases of parser combinators were regular 
+expressions. Rather, parser combinator syntax includes all the regular
+expression operators, so that regular expressions can be easily 
+translated into parser combinators.
 
-'CharIn' is used for characetr ranges, e.g., CharIn("0-9") implements [0-9]
+'CharIn' provides character ranges, e.g., CharIn("0-9") implements [0-9]
 String literals like "foo" match their strings exactly, the same way a composition
 of character regexes does.
 
