@@ -61,17 +61,17 @@ expression operators, so that regular expressions can be easily
 translated into parser combinators.
 
 'CharIn' provides character ranges, e.g., CharIn("0-9") implements [0-9]
-String literals like "foo" match their strings exactly, the same way a composition
-of character regexes does.
+String literals like "foo" match their strings exactly, the same way a 
+composition of character regexes does.
 
 Begin and End implement ^ and $
 
 
 ** Compound cases
 
-Repetitions are provided as a method call .rep(...).  It has
-optional arguments for the *minimum* number of repetitions and for separators, e.g.,
-comma separators for lists.
+Repetitions are provided as a method call .rep(...).  It has optional 
+arguments for the *minimum* number of repetitions and for separators, 
+e.g., comma separators for lists.
 
 Sequencing uses the tilde symbol (~).
 If r1 is  "my" and r2 is "String", then r1 ~ r2 matches "myString".
@@ -98,8 +98,8 @@ some expressions that should parse.
 ** Capture
 Instead of using parentheses to capture inputs, fastparse captures
 inputs with a method named "!". Captured data can then be transformed
-with a method "map" which behaves similarly to other higher-order functions
-named "map".
+with a method "map" which behaves similarly to other higher-order 
+functions named "map".
 
 Specifically, if x has type P[t1] and f is a function of type t1 => t2
 then x.map(f) has type P[t2].  x.map() is understood as parsing a t1
@@ -112,10 +112,10 @@ language, i.e., polynomials without identifiers.  Fastparse makes use
 of several pieces of advanced Scala syntax which I intentionally brush
 over. All functions that produce parsers should have [_: P] in the
 argument specification, an advanced style of type abstraction used by
-fastparse. A function named P is also called at the outside of every parser
-definition - this function P has a complex set of type overloads which
-are essential to type-checking fastparse parsers. In practice, not every
-parser needs this outer call to P, but when in doubt, call P.
+fastparse. A function named P is also called at the outside of every 
+parser definition - this function P has a complex set of type overloads
+which are essential to type-checking fastparse parsers. In practice, 
+not every parser needs this outer call to P, but when in doubt, call P.
 
 (With line numbers)
 1 import fastparse._, NoWhitespace._
@@ -123,30 +123,42 @@ parser needs this outer call to P, but when in doubt, call P.
 3 def parens[_: P]: P[Int] = P("(" ~/ addSub ~ ")" )
 4 def factor[_: P]: P[Int] = P( number | parens )
 5
-6 def divMul[_: P]: P[Int] = P( factor ~ (CharIn("*/").! ~/ factor).rep ).map(eval)
-7 def addSub[_: P]: P[Int] = P( divMul ~ (CharIn("+\\-").! ~/ divMul).rep ).map(eval)
+6 def divMul[_: P]: P[Int] = 
+   P( factor ~ (CharIn("*/").! ~/ factor).rep ).map(eval)
+7 def addSub[_: P]: P[Int] = 
+   P( divMul ~ (CharIn("+\\-").! ~/ divMul).rep ).map(eval)
 8 def expr[_: P]: P[Int]   = P( addSub ~ End )
 
 Line 1 imports the fastparse library with no special whitespace handling.
-Line 2 defines a value called number, which is a parser for numbers, of type Int.
-That parser matches a nonempty repetition of digits, captures it (!), and maps the "to Integer" method
-(_.toInt) over the parse result.
-Line 3 defines a parser "parens" for parenthesized expressions, which wrap addSub expressions in parentheses.
-A cut ~/ is used after the opening paren because, if we see a paren, we know that no other rule could
-apply, and the expression must be a parenthesized one.
+Line 2 defines a value called number, which is a parser for numbers, 
+of type Int.
+That parser matches a nonempty repetition of digits, captures it (!),
+ and maps the "to Integer" method (_.toInt) over the parse result.
+Line 3 defines a parser "parens" for parenthesized expressions,
+which wrap addSub expressions in parentheses.
+A cut ~/ is used after the opening paren because, if we see a paren,
+we know that no other rule could apply, and the expression must be
+a parenthesized one.
 Line 4 defines "factor" as "either number or parens"
-Line 6 defines divMul, for expressions containing only division and multiplication (and parenthesized expressions).
-A divMul expressin must contain at least one factor, optionally followed by any number of factors that are separated
-by operators. Here, eval stands for a function that evaluates the arithmetic expression. We omit the definition.
-Line 7 defines addSub, for all expressions of "add/subtract" level precedence or higher. Such expressions consist
-of "divMul" expressions, optionally separated by "+" and "-".
-The top level function of the parser is "expr" on Line 8, which parses addSub against a whole string.
+Line 6 defines divMul, for expressions containing only division and
+multiplication (and parenthesized expressions).
+A divMul expressin must contain at least one factor, optionally 
+followed by any number of factors that are separated by operators.
+Here, eval stands for a function that evaluates the arithmetic 
+expression. We omit the definition.
+Line 7 defines addSub, for all expressions of "add/subtract" level
+precedence or higher. Such expressions consist of "divMul" expressions,
+optionally separated by "+" and "-".
+The top level function of the parser is "expr" on Line 8, which 
+parses addSub against a whole string.
 
-This code may seem mysterious at first. By the end of lecture we will show it is an instance of a rigorous and powerful
+This code may seem mysterious at first. By the end of lecture we will
+show it is an instance of a rigorous and powerful
 parsing approach called precedence-climbing parsing.
 
-The discussion of the example parser would be incomplete without the discussion of its test cases.
-These test cases are a great example of how you could write your own test cases.
+The discussion of the example parser would be incomplete without the
+discussion of its test cases. These test cases are a great example of
+how you could write your own test cases.
 
 9  val Parsed.Success(2, _) = parse("1+1", expr(_))
 10  val Parsed.Success(15, _) = parse("(1+1*2)+3*4", expr(_))
@@ -154,16 +166,18 @@ These test cases are a great example of how you could write your own test cases.
 12 val Parsed.Failure(expected, failIndex, extra) = parse("1+1*", expr(_))
 
 Each line starts by pattern matching on a constructor for parse results.
-Parsed.Success is returned by successful parser calls. The first argument is the parsed value and 
-the second value contains additional information. We only need the value, so we ignore the second
-argument using a wildcard pattern match.
-The patterns specify exact result values (2, 15, 21), so Scala will report a (pattern-match) error
-if the parser gave the wrong answer, thus alerting us to any test failures.
-The fourth line instead returns Parsed.Failure, which reports what symbols were expected to come next after
-the failure point, the index (within the string) of the failure location, and extra information.
+Parsed.Success is returned by successful parser calls. The first argument 
+is the parsed value and the second value contains additional information.
+We only need the value, so we ignore the second argument using a wildcard
+pattern match.
+The patterns specify exact result values (2, 15, 21), so Scala will report
+a (pattern-match) error if the parser gave the wrong answer, thus alerting 
+us to any test failures. The fourth line instead returns Parsed.Failure, 
+which reports what symbols were expected to come next after the failure point,
+the index (within the string) of the failure location, and extra information.
 
-The actual syntax for invoking a parser is concise but mysterious. We treat it as a black box, due to its use
-of advanced scala features. 
+The actual syntax for invoking a parser is concise but mysterious. We treat it
+as a black box, due to its use of advanced scala features. 
 
 Let exp be a Scala expression of type Parse[t] for some t and
 let str have type String.
@@ -173,8 +187,8 @@ parse(str, exp(_))
 
 and returns a Success or Failure. If it returns Success(x,y), then x has type t.
 
-The last test case in the example shows how to use the debug tracing features, which print verbose
-information for parse failures.
+The last test case in the example shows how to use the debug tracing features,
+which print verbose information for parse failures.
 
 13 val longAggMsg = extra.trace().longAggregateMsg
 14 assert(
@@ -183,36 +197,47 @@ information for parse failures.
 17  """Expected expr:1:1 / addSub:1:1 / divMul:1:3 / factor:1:5 / (number | parens):1:5, found """""
 18 )
 
-Line 13 uses extra.trace().longAggregateMsg to produce a string containing detailed debug info.
-The next 4 lines perform two assertions, the first of which completes the test from line 12 and the second of which
-completes the test from line 13.
+Line 13 uses extra.trace().longAggregateMsg to produce a string containing
+detailed debug info. The next 4 lines perform two assertions, the first
+of which completes the test from line 12 and the second of which completes
+the test from line 13.
 
-In my experience, it takes some additional engineering work to get truly user-friendly error messages, but the builtin
-error messages can be effective for development purposes, as you get used to them.
-The creation of high-quality error messages is a persistent problem in the implementation of programming languages,
-which we all know when we are the user of a PL but conveniently forget when we are its designer.
-Fastparse does not make this problem disappear, but handles it as nicely as we could ask for.
+In my experience, it takes some additional engineering work to get 
+truly user-friendly error messages, but the builtin error messages
+can be effective for development purposes, as you get used to them.
+The creation of high-quality error messages is a persistent problem
+in the implementation of programming languages, which we all know when
+we are the user of a PL but conveniently forget when we are its designer.
+Fastparse does not make this problem disappear, but handles it as
+nicely as we could ask for.
 
 ** Left-recursion
-Parsing proceeds from left-to-right and depth-first (like function calls). It is important to recognize this so you
-can tell why certain fastparse programs loop forever and, in doing so, proceed to write programs that do not loop forever.
+Parsing proceeds from left-to-right and depth-first (like function calls).
+It is important to recognize this so you can tell why certain fastparse
+programs loop forever and, in doing so, proceed to write programs that
+do not loop forever.
 
-Remember how the rules "E -> E + E" and "E -> E * E" were perfectly acceptable in CFGs? If we were to translate these to code
-in the most direct way imaginable, we would produce code that loops forever, such as:
+Remember how the rules "E -> E + E" and "E -> E * E" were perfectly
+acceptable in CFGs? If we were to translate these to code in the most
+ direct way imaginable, we would produce code that loops forever, such as:
 
  def expr[_: P]: P[Int] = P( (expr ~ "+" ~ expr)
                            | (expr ~ "*" ~ expr)).map(eval)
 
-This is because "expr" is a recursive call! The first thing this parser does when it attempts to match a string is to immediately
-make a recursive call, turning quickly into an infinite recursion. The good news is that there is a systematic approach
-for avoiding this bug.
+This is because "expr" is a recursive call! The first thing this parser 
+does when it attempts to match a string is to immediately make a recursive
+call, turning quickly into an infinite recursion. The good news is that 
+there is a systematic approach for avoiding this bug.
 
 * Precedence-climbing
-Precedence-climbing is a classic and well-established approach for writing parsers for operators with precedence and associativity,
-and without infinite loops. The example parser from today's lecture is already a precedence-climbing parser, so I don't need to 
-give you a new example parser. Instead, let's walk through what they are and how they work.
+Precedence-climbing is a classic and well-established approach for 
+writing parsers for operators with precedence and associativity, and
+without infinite loops. The example parser from today's lecture is 
+already a precedence-climbing parser, so I don't need to  give you a new
+example parser. Instead, let's walk through what they are and how they work.
 
-The first step is to have some operators and to know their precedence and associativity. Here's a table:
+The first step is to have some operators and to know their precedence 
+and associativity. Here's a table:
 
 Operator   Precedence    Associativity
 ()          0             NA
@@ -223,23 +248,36 @@ Operator   Precedence    Associativity
 
 where "0" means highest-precedence and "2" means lowest precedence.
 
-In a precedence-climbing parser, there is one helper function for each precedence level.
-The "main" function immediately calls the helper for the lowest-precedence operator(s).
+In a precedence-climbing parser, there is one helper function for each
+precedence level. The "main" function immediately calls the helper for
+the lowest-precedence operator(s).
 
-The helper functions do not make recursive calls. Instead, they always call the next helper function, i.e., the helper function
-for "+" and "-" calls the helper function for "/" and "*", which calls the helper function for parens.
-The helper must also recognize the operator symbol (+,-,*,/), potentially repeatedly.
-With repeated operations, each helper function produces a sequence of higher-precedence expressions and the operations applied to them.
-For example, in parsing  "a*b + c*d + e*f", the +- helper function sees a sequence of three expressions "a*b","c*d", and "e*f" added together.
-Associativity just means the order in which this sequence is combined into a single result.
-Left-associativity means it is combined starting from the left, right-associativity means it is combined starting from the right.
+The helper functions do not make recursive calls. Instead, they always 
+call the next helper function, i.e., the helper function for "+" and "-"
+calls the helper function for "/" and "*", which calls the helper
+function for parens. The helper must also recognize the operator symbol
+(+,-,*,/), potentially repeatedly. With repeated operations, each helper
+function produces a sequence of higher-precedence expressions and the
+operations applied to them. For example, in parsing  "a*b + c*d + e*f",
+the +- helper function sees a sequence of three expressions "a*b","c*d", 
+and "e*f" added together. Associativity just means the order in which
+this sequence is combined into a single result. Left-associativity means
+it is combined starting from the left, right-associativity means it is
+combined starting from the right.
 
-How do precedence-climbing parsers work? We can easily argue that they terminate, because each function only calls higher-precedence functions,
-resulting in a bounded call depth (3 in this case). The key correctness observation is that nothing is lost when we move up the precedence stack,
-because *that's what precedence means*. By definition, + and - are the things we do last, so we ought to parse all higher levels first. When we do
-so, we can expect the divMul call to behave correctly, because a divMul expression contains no + or -. If the starting expression did contain a + or -,
-it will be the next symbol we parse after parsing all * and / expressions.
+How do precedence-climbing parsers work? We can easily argue that they
+terminate, because each function only calls higher-precedence functions,
+resulting in a bounded call depth (3 in this case). The key correctness
+observation is that nothing is lost when we move up the precedence stack,
+because *that's what precedence means*. By definition, + and - are the
+things we do last, so we ought to parse all higher levels first. When
+we do so, we can expect the divMul call to behave correctly, because a
+divMul expression contains no + or -. If the starting expression did 
+contain a + or -, it will be the next symbol we parse after parsing all
+ * and / expressions.
 
-The beauty of this approach is that it works just as well with any number of precedence levels and with different associativities for different operators,
-yet it is efficient, taking only linear time in the length of a string, for a fixed number of precedence levels.
+The beauty of this approach is that it works just as well with any 
+number of precedence levels and with different associativities for 
+different operators, yet it is efficient, taking only linear time in
+ the length of a string, for a fixed number of precedence levels.
  
