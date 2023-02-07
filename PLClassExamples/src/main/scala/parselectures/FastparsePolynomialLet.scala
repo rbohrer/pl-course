@@ -1,10 +1,11 @@
 package edu.wpi.rbohrer.plcourse
 package parselectures
 
-import fastparse.NoWhitespace._
+import fastparse.MultiLineWhitespace._
 import fastparse._
 
 sealed trait Expression
+
 sealed trait Value extends Expression
 final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
 final case class Number(value: Int) extends Value {
@@ -13,6 +14,7 @@ final case class Number(value: Int) extends Value {
   }
 }
 final case class Variable(name : String) extends Expression
+// let x = e1 in e2
 final case class Let(name : String, definition : Expression, body : Expression) extends Expression
 
 
@@ -22,11 +24,30 @@ case object Minus extends Operator
 case object Times extends Operator
 case object Divide extends Operator
 
+
+//(1+2)*5
+/*
+     *
+    / \
+    +  5
+   / \
+   1 2
+   *
+   * ApplyOp(Times, ApplyOp(Plus, Number(1), Number(2)), Number(5))
+ */
 class FastparsePolynomialLet {
 
-  def number[_: P]: P[Expression] = P( CharIn("0-9").rep(1).!.map(_.toInt).map(Number) )
+  def number[_: P]: P[Expression] =
+    {
+      import fastparse.NoWhitespace._
+      P( CharIn("0-9").rep(1).!.map(_.toInt).map(Number) )
+    }
   def parens[_: P]: P[Expression] = P( "(" ~/ addSub ~ ")" )
-  def ident[_: P]: P[String] = P (CharIn("a-z").rep(1).!)
+
+  def ident[_: P]: P[String] = {
+    import fastparse.NoWhitespace._
+    P (CharIn("a-z").rep(1).!)
+  }
   def varExpr[_: P]: P[Expression] = P(ident.map(Variable))
   def ws[_: P]: P[Unit] = P(" ".rep(0)) // whitespace
   def factor[_: P]: P[Expression] = P( number | letExpr | varExpr | parens )
