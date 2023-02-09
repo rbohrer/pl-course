@@ -1,5 +1,3 @@
-TODO: I need to test my code
-
 Lecture 08: Scala, Part III: Abstract Syntax Trees + Elaborators
 
 - Review: Fastparse parsers
@@ -64,7 +62,7 @@ Exercise: Draw a pretty tree for 5-(3*(1+2))
 
 Recall that expressions are not the only kinds of program; we could
 also have statements, definitions, and so on.  Data structures for
-this programs are defined in the same way as ASTs, it's just that
+these programs are defined in the same way as ASTs, it's just that
 sometimes they will have a tree shape and sometimes they won't.
 Statements, like expressions, are usually tree-shaped.  Definitions
 are often less tree-shaped: we might have a flat list of all the
@@ -83,7 +81,6 @@ Haskell: data
 Standard ML: datatype
 OCaml: type
 Rust: enum
-PLAI-typed (from CS 4536): define-type
 Scala: *case class*
 *** end of skip ***
 
@@ -119,7 +116,10 @@ and each variant turns into a case class.
 Thus, here's the Scala code for defining expression ASTs:
 
 sealed trait Expression
-final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
+
+final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends
+Expression
+
 final case class Number(value: Int) extends Expression
 
 sealed trait Operator
@@ -128,28 +128,33 @@ final case object Minus
 final case object Times
 final case object Divide
 
-Though this code is systematically generated from the context-free grammar, it contains
-many new Scala keywords and subtleties. Let's discuss each, one-by-one.
+Though this code is systematically generated from the context-free
+grammar, it contains many new Scala keywords and subtleties. Let's
+discuss each, one-by-one.
 
 * case object
-A case *object* is like a case class, except there's only one of it. Actually, "object"
-is a keyword all its own, and should be used wherever you want a singleton object
-(singletons with data are often considered bad practice, but object is a very nice
-replacement for, e.g., static *methods* in Java)
+A case *object* is like a case class, except there's only one of
+it. Actually, "object" is a keyword all its own, and should be used
+wherever you want a singleton object (singletons with data are often
+considered bad practice, but object is a very nice replacement for,
+e.g., static *methods* in Java)
 
-If you don't want to use case object, you could use case class for your whole life and
-suffer no consequences. Mainly you get to write fewer parentheses.
+If you don't want to use case object, you could use case class for
+your whole life and suffer no consequences. Mainly you get to write
+fewer parentheses.
 
 * final
-Like in Java, "final" means "nobody can ever extend this class, ever". We usually want
-this when writing case classes, because they're supposed to be simple data. If you forget
-it, your code will still work, the compiler just won't warn you away from extending it.
+Like in Java, "final" means "nobody can ever extend this class,
+ever". We usually want this when writing case classes, because they're
+supposed to be simple data. If you forget it, your code will still
+work, the compiler just won't warn you away from extending it.
 
 * sealed
-The Scala keyword "sealed" is a more specialized counterpart to "final", mostly used
-for case classes. A "sealed" class can be extended, but it can only be extended by
-other classes that are defined in the same file. I.e., the trait for a case class is
-extended only by its case classes.
+The Scala keyword "sealed" is a more specialized counterpart to
+"final", mostly used for case classes. A "sealed" class can be
+extended, but it can only be extended by other classes that are
+defined in the same file. I.e., the trait for a case class is extended
+only by its case classes.
 
 * trait
 Speaking of traits: traits in Scala are similar to (modern) Java interfaces.
@@ -171,9 +176,10 @@ which are case-sensitive, this code will work, but then it will mysteriously fai
 to compile on Windows and any other case-sensitive systems.  
 
 * constructors
-Once you define a case class, you can call its "constructor" function to create a value
-of that type, for example, Number(5) is a value of type Number. The keyword "new" is
-used for constructing all classes *except* case classes, which just use the constructor name.
+Once you define a case class, you can call its "constructor" function
+to create a value of that type, for example, Number(5) is a value of
+type Number. The keyword "new" is used for constructing all classes
+*except* case classes, which just use the constructor name.
 
 * match
 The big selling point of case classes is that they work well with pattern-matching.
@@ -203,9 +209,10 @@ P match {
   case false => expr2
 }
 
-That is, we compute P (a true-or-false-value). If it's true, we evaluate expr1, else we
-evaluate expr2. Note that the entire "P match { ... }" is itself an expression, and its
-value is the value of the matching expr1/expr2.
+That is, we compute P (a true-or-false-value). If it's true, we
+evaluate expr1, else we evaluate expr2. Note that the entire "P match
+{ ... }" is itself an expression, and its value is the value of the
+matching expr1/expr2.
 
 *** Patterns
 Patterns are a little language all of their own, following this grammar:
@@ -217,31 +224,39 @@ pat ::=  caseObj
        | id | _id | _
        | <see docs for full info>
 
-- case object patterns match exactly that one value, and are written by writing the name
-of that value (e.g., true and false above)
+- case object patterns match exactly that one value, and are written
+by writing the name of that value (e.g., true and false above)
 
-- caseClass patterns consist of the name of the case class, followed by patterns for each
-  argument, similar to the syntax for calling their constructor. For example, the pattern
-  Number(5) only matches the Expression AST for the number 5.
+- caseClass patterns consist of the name of the case class, followed
+  by patterns for each argument, similar to the syntax for calling
+  their constructor. For example, the pattern Number(5) only matches
+  the Expression AST for the number 5.
 
-- literal patterns do the same for built-in types such as numbers and strings
+- literal patterns do the same for built-in types such as numbers and
+  strings
 
-- (pat1, ..., patN) is a pattern for tuples with N elements, and it matches each element
-  against the corresponding pattern. For example the pair (2-tuple) pattern ("hello", 2) matches
-  only the pair ("hello", 2).
+- (pat1, ..., patN) is a pattern for tuples with N elements, and it
+  matches each element against the corresponding pattern. For example
+  the pair (2-tuple) pattern ("hello", 2) matches only the pair
+  ("hello", 2).
 
-- Whenever you write a variable name (identifier) as a pattern, and that name is not already
-  defined as a case object/case class/literal, then it is treated as a new variable. That is,
-  this pattern matches everything, and serves as a definition at the same time, defining the
-  new variable to be equal to the expression you matched on.
+- Whenever you write a variable name (identifier) as a pattern, and
+  that name is not already defined as a case object/case
+  class/literal, then it is treated as a new variable. That is, this
+  pattern matches everything, and serves as a definition at the same
+  time, defining the new variable to be equal to the expression you
+  matched on.
 
-- When you write a variable name starting with an underscore _, it means "don't actually define
-  a new variable, I'm just writing a variable name as documentation"
+- When you write a variable name starting with an underscore _, it
+  means "don't actually define a new variable, I'm just writing a
+  variable name as documentation"
 
-- The wildcard pattern _, meaning "match anything, define no variables", is a special case of it.
+- The wildcard pattern _, meaning "match anything, define no
+  variables", is a special case of it.
 
-There are a few others. I encourage you to learn them from the documentation once you've got some
-practice writing Scala code. The other patterns are useful! But I must pick and choose what goes in
+There are a few others. I encourage you to learn them from the
+documentation once you've got some practice writing Scala code. The
+other patterns are useful! But I must pick and choose what goes in
 each lecture.
 
 * Identifiers
@@ -255,20 +270,24 @@ OP ::= "+" | "-" | "*" | "/"
 This leads to two new case classes for expressions:
 
 final case class Variable(name : String) extends Expression
-final case class Let(name : String, definition : Expression, body : Expression) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
 
-The expression "let X = E in E" introduces a local variable named X, defines it to be equal to
-the value of the first expression, and allows that definition to be referenced in the second
-expression by writing the variable name X again.
+The expression "let X = E in E" introduces a local variable named X,
+defines it to be equal to the value of the first expression, and
+allows that definition to be referenced in the second expression by
+writing the variable name X again.
 
 
 Thus, our overall type definition is: 
 
 sealed trait Expression
-final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
+final case class ApplyOp(op : Operator, left: Expression, right: Expression)
+  extends Expression
 final case class Number(value: Int) extends Expression
 final case class Variable(name : String) extends Expression
-final case class Let(name : String, definition : Expression, body : Expression) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
 
 sealed trait Operator
 case object Plus extends Operator
@@ -285,10 +304,12 @@ package edu.wpi.rbohrer.plcourse
 import fastparse._, NoWhitespace._
 
 sealed trait Expression
-final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
+final case class ApplyOp(op : Operator, left: Expression, right: Expression)
+  extends Expression
 final case class Number(value: Int) extends Expression
 final case class Variable(name : String) extends Expression
-final case class Let(name : String, definition : Expression, body : Expression) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
 
 sealed trait Operator
 case object Plus extends Operator
@@ -297,7 +318,6 @@ case object Times extends Operator
 case object Divide extends Operator
 
 class FastparsePolynomialLet {
-
   def number[_: P]: P[Expression] = P( CharIn("0-9").rep(1).!.map(_.toInt).map(Number) )
   def parens[_: P]: P[Expression] = P( "(" ~/ addSub ~ ")" )
   def ident[_: P]: P[String] = P (CharIn("a-z").rep(1).!)
@@ -344,22 +364,28 @@ class FastparsePolynomialLet {
 
 Notable differences from previous code:
 - We implement whitespace manually as a parser "ws"
-- We use helper functions letHelper, addSubHelper, and divMulHelper to convert the
-raw results of parsing to the desired Expression type. The letHelper code is pure boilerplate,
-unpacking the arguments of a tuple to call a multi-argument function. The other two helpers
-additional use a fold to combine the parsed expressions. Note that associativity rules can
-be changed by changing the order of the fold
-- The latter two helper functions also make use of an anonymous function as the helper to the
-fold. Anonymous functions are functions that we don't give names to. The core syntax for
-anonymous functions is (argName : Type => body). Advanced use: Pattern-matching syntax can
-be used for pattern-matching on the arguments of an anonymous function - see documentation
-for further information.
 
+- We use helper functions letHelper, addSubHelper, and divMulHelper to
+convert the raw results of parsing to the desired Expression type. The
+letHelper code is pure boilerplate, unpacking the arguments of a tuple
+to call a multi-argument function. The other two helpers additional
+use a fold to combine the parsed expressions. Note that associativity
+rules can be changed by changing the order of the fold
+
+- The latter two helper functions also make use of an anonymous
+function as the helper to the fold. Anonymous functions are functions
+that we don't give names to. The core syntax for anonymous functions
+is (argName : Type => body). Advanced use: Pattern-matching syntax can
+be used for pattern-matching on the arguments of an anonymous function
+
+- see documentation for further information.
 
 * Not covered: methods, elaborators
-There's much more to each of these features, e.g., case classes can do much more with
-methods and traits, and ASTs are useful for many parts of a compiler. Tune in next time(s) :)
 
-Conclusion: Today we learned how to represent programs as ASTs and how to write a parser that
-builds an AST from a string. Next time we will learn how to run those programs by writing
-an *interpreter*
+There's much more to each of these features, e.g., case classes can do
+much more with methods and traits, and ASTs are useful for many parts
+of a compiler. Tune in next time(s) :)
+
+Conclusion: Today we learned how to represent programs as ASTs and how
+to write a parser that builds an AST from a string. Next time we will
+learn how to run those programs by writing an *interpreter*
