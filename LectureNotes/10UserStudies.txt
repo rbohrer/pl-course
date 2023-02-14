@@ -256,6 +256,8 @@ to do. This does not mean that user satisfaction should not be studied at all, r
 that more precise instruments should be used to provide satisfaction feedback that
 is insightful and actionable.
 
+Formative: inform future work
+Summative: evalutate prior work
 
 * Categories of Methods
 
