@@ -58,6 +58,12 @@ I'll draw an example on the board
 
 In class: I draw a pretty tree for (1+2)*5
 
+      *
+     / \
+     +  5
+    / \
+   1   2
+
 Exercise: Draw a pretty tree for 5-(3*(1+2))
 
 Recall that expressions are not the only kinds of program; we could
@@ -217,15 +223,29 @@ matching expr1/expr2.
 *** Patterns
 Patterns are a little language all of their own, following this grammar:
 
-pat ::=  caseObj 
+pat -->  caseObj 
        | literal
        | (pat1, ..., patN)
        | caseClass(pat1,...,patN)
        | id | _id | _
+       | pat if e
        | <see docs for full info>
 
 - case object patterns match exactly that one value, and are written
 by writing the name of that value (e.g., true and false above)
+e match {
+  case pat1 => e1
+  ...
+  case patN => eN
+}
+
+e.g.
+e match {
+case Let(x,e1,e2) =>
+case ApplyOp(op, l,r) =>
+case () =>
+case () =>
+}
 
 - caseClass patterns consist of the name of the case class, followed
   by patterns for each argument, similar to the syntax for calling
@@ -389,3 +409,14 @@ of a compiler. Tune in next time(s) :)
 Conclusion: Today we learned how to represent programs as ASTs and how
 to write a parser that builds an AST from a string. Next time we will
 learn how to run those programs by writing an *interpreter*
+
+* Anonymous functions in Scala
+
+1) (x:t => e) is an anonymous function that takes x of type t and computes e.
+2) {case pattern => e}
+    e.g.  {case (x,e1,e2) => Let(x,e1,e2)}
+3) Let(_)  is the same as (x => Let(x))
+  more useful for like f(_.g)
+  Personal advice: mostly avoid, gets confusing
+  e.g. Let(_,_,_) never does what you want
+
