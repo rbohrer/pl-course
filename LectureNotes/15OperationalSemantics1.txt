@@ -58,9 +58,9 @@ EXERCISE: Circle the ones that are values
 
 Big-step operational semantics (evaluate to a value) and small-step operational semantics 
   (step to next expression) are both useful
-In this course, we write e ⤷ v  for big-step evaluation, spoken “e evaluates to v”
-In this course, we write e1 ⟼ e2 for small-step stepping, spoken “e1 steps to e2” (in one step).
-If you ever see e1 ⟼* e2, this means “e1 steps to e2” in any number of steps
+In this course, we write e \Downarrow v  for big-step evaluation, spoken “e evaluates to v”
+In this course, we write e1 |-> e2 for small-step stepping, spoken “e1 steps to e2” (in one step).
+If you ever see e1 |->* e2, this means “e1 steps to e2” in any number of steps
 We occasionally write e1 = e2, meaning that e1 and e2 produce the same value or same behavior.
 
 EXERCISE: I write 3 expressions on different columns of the board, you use step notation to write
@@ -70,7 +70,7 @@ the traces on the board.
 ** Inference Rules
 
 Throughout CS 536, we use inference rule notation for semantics (and types)
-Vocab: Anything defined by inference rules (like “e1 ⟼ e2”) is a judgement.
+Vocab: Anything defined by inference rules (like “e1 |-> e2”) is a judgement.
 
 
 Every rule is written with a horizontal line.
@@ -128,7 +128,7 @@ The first two will be defined as judgments; the third definition is not a judgem
 
 Definition: The judgement "e value" holds iff e is a value.
 
-Definition: The judgement "e ⤷ v" holds iff e evaluates to the value v
+Definition: The judgement "e \Downarrow v" holds iff e evaluates to the value v
 
 Definition: Let "op" be any of the operator symbols, e.g., the symbols "+,-,*,/".
 Then _op_ stands for the corresponding mathematical operation on numeric values.
@@ -141,18 +141,18 @@ keep these two ideas separate "a program that adds" vs. "the resulting sum".
 The first rule says that a value evaluates to itself:
           v value
 EvalVal ------------
-          v ⤷ v
+          v \Downarrow v
 
 The second rule says that operations are evaluated by evaluating each argument,
 then applying the operation on the values:
 
-        e1 ⤷ v1   e2 ⤷ v2
+        e1 \Downarrow v1   e2 \Downarrow v2
 EvalOp  --------------------- 
-        e1 op e2 ⤷ v1 _op_ v2
+        e1 op e2 \Downarrow v1 _op_ v2
 where op is one of +,-,*, or /.
 
-Judgements like ⤷ follow their own syntactic rules.
-It is essential that the "v" in e ⤷ v  (i.e., the right-hand side) 
+Judgements like \Downarrow follow their own syntactic rules.
+It is essential that the "v" in e \Downarrow v  (i.e., the right-hand side) 
 is a value, otherwise the judgement is not syntactically well-formed.
 *This* is why we make a pedantic distinction between op and _op_: 
 v1 _op_ v2 is a value, the numeric value for the sum of v1 and v2,
@@ -160,22 +160,22 @@ thus the rule's conclusion is syntactically well-formed.
 
 ** Relating judgements
 To strengthen our knowledge of operational semantics, let's reflect
-on how the different judgements (⤷,⟼,⟼*) relate to each other.
+on how the different judgements (\Downarrow,|->,|->*) relate to each other.
 
-Note that ⟼* is defined as repeated stepping (we have not defined the
-stepping judgement ⟼ today).
+Note that |->* is defined as repeated stepping (we have not defined the
+stepping judgement |-> today).
 
-I give an example that relates evaluation (⤷) to the equality judgement (=)
+I give an example that relates evaluation (\Downarrow) to the equality judgement (=)
 which means that two programs have the same value/behavior:
 Example:
-         e1 ⟼* e2
+         e1 |->* e2
 StepsEq -----------
           e1 = e2
 
 It says if e1 steps to e2 in any number of steps, then e1 and e2 have equivalent
 values.
 
-EXERCISE: Write a rule that relates at least two of the judgements ⤷,⟼,⟼*,=.
+EXERCISE: Write a rule that relates at least two of the judgements \Downarrow,|->,|->*,=.
 
 ** Closing thoughts
 The "Type Theorist" part of this course can feel overwhelmingly pedantic for

@@ -144,7 +144,7 @@ See provided code for complete version including AST
 definitions. Here I just give the typechecking function
 and its helper functions:
 
-ject TypeChecker {
+object TypeChecker {
   type Context = Map[String, Type]
   case class IllTypedException(C:Context, e: Expression)
     extends Exception
