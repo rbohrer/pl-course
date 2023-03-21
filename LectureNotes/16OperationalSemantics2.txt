@@ -45,7 +45,7 @@ Note that we usually leave off the period (.) when writing a nonempty context.
 
 ** Rules
 Because environments are used in the evaluation judgment, the definition of the evaluation judgement
-must change today. Evaluation is now written: E |- e ⤷ v, which is pronounced "in environment E, 
+must change today. Evaluation is now written: E |- e \Downarrow v, which is pronounced "in environment E, 
 expression  e evaluates to value v". The symbol |- (\vdash in LaTeX) is called "turnstile".
 It does not exactly mean implication, but something close: everything to the left of a turnstile
 is either an environment or some other sort of "context" for the judgement on the right side.
@@ -54,14 +54,14 @@ Let's rewrite the rules from the previous lecture using environments:
 
           v value
 EvalVal ------------
-          E |- v ⤷ v
+          E |- v \Downarrow v
 
 The second rule says that operations are evaluated by evaluating each argument,
 then applying the operation on the values:
 
-        E |- e1 ⤷ v1   E |- e2 ⤷ v2
+        E |- e1 \Downarrow v1   E |- e2 \Downarrow v2
 EvalOp  --------------------- 
-        E |- e1 op e2 ⤷ v1 _op_ v2
+        E |- e1 op e2 \Downarrow v1 _op_ v2
 
 Nothing deep has changed in these rules. This is as should be expected, because environments
 are for handling variables, and neither EvalVal nor EvalOp use variables in any way. This was
@@ -73,7 +73,7 @@ Let's look at the rules where environments matter most: the rules for variables.
 To evaluate a variable, look up its value from the environment (written E(x))
            E(x) = v
 EvalVar  -------------------
-         E |- x ⤷ v
+         E |- x \Downarrow v
 
 Note that the interpreter in Scala contained some error-handling code. In type theory,
 the equivalent to this error-handling code would be a new judgement "e error" which means
@@ -92,9 +92,9 @@ saying x is not defined in E.
 
 That rule shows us what to do after we have defined a variable, but we also need a way to define the
 variable. That's where "let" comes in.
-        E |- e1 ⤷ v1   E,x|->v1 |- e2 ⤷ v2
+        E |- e1 \Downarrow v1   E,x|->v1 |- e2 \Downarrow v2
 EvalLet ---------------------------------
-        E |- let x = e1 in e2 ⤷ v2
+        E |- let x = e1 in e2 \Downarrow v2
 
 EvalLet is the first rule that changes E. In general, we change E whenever we define or redefine
 a variable. The EvalLet rule says that e1 should first be evaluated in the "current" environment E,

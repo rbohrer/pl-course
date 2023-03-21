@@ -213,7 +213,7 @@ required, and several special measurement scales are often used
 
 The best-known style of  psychometric scales are Likert(-type) scales.
 A Likert scale question starts by providing a statement and asking
-the respondent how strongly they disagree. For example:
+the respondent how strongly they agree/disagree. For example:
 
 How strongly do you agree or disagree with the statement:
 "The thought of programming in Python gets me out bed in the morning"
@@ -285,7 +285,7 @@ Bad examples:
 [Asked 1 week before end of semester]
 "What are the tradeoffs if my language is implemented as a compiler vs. interpreter?"
 [If you specifically signed up to learn about functional languages]
-"Why should or shouldn't  my language be object-oriented?"
+"Why should or shouldn't my language be object-oriented?"
 
 Good examples:
 [Asked now]
@@ -443,32 +443,3 @@ have?"
 
 "Did your program feel fast?"
 
-
-
-TASKS
-• This is the hardest part of study design.
-• You will not get this right the first time.
-• Solution: pilot repeatedly
-
-PARSONS PROBLEMS
-
-
-DATA COLLECTION
-
-THINK-ALOUD 
-
-
-WIZARD OF OZ
-• Have an experimenter simulate incomplete parts of the system
-• Can give any kind of programming task this way if it doesn't require
-running the code
-
-
-NATURAL PROGRAMMING
-• Want to find out how people "naturally" specify software.
-• Yes, depends on prior experience
-• Find people without experience
-• Put people in a novel situation
-• Constrain choices
-
-TASK CONTEXTS 
