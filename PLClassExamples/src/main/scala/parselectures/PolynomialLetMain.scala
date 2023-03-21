@@ -2,11 +2,10 @@ package edu.wpi.rbohrer.plcourse
 package parselectures
 
 import fastparse._
-
 import scala.io.Source
 import scala.io.StdIn.readLine
-object PolynomialLetMain {
 
+object PolynomialLetMain {
   private def parseStr(src: String): Expression = {
     parse(src, new FastparsePolynomialLet().expr(_)) match {
       case Parsed.Success(value, index) => value
@@ -20,7 +19,7 @@ object PolynomialLetMain {
     val prog = src.mkString
     src.close()
     val e = parseStr(prog)
-    val result = PolynomialLetInterpreter(e)
+    val result = PolynomialLetInterpreter(Elaborator(e))
     println("Program result: ")
     println(result)
   }
@@ -30,7 +29,7 @@ object PolynomialLetMain {
       print("> ")
       val prog = readLine()
       val e = parseStr(prog)
-      val result = PolynomialLetInterpreter(e)
+      val result = PolynomialLetInterpreter(Elaborator(e))
       println(result)
     }
   }

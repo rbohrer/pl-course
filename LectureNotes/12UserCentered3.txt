@@ -53,7 +53,7 @@ iterate and revise your task choices. In particular, iterate amongst
 your project team before trying out the tasks on the whole class.
 
 Example Starting Points:
-"Write a program that satsifies this specification"
+"Write a program that satisfies this specification"
 "Fill in the missing code to satisfy the specification"
 "Read this code. Are there bugs? If so, which?"
 "Here is a debugger. Debug this code"
@@ -126,7 +126,8 @@ existing theory to assess the data, just look for patterns that emerge
 from these data, to come up with tentative labels for the data.
 
 Example from blog post:
-"Research question three: What irritates or upsets Millennials when receiving feedback on their work?"
+"Research question three: What irritates or upsets Millennials when
+  receiving feedback on their work?"
 Open codes:
  Getting called out
  Not being heard

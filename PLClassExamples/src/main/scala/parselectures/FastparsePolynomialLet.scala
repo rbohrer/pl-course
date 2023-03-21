@@ -8,6 +8,7 @@ sealed trait Expression
 
 sealed trait Value extends Expression
 final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends Expression
+final case class Function(name: String, args: List[String], body: Expression) extends Value
 final case class Number(value: Int) extends Value {
   override def toString: String = {
     value.toString
@@ -16,12 +17,14 @@ final case class Number(value: Int) extends Value {
 final case class Variable(name : String) extends Expression
 // let x = e1 in e2
 final case class Let(name : String, definition : Expression, body : Expression) extends Expression
-
+final case class LetFun(fn: Function, body : Expression) extends Expression
+final case class ApplyFun(fn: Expression, args: List[Expression]) extends Expression
 
 sealed trait Operator
 case object Plus extends Operator
 case object Minus extends Operator
 case object Times extends Operator
+case object Power extends Operator
 case object Divide extends Operator
 
 
@@ -84,6 +87,7 @@ class FastparsePolynomialLet {
       next match {
         case ("/", e) => ApplyOp(Divide, acc, e)
         case ("*", e) => ApplyOp(Times, acc, e)
+        case ("^", e) => ApplyOp(Power, acc, e)
       })
   }
 }
