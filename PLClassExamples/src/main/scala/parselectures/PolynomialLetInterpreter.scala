@@ -25,7 +25,9 @@ object PolynomialLetInterpreter {
       case Variable(name) =>
       try {
         env(name)
-      } catch { case e : NoSuchElementException => throw new InterpException(e)}
+      } catch {
+        case e : NoSuchElementException => throw new InterpException(e)
+      }
       case ApplyOp(op, left, right) => applyOp(op,apply(env,left),apply(env,right))
       case Let(name, definition, body) =>
         val v = apply(env, definition)
@@ -33,7 +35,7 @@ object PolynomialLetInterpreter {
         apply(env2, body)
     }
   }
-
+// let x = 10 in x*x
   def apply(e: Expression): Value = { apply(Map(), e) }
 
 }
