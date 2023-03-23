@@ -73,6 +73,38 @@ Theorem Statement [Big-Step Type Safety]
 If C |- e:t and E(x):C(x) for all x in C,
 and E |- e ↪ v, C |- v:t
 
+
+** Operational Semantics
+Today, we will use the following operational semantics rules:
+        *
+OpVal ----------
+      E|- v ↪ v   
+
+        *
+OpVar --------- (E(x) = v)
+      E|- x ↪ v 
+
+       E |- e1 ↪ v1  E |- e2 ↪ v2
+OpOp  --------------------------
+       E |- e1 op e2 ↪ v1 _op_ v2
+
+
+      E |- e1 ↪ v1     E,(x|->e1) |- e2 ↪ v2
+OpVal --------------------------------------
+      E |- let val x:t = e1 in e2 ↪ v2
+
+
+      E,(f(x)|->e1) |- e2 ↪ v 
+OpDef -----------------------------
+      E |- let def f(x:t1):t2 = e1 in e2  ↪ v
+
+
+      E |- e1 ↪ v1   
+      (E,x|->v1) |- e2 ↪ v2
+OpFun ----------------------------- (E(f(x)) = e2)
+    E |- f(e1) ↪ v2
+
+
 ** Mid-level Proof Structure
 The structure of a PL proof, though intimidating at first, is
 systematic. Most PL proofs use a technique called rule induction, which
@@ -178,6 +210,11 @@ and E |- e ↪ v, C |- v:t.
 Proof: By rule induction on the judgement e ↪ v.
 
                  *
+               ----- (E(x)=v)
+Case for rule  E|- x ↪ v   
+then C |- v:t by the assumption E:C.
+
+                 *
                -----
 Case for rule  E|- v ↪ v   then C |- v:t by assumption.
 
@@ -219,14 +256,6 @@ Fact (4) is what we wanted to show, completing the case.
 cases, but do need here.
 **IH2 is applicable because (E,f(x)|->e1)(y):(C,f:t1->t2)(y) for all y in (C,x:t1->t2), see
 fact (5)
-
-             E |- e1 ↪ v1    E |- e2 ↪ v2
-Case for rule -----------------------------
-             E |- e1;e2 ↪ v2
-By inversion on C |- , obtain
-(1) C |- e1 : t1 and (2) C |- e2 : t2, then apply IH1 and IH2 to get
-(3) C |- v1 : t1 and (4) C |- v2 : t2.
-Fact (4) is what we wanted to show, completing the case.
 
                E |- e1 ↪ v1   E(f(x)) = e2
 	       E,x|->v1 |- e2 ↪ v2
