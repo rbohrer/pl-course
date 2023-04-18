@@ -1,6 +1,14 @@
 Lecture 24: Penrose
 
 Reading: https://dl.acm.org/doi/pdf/10.1145/3386569.3392375
+Tutorial: https://penrose.cs.cmu.edu/docs/tutorial/welcome
+Try it in your browser: https://penrose.cs.cmu.edu/try/
+Then go to Examples, we will try these examples today:
+"SIGGRAPH teaser - Euclidean Geometry"
+"Lewis Structure of Nitric Acid"
+"Sets as Venn Diagrams in 2.5D"
+
+
 Authorship note: the first author's first name is Kai. 
 Ignore the name in the paper. I looked for a version with the
 correct name and could not find one.
@@ -43,7 +51,9 @@ overlap of goals with Processing, and even that goal
 should be expected to lead to different designs outcomes
 given the different audience.
 
-In-class: Go over the first diagram in the Penrose paper.
+In-class: Let's look at a few pretty diagrams together.
+
+In-class: Go over the code for the first diagram in the Penrose paper.
 
 Here is the Penrose source code for that diagram:
 
@@ -196,6 +206,59 @@ This example says that for vectors u \in U (for any U), we define the vector's a
 Depending on which programming languages you know, the style language could seem very familiar.
 On that note, we're done describing the Penrose language now; let's look at some general PL
 ideas that showed up in Penrose.
+
+* Practice
+In-class: Read over the code for Lewis structure diagram example:
+
+Hydrogen h
+Nitrogen n
+Oxygen o1, o2, o3
+-- bonds
+Bond b1 := MakeSingleBond(h, o1)
+Bond b2 := MakeSingleBond(o1, n)
+Bond b3 := MakeDoubleBond(n, o2)
+Bond b4 := MakeSingleBond(o3, n)
+-- electrons
+ZeroValenceElectrons(h)
+ZeroValenceElectrons(n)
+FourValenceElectrons(o1)
+FourValenceElectrons(o2)
+SixValenceElectrons(o3)
+-- layout
+-- Collinear(n, o1, h)
+-- VerticalAlign(o2, n)
+-- HorizontalAlign(o1, o3)
+
+
+Exercise: Everyone make a Lewis diagram for the molecule of your choice.
+Examples:
+
+Diatomic Oxygen
+:O:=:O:
+
+Diatomic Chlorine
+::Cl:-:Cl::
+
+Nitrate:
+
+:O:=N-:O::
+    |  
+   :O::
+    
+
+Water:  
+
+H-:O:-H
+
+Formaldehyde
+ 
+ :O:
+  ||
+H-C-H
+
+Discussion points:
+- Watching the constrained optimization process in action
+- Customizing style, e.g. customizing sizes in the Venn Diagram example
 
 *Connections to Other CS Ideas
 
