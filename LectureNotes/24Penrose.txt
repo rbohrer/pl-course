@@ -357,7 +357,7 @@ comfortable working extensively with abstractions.
 
 In conclusion, though Penrose synthesizes many existing PL ideas, there is no
 shame in doing so. On the contrary, in combining old ideas, it does something
-new which would likely be difficul to a;ccomplish without such reuse.
+new which would likely be difficul to accomplish without such reuse.
 
 
 

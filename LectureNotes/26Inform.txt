@@ -1,4 +1,4 @@
-Lecture 26: Natural Language, from FLOW-MATIC Inform
+Lecture 26: Natural Language, from FLOW-MATIC to Inform
 Sources: Inform (7) was developed by Emily Short and Graham Nelson, a wife-and-husband team. 
 This lecture is largely based on their work, especially 
 https://ganelson.github.io/inform-website/book/WI_1_1.html
@@ -35,24 +35,25 @@ The Wikipedia article on FLOW-MATIC provides the following example program
 INPUT INVENTORY FILE-A PRICE FILE-B ; OUTPUT PRICED-INV FILE-C UNPRICED-INV
   FILE-D ; HSP D .
   
-  IF EQUAL GO TO OPERATION 5 ; OTHERWISE GO TO OPERATION 2 .
-  TRANSFER A TO D .
-  WRITE-ITEM D .
-  JUMP TO OPERATION 8 .
-  TRANSFER A TO C .
-  MOVE UNIT-PRICE (B) TO UNIT-PRICE (C) .
-  WRITE-ITEM C .
-  READ-ITEM A ; IF END OF DATA GO TO OPERATION 14 .
-  JUMP TO OPERATION 1 .
-  READ-ITEM B ; IF END OF DATA GO TO OPERATION 12 .
-  JUMP TO OPERATION 1 .
-  SET OPERATION 9 TO GO TO OPERATION 2 .
-  JUMP TO OPERATION 2 .
-  TEST PRODUCT-NO (B) AGAINST ; IF EQUAL GO TO OPERATION 16 ;
-    OTHERWISE GO TO OPERATION 15 .
-  REWIND B .
-  CLOSE-OUT FILES C ; D .
-  STOP . (END)
+1  COMPARE PRODUCT-NO (A) WITH PRODUCT-NO (B) ; IF GREATER GO TO OPERATION 10 ;
+   IF EQUAL GO TO OPERATION 5 ; OTHERWISE GO TO OPERATION 2 .
+2  TRANSFER A TO D .
+3  WRITE-ITEM D .
+4  JUMP TO OPERATION 8 .
+5  TRANSFER A TO C .
+6  MOVE UNIT-PRICE (B) TO UNIT-PRICE (C) .
+7  WRITE-ITEM C .
+8  READ-ITEM A ; IF END OF DATA GO TO OPERATION 14 .
+9  JUMP TO OPERATION 1 .
+10 READ-ITEM B ; IF END OF DATA GO TO OPERATION 12 .
+11 JUMP TO OPERATION 1 .
+12 SET OPERATION 9 TO GO TO OPERATION 2 .
+13 JUMP TO OPERATION 2 .
+14 TEST PRODUCT-NO (B) AGAINST ; IF EQUAL GO TO OPERATION 16 ;
+   OTHERWISE GO TO OPERATION 15 .
+15 REWIND B .
+16 CLOSE-OUT FILES C ; D .
+17 STOP . (END)
 
 Discussion: What are your first reactions upon reading this code?
 
@@ -60,10 +61,10 @@ My own reaction is that it seems very verbose compared to later PL syntaxes.
 The line
 
 COMPARE PRODUCT-NO (A) WITH PRODUCT-NO (B) ; IF GREATER GO TO OPERATION 10 ;
-
+IF EQUAL GO TO OPERATION 5 ; OTHERWISE GO TO OPERATION 2 .
 would be written in C as something like:
 
-if(a>b) goto Op10;
+if(a>b) goto Op10; else if (a<b) goto Op5; else goto Op2;
 
 If I had to guess why NLP languages are not popular today, it is (1) because of their 
 reputations for verbosity and complexity, and (2) because they remain formal languages,
@@ -96,7 +97,7 @@ there are not more successful examples.
 
 * Inform 7: Intro Example: "Disenchantment Bay 1"
 
-Let's right into one of the official example Inform programs, about chartering a
+Let's jump right into one of the official example Inform programs, about chartering a
 boat. The source code follows (indented):
 
   The Cabin is a room. 
@@ -116,6 +117,7 @@ boat. The source code follows (indented):
   Test me with "examine case / get rods / open case / get rods / sit on bench / 
   take cushions / get up"
 
+
 DISCUSS IN-CLASS: first impressions.
 
 One immediately visible aspect of Inform code is that it takes the natural language concept
@@ -126,6 +128,9 @@ text of a room, is entirely free-form natural language text, to be displayed dir
 Even beyond the description text, I truly believe that this Inform code can be *read* by 
 non-programmers. Yet once one wants to *write* Inform code, there is a formal language that must
 be learned.
+
+PLAY example Inform game in class for a few minutes.
+
 
 * Toward Defining Inform 7
 
@@ -262,16 +267,13 @@ love, one can write instead:
 
    Loving relates various people to various people.
 
-* In-class activities
-- Discuss your feelings about Inform
-- Play a game
-- Game jam: let's write a quick game together!
+* Discuss your feelings about Inform
 
 * Conclusion
 
 I will not conclusively state whether NLP should be more widespread or not. Inform is successful,
-but text adventure programming is a bit of a niche subcommunity, and it's not what most programmers
-will spend their careers on. However I'm willing to call NLP and important part of the course since
+but text adventure programming is a niche subcommunity, and it's not what most programmers
+will spend their careers on. However, I'm willing to call NLP an important part of the course since
 
 1) NLP is a great example of why audience matters and why design priorities matter. I would not use
 Inform syntax to write an operating system or compiler, and *that's ok*.
@@ -289,13 +291,13 @@ Today's lecture was our last lecture on DSLs, all of which were focused on creat
 of one kind or another. In reflecting on these past four lectures:
 
 - In designing DSLs, there is joy in studying your humans. Understanding of psychology, audience,
-  and motivation of everyone involved in key to latsing success
+  and motivation of everyone involved in key to lasting success
 - A PL does not have to be for everyone, rather "PL for everyone" is more likely to consist of 
   embracing diversity of languages for diversity of audiences. Penrose and Processing, distant 
   cousins they may be, visibly target incredibly different audiences. Twine prioritizes those who
   do not program at all, while Inform prioritizes scriptwriters without telling them to avoid code
   in the end. These subtle differences produce radical differences in language design
-- PL design is an act of creation. The creative part of my main that lights up when I write a story
+- PL design is an act of creation. The creative part of my brain that lights up when I write a story
   in Inform lights up in just the same way when I design a new PL for a new domain.
 - PL design is alive. Traditional PL courses have a habit of emphasizing classic ideas that stood
   the test of time, and their risk is that they may forget to show us all the PL design work that
@@ -307,6 +309,6 @@ Instead, these are the sorts of languages that inspire a person to keep coding f
 of it after the work day ends. Programming for joy has inspired some of the most exciting 
 conversations in the modern PL design space. 
 
-So, whatever job means for you: May your code spark joy.
+So, whatever joy means for you: May your code spark joy.
 
 As we near the end of semester, hold that thought in your heart.

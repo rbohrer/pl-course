@@ -83,23 +83,42 @@ StepsNext --------------------------------
 This computational model of Twine is surprisingly similar to a standard
 formal language!
 
-Theorem: Not-extensible Twine is equivalent to deterministic finite automata (DFA).
-Idea: Interactive fiction often have "good ends" and "bad ends". The good ends
-can be made into the "accepting states" of the DFA.
+(Note: We have not discussed this formal language in this course. I am discussing
+it here because some students have seen it in related courses.)
+
+Theorem: Not-extensible Twine is equivalent to deterministic finite automata (DFA)
+with the following modifications:
+1) DFAs have "accepting" and "non-accepting" states, which would correspond to 
+winning and losing states of a game.
+2) DFAs allow every move from every state, but Twine games need not do this.
+To make a DFA, create a new "stuck" state and have every undefined action go there.
 Proof: (Omitted)
+
+Corollary: The number of moves in the shortest winning play is at most the number
+of prompts in the game.
+Proof: By the Pumping Lemma.
+
+Corollary: If any winning play contains a cycle, then arbitrarily long winning plays
+are possible.
+Proof: By the Pumping Lemma.
+
+Corollary: The set of all winning plays forms a regular language, i.e., there exists
+a regular expression which detects all winning plays.
+Proof: By equivalence of DFAs and regular expressions.
 
 *** Extensible
 
 How should we formally define an extensible language? One of the easiest
 ways to do this is to treat the extensions as entirely abstract. All we know
 about extended Twine is that there exists some extra state (set ES) beyond
-the vertex names, and there exist some extended actions (set EA) that can
-affect the extended state in arbitrary ways (write "action(s,l)" for the result
-of extended action l on state s).
+the vertex names, and there exist some extended actions that can
+affect the extended state in arbitrary ways (write "action(s,l)" for the 
+state resulting from label l on state s).
 
-It now suffices to redefine the state s from a vertex n to a pair (n,es) where es \in ES
-is extended state, and to redefine action sequences so that each l is an arbitrary string,
-not necessarily one that has an edge. We need only add one new stepping rule
+It now suffices to redefine the state s from a vertex n to a pair (n,es) 
+where es \in ES is extended state, and to redefine action sequences so that
+each l is an arbitrary string, not necessarily one that has an edge. We need
+only add one new stepping rule
 
 
          G=(V,E) s=(n,es)   (n,n',l) \notin E (for all n' \in VN)
@@ -127,10 +146,10 @@ contrast to "Design Fiction." Let's explore each of those topics in turn.
 
 ** Participatory Design
 
-In HCI research, Participatory Design (PD) refers to many design approaches that
-seek to democratize the research participants by allowing research 
-participants to play a role in the design of the design artifact. In
-the least radical forms of PD, 	participants provide formative input to
+In HCI research, Participatory Design (PD) refers to many design 
+approaches that seek to democratize the research participants by allowing 
+research  participants to play a role in the design of the design artifact.
+In the least radical forms of PD, participants provide formative input to
 the design team, who then use it in their design process. In more
 radical forms of PD, the participants typically play a direct role in
 design and have direct co-ownership of the design outputs. Even radical PD
@@ -198,6 +217,11 @@ QUESTION: Is this sort of agency something you'd care about? Why/why not?
 
 QUESTION: Can you think of a time that fiction helped you process a difficult
 emotional experience?
+
+QUESTION: Do you have any favorite media that address a topic that is
+personal for you?
+Example: Prof. Rose likes the indie game "One Night, Hot Springs"
+
 
 QUESTION: Can you think of a time that software helped you through a difficult
 emotional experience? It could be fiction *or not*.
