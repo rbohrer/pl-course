@@ -1,0 +1,445 @@
+Lecture 09: User-Centered Programming Language Design, Part II
+or: How (Not) to Design a Study
+- Demographics
+- "Data types"
+- Prof. Rose's Worst Survey Ever
+- Tasks
+
+We will talk about study design, including how to do it badly. We'll
+talk about several kinds of studies: (1) surveys and (2) task-based
+usabilities studies. I'm not going to put you on the spot and
+criticize your work in front of your classmates. I do want you to
+learn from how I criticize my own examples, then go and privately
+criticize your own work to make it better.
+
+* Demographics in Surveys
+
+It is typical for research surveys to ask for some information about
+the people who answer it. The golden rule of demographic questions is:
+"If you ask a question, you should be able to answer exactly why
+you're asking that precise question and what you're using the answer for".
+
+Good Examples:
+- "Please provide your email address so the researchers can contact you to
+   send you payment for participation and advertise follow-up studies"
+- "Please provide how many years of programming experience you have,
+   so that we can compare experiences of new and experienced programmers"
+- "Provide your race and gender so that the research team can assess whether
+   our outreach methods were effective in recruiting participants who are
+   representative of our nation's diversity"
+
+
+Bad Examples + Inclusivity Considerations:
+
+Content warning: This section includes examples that are insensitive to racial
+minorities and trans* people, for the purposes of teaching students to do better.
+
+** Race Issues
+
+When collecting racial data, it is important to recognize that
+widely-used categorizations of race, such as the US Census categories
+are... racist. They collapse hugely diverse groups of people into a
+short list of categories chosen by their colonizers.
+
+Example 1: Black/African American
+Diversity erased by this category includes diversity of national origin
+(recent immigrants vs. diaspora that have lived in the US for generations)
+as well as groups such as Afro-Indigenous and Afro-Latine people.
+
+Example 2: AAPI
+
+This erases national, ethnic, and cultural diversity, collapsing
+groups with vastly different levels of socio-economic privilege. For
+example, Hmong students, from an under-represented and under-resourced
+group, have been denied "underrepresented status" because other groups
+within this umbrella are well-represented.
+
+
+** Legal Issues
+
+Be extremely careful when collecting data that could have legal
+implications or other major life implications if it were made
+public. For this class: simply don't do it. For research: these data
+typically require an elevated level of scrutiny from the IRB.
+
+Examples: "Immigration status: _________"
+          "Intravenous drug user?:   Y   /   N "
+          "HIV status:   +  /   -       "
+	  
+
+** Trans Issues
+
+As a trans prof, I spend a lot of time talking about trans
+issues. This does not mean that I think our issues are uniquely more
+important than other minority groups, it just means that I think each
+person should contribute our own expertise, and this is my expertise.
+
+**** Name fields
+Do not ask for legal name, just ask for "name". Many trans people have
+not had the opportunity to change their legal names, and you are asking
+these people to announce that they are trans if you say "legal name".
+
+**** Gender fields
+
+If you ask gender, ask it as a fill-in-the-blank question. It can be
+tempting to do the following for data sanitization purposes:
+
+-Male
+-Female
+-Other:  <fill in>
+
+But this has two issues: one, it implies that nonbinary people are the
+cultural "other"; two, it implies a ranking between "male" and "female".
+Do not ask for "legal gender" for the same reason you should not ask for
+"legal name". If you are absolutely required to do so, please be aware
+that both Massachusetts and the US federal government recognize the
+neutral gender marker "X" in addition to "F" and "M".
+
+Do not ask for a person's sex in a survey. This refers to biology at
+birth, not gender.
+
+**** "Gender identity" / Gender modality
+
+Whether or not someone is trans should be treated as protected
+personal information, regardless of whether there are legal
+protections. Only ask this if you have *very good* reasons, e.g., you
+are doing trans-specific research. Personally, I prefer the term
+"gender modality," which can be "cis," "trans," "nonbinary," "fluid,"
+etc., over "gender identity" because "gender identity" sounds like it
+is not identical to gender.
+
+
+** Disability Issues
+
+I am also a disabled prof, so I also try to educate on disability issues.
+
+Most people will be disabled at some point in our lives, and
+disability AI is a whole area of its own. For this lecture, let's
+focus on a few low-hanging fruit for accessible survey design.
+
+Vision:
+- Use large fonts when you have vision-impaired participants
+- Provide a screen-reader-friendly digital survey for blind participants
+- If you use color, avoid using color as your *only* way of communicating
+  information - you should redundantly communicate it in some second way
+  for colorblind participants
+
+Neurodevelopmental:
+- When you have dyslexic participants, use dyslexia-friendly fonts.
+  MS Comic Sans is often recommended for this. (Yes, really)
+- If your participants have attention issues, allow them to take breaks
+  as much as they want
+- Likewise, be mindful how long the study takes and how many questions
+  it contains (this applies to everyone, though)
+- If you are doing in-person studies and your participants have sensory
+  issues, make sure to choose a place for the study that does aggravate
+  those issues (e.g., a quiet place with no extra-bright lights and no
+  strong smells)
+
+Musculoskeletal:
+- Some people cannot write or can only write for limited periods of time
+  using special arthritis-friendly writing tools (me). Provide digital
+  surveys and/or make participants aware that handwriting will be required,
+  so they can acquire any accessible tools in advance. (Providing them is
+  even better, but some folks may prefer to handle it themselves).
+
+  Provide breaks for this group too.
+
+- If you are preparing a physical space for participants to take the study,
+  make sure there is proper furniture if the participant needs to sit.
+  Avoid places that only have stools with no back.
+
+Summary of inclusive questions:
+The Silver Rule is "Fill in the blank"
+
+* "Data types"
+
+Let's discuss different data you might collect during a study (both
+surveys and otherwise) and how to get data that will help you.
+
+** Quantitative
+
+I sometimes push back on the widespread use of quantitative data
+because I want to ensure you get useful data. That being said, plenty
+of quantitative data are useful. Based on your specific project, my
+categorization below may not apply. Some of my useful questions may
+not be useful to you and vice-versa. I am providing only a starting point:
+
+More likely useful:
+
+- Relevant quantitative demographic info:
+   "How many years of programming experience?"
+   "How many hours of programming/week in that period?"
+   "Years of education completed?"
+
+- Performance metrics that are actionable:
+  - "What percentage of documentation pages provided desired information?"
+  - "What percentage of error messages contained information you could use?"
+
+- Performance metrics that closely align with goals:
+   - "How many minutes did it take you to write program X in language Y vs. Java?"
+      (if you care about time)
+   - "How many times did you revise your implementation of program X before it was correct?"
+      (if you care about this)
+
+Less likely useful:
+
+- Performance metrics that do not align with goals:
+  - "How many minutes did it take you to write program X in language Y vs. Java?"
+    (Bad if time-based productivity is not your goal. Productivity could mean many things)
+  - "How many lines of code did it take to do task X"
+    (Bad if your goal is to write more readable or maintainable code, which would not
+     necessarily be shorter than competing languages)
+  
+- Performance metrics that are not actionable:
+  - "On a scale of 1-5, how much do you like the language?"
+  - "On a scale of 1-5, how likely are you to recommend it to a friend?"
+
+- Wildly irrelevant data
+  - "How tall are you?"
+
+*** Scales, etc.
+
+Let's go into details of different ways to collect quantitative
+data. When the data are objective and empirical, no special scale may
+be needed. e.g., when asking for years of programming experience, a
+simple fill-in-the-numeric-blank suffices.
+
+For questions that require subjective judgement, more thought is
+required, and several special measurement scales are often used
+(keyword: "psychometric scales").
+
+- Likert Scale
+
+The best-known style of  psychometric scales are Likert(-type) scales.
+A Likert scale question starts by providing a statement and asking
+the respondent how strongly they agree/disagree. For example:
+
+How strongly do you agree or disagree with the statement:
+"The thought of programming in Python gets me out bed in the morning"
+
+A standard 5-point Likert scale has the following 5 responses:
+
+1. Strongly disagree
+2. Disagree
+3. Neither agree nor disagree
+4. Agree
+5. Strongly agree
+
+Likert-scale questions can be analyzed both individually and in
+aggregate.  It is common to provide several statements that assess the
+same underlying design goal and combine responses using statistical
+methods to produce a combined numeric rating.
+
+- Forced choice
+
+Whenever you write a Likert-scale question, ask yourself: Do I want to
+let the respondent remain neutral or do I want to make them take a side?
+
+Both options are valid and common. If you want them to take a side, that's
+called forced choice. A 4-value forced-choice Likert scale looks like this:
+
+1. Strongly disagree
+2. Disagree
+3. Agree
+4. Strongly agree
+
+- Acquiscence bias
+
+Several cognitive biases occur in responses to Likert-scale
+questions. One such bias is called "acquiscence bias": some groups of
+respondents have a bias toward agreeing with whatever statement they
+are given. A standard technique for accounting for (and measuring!)
+acquiescence bias is to phrase half of the questions such that "agree"
+correlates to the underlying variable you wish to measure and phrase
+half such that "disagree" correlates to that variable.
+
+Example:
+"The thought of programming in Python gets me out bed in the morning"
+"Python brings me misery"
+"Python is my most favorite language"
+"Python brings me life satisfaction"
+"The thought of programming in Python keeps me up at night"
+"Python is my least favorite language"
+ 
+
+** Qualitative
+
+Qualititative methods deserve at least one lecture all of their own.
+Here are a few thoughts to get you started.
+
+Platinum rule: "Don't ask if you don't want the answer"
+
+This rule is not just a facetious one, but a serious one at the same
+time. Of course, it is important in research to ask hard questions and
+accept difficult feedback in stride. But it is also true that design
+is partially a creative act of self-expression, and there are some
+designchoices we make for our own satisfaction rather than pragmatic
+purposes. If you know that you're going to stand by your design
+decision for reasons of personal expression, don't ask people whether
+you should change it. Likewise, keep scope in mind. If you have
+limited resources for your project (you do), aim for feedback that is
+not only actionable in general, but actionable within your constraints.
+
+Bad examples:
+[Asked 1 week before end of semester]
+"What are the tradeoffs if my language is implemented as a compiler vs. interpreter?"
+[If you specifically signed up to learn about functional languages]
+"Why should or shouldn't my language be object-oriented?"
+
+Good examples:
+[Asked now]
+"What are the tradeoffs if my language is implemented as a compiler vs. interpreter?"
+[If you are open to either answer]
+"How should we balance our remaining time on better error messages
+vs. a more complete standard library?"
+
+
+** Open-ended language
+
+To get extensive, open-ended responses, you need to phrase the
+question in an open-ended way.
+
+Palladium rule: "How" and "Why" are your friends.
+These words invite the respondent to open up and provide their
+full thoughts, rather than a short yes/no answer. Yes/no data
+have their place, but they are quantitative.
+
+
+* Prof. Rose's Worst Survey Ever
+
+The following is an example survey I wrote to show you many bad
+practices, all together. Use this to guide the development of your
+own studies for your projects: see what I do wrong, and privately
+check your work for similar mistakes, and revise the mistakes if
+they are present.
+
+[Editor's note: This survey is taken in person, on the platform of
+a New York subway, using an off-white whiteboard marker, printed on
+paper in 7 point Times New Roman font]
+******* START OF WORST SURVEY EVER *******
+Demographics:
+
+Legal Name:
+Preferred Name:
+
+If you have undergone a legal name change:
+Previous name:
+Date of name change:
+Method of name change:
+Location of name change:
+
+Gender [select one]: Female / Male / Not declared
+
+Gender Identity [select one]:
+  Agender
+  All genders
+  Androgynous
+  Bi-gender
+  Demi-female
+  Demi-male
+  Female
+  Gender Fluid
+  Genderqueer
+  Intersex
+  Male
+  Non-binary/non-conforming
+  Transgender
+  Transgender Female
+  Transgender Male
+  Tri-gender
+
+Pronoun [select at most one]:
+  He/Him/His
+  She/Her/Hers
+  They/Them/Their
+  Xe/Xem/Xyr
+  Ze/Hir/Hirs
+
+Disability Status[select at most one]:
+  Hearing Impairment
+  Learning Impairment
+  Mobility Impairment
+  Speech Impairment
+  Visual Impairment
+
+Marital status [select one]:
+  Single (United States of America)
+  Divorced (United States of America)
+  Partnered (United States of America)
+  Married (United States of America)
+  Separated (United States of America)
+  Widowed (United States of America)
+
+Race [select all that apply]:
+  American Indian or Alaska Native
+  Asian
+  Black or African American
+  Hawaiian or Other Pacific Islander
+  White
+
+Ethnicity[checkbox]: Hispanic/Latino? 
+
+US Citizenship Status[select one]:
+  - US Citizen
+  - Permanent Resident
+  - Non-Citizen
+  
+
+Quantitative Questions:
+
+What year did you start using a computer?
+What brand of computer was it?
+How many minutes a day do you spend on a computer?
+On a scale of 1-10, how proficient of a typist are you?
+Enter your typing speed in characters per hour: ___
+
+Rate your responses to the following statements:
+
+"I like the proposed language"
+1. Storngyl Disagree
+2. Disagree
+3. No opinion
+4. Agree
+5. Strong Agree
+
+"I am likely to recommend the langauge to a friend"
+5. Agree Lots
+4. Agree
+3. Neutral
+2. Disagree Some
+1. Disagree More
+
+"I think more people should use the language"
+1. Agree as much as possible
+4. Disagree a bit
+2. Agree
+3. Neither agree nor disagree
+5. Disagree More
+
+"This language should come pre-installed on computers"
+6. Agree as much as possible
+4. Disagree a bit
+6. Simultaneously agree and disagree but in equal amounts
+2. Agree
+6. Neither agree nor disagree
+5. Disagree More
+
+Check all the following boxes that apply:
+
+- This language reminds me of Java
+- This language has useful features that Java does not
+- This language could be useful to a programmer that struggled to
+  learn Java.
+
+
+Qualitative Questions:
+
+"If time and money were no constraint and you could make any IDE for
+programming in this language, what are all the features it would
+have?"
+
+"What is your favorite thing about the language?"
+
+"Did your program feel fast?"
+

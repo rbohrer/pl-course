@@ -1,0 +1,104 @@
+Lecture 16: Operational Semantics, Part 2
+
+Last time, we started to define the operational semantics of programs: how programs run.
+However, we left out one of the most important features in all of programming: variables!
+Variables have a profound impact on the design of a language, including its semantics.
+Today, let's do a more complex operational semantics for a more complex language, with variables.
+
+** Scala
+Let's start by reviewing the full version of the interpreter we wrote in Scala.
+
+type Environment = Map[String,Value]
+def apply(env: Environment, e: Expression): Value = {
+    e match {
+      case value: Value => value
+      case Variable(name) =>
+      try {
+        env(name)
+      } catch { case e : NoSuchElementException => throw new InterpException(e)}
+      case ApplyOp(op, left, right) => applyOp(op,apply(env,left),apply(env,right))
+      case Let(name, definition, body) =>
+        val v = apply(env, definition)
+        val env2 = env + (name -> v)
+        apply(env2, body)
+    }
+  }
+
+At the heart of the interpreter is the type Environment, which is a mapping from strings
+(variable names) to values.
+
+** Environments
+Environments remain our focus in today's lecture. There are two basic approaches to reasoning 
+about variables in semantics: (1) eliminate variables by substituting in their definitions, or
+(2) use the environment to maintain a list of definitions and look them up upon use. Each
+approach is good for different things. Substitution-style reasoning is often required when doing
+a proof about a program, but environment-style reasoning is more faithful to how most programming
+languages are implemented, and typically more efficient for use in an interpreter.
+
+I use the variable E to stand for "any environment". Environments are defined by this grammar:
+
+E ::=  .   |  E,x|->v
+
+that is, a dot stands for the empty environment, and otherwise, an environment is a comma-separated
+list of mappings x|->v which map the name x of each variable to its value v.
+Note that we usually leave off the period (.) when writing a nonempty context.
+
+** Rules
+Because environments are used in the evaluation judgment, the definition of the evaluation judgement
+must change today. Evaluation is now written: E |- e \Downarrow v, which is pronounced "in environment E, 
+expression  e evaluates to value v". The symbol |- (\vdash in LaTeX) is called "turnstile".
+It does not exactly mean implication, but something close: everything to the left of a turnstile
+is either an environment or some other sort of "context" for the judgement on the right side.
+
+Let's rewrite the rules from the previous lecture using environments:
+
+          v value
+EvalVal ------------
+          E |- v \Downarrow v
+
+The second rule says that operations are evaluated by evaluating each argument,
+then applying the operation on the values:
+
+        E |- e1 \Downarrow v1   E |- e2 \Downarrow v2
+EvalOp  --------------------- 
+        E |- e1 op e2 \Downarrow v1 _op_ v2
+
+Nothing deep has changed in these rules. This is as should be expected, because environments
+are for handling variables, and neither EvalVal nor EvalOp use variables in any way. This was
+just a warmup using the new notation. Take a moment to note that the judgement "v value" has not
+changed from last time at all, because we don't need the environment to tell whether something
+is a value. 
+
+Let's look at the rules where environments matter most: the rules for variables.
+To evaluate a variable, look up its value from the environment (written E(x))
+           E(x) = v
+EvalVar  -------------------
+         E |- x \Downarrow v
+
+Note that the interpreter in Scala contained some error-handling code. In type theory,
+the equivalent to this error-handling code would be a new judgement "e error" which means
+"program e produces a runtime error in one step".
+
+                    *
+EvalVarErr  ------------------- (x \notin domain(E))
+             E |- x error
+
+This is the first rule where we wrote a side condition! 
+We only write a side condition when we need to write down some "premise" but don't know how to
+write that premise using any of our judgements.
+In the EvalVarErr rule, we want a premise like "x is not defined in E", but we don't have a judgement
+for that, so we write it as a side condition. The side condition I wrote is just a formal way of 
+saying x is not defined in E.
+
+That rule shows us what to do after we have defined a variable, but we also need a way to define the
+variable. That's where "let" comes in.
+        E |- e1 \Downarrow v1   E,x|->v1 |- e2 \Downarrow v2
+EvalLet ---------------------------------
+        E |- let x = e1 in e2 \Downarrow v2
+
+EvalLet is the first rule that changes E. In general, we change E whenever we define or redefine
+a variable. The EvalLet rule says that e1 should first be evaluated in the "current" environment E,
+then the resulting v1 is added to the environment as the definition of x while computing e2.
+The final result v2 of e2 is the result of the let.
+
+

@@ -1,0 +1,267 @@
+Lecture 25: Twine
+
+* What is Twine
+ 
+Twine is an open-source, web-based  environment for developing 
+interactive fiction (which include text adventures and visual novels),
+first released in 2009. One of it selling points is that it allows
+new users to create games without programming, strictly using the
+graphical interface, but then to add more complicated functionality using
+HTML, Javascript, and CSS if and when they're ready to. Building on
+themes from the Processing lecture, today's lecture will put focus 
+on community, and *who* uses Twine and how. 
+
+** Example
+In-class: Let's write and play through a basic Twine game :D
+
+** Formally
+
+Though I am not aware of any published formal semantics for Twine, it's
+worth trying to give it one as an exercise. The fundamental concept in
+Twine is a directed graph, wherein each passage of text corresponds to a 
+node and each directed edge represents to a node of text that could follow 
+another. For example, if a node has two out-edges, then the player gets to
+pick which passage of the two passages of text comes next, and if the node 
+has one out-edge, the player gets no choice. In serious Twine usage, it is
+essential that the language is extensible beyond basic graph structure, using
+HTML, Javascript, and CSS. However, that adds complexity to the formalism,
+so we begin with a non-extensible Twine and then add extensibility.
+
+*** Not Extensible
+
+A Twine program (variable m for "machine configuration") consists of program 
+graph G and current state s:
+
+m ::= (G,s)
+
+where a graph consists of vertices and edges
+
+G ::= (V,E)
+Each vertex v is a pair (n,p) of vertex identifier n and passage of text p.
+We write VN = {n | exists p s.t. (n,p) \in V}
+Each edge e is a triple (u,v,l) where u \in VN is the source, v \in VN is the
+destination, and l \in String is a label identifying the edge.
+A state s is just a string s \in VN. We do not bother developing a type system
+for Twine, but we expect basic properties such as edges only using vertices
+drawn from VN.
+
+The operational semantics of Twine should explain which vertices are explored
+as the player plays the game. However, those actions depend on the player's 
+actions. Actions are indicated by edge labels l, and an entire playthrough of
+a Twine game is indicated by a sequence l1,...lk of k edge labels.
+
+We write m |->_l m' to mean that m steps to m' in one step along label l and 
+m done_{l1,...,lk} to mean that m is done executing given sequence l1,...,lk
+of remaining actions. We write m |->*_l1,...,lk to mean that m steps to m' 
+in k steps, each following the given edge label. Then, the semantics of Twine 
+programs are defined by the following rules:
+
+The judgement "m done" is trivial: execution is done exactly when the sequence
+of remaining actions is empty:
+
+                  *
+DoneEmp-------------------- (if k = 0)
+         m done_{l1,...,lk}
+
+The judgement m |->_l m' has a single rule:
+
+         G = (V,E)   (s,s',l) \in E
+StepOne ---------------------------- 
+          (G,s) |->_l (G, s')
+
+and the judgement |->* is defined from the other two:
+
+             m done_{l1,...,lk}
+StepsDone --------------------------------
+             m |->*_{l1,...,lk} m
+
+
+             m |->_l1 m'   m' |->*_{l2,...,lk} m'' 
+StepsNext -------------------------------- 
+             m |->*_{l1,...,lk} m
+
+This computational model of Twine is surprisingly similar to a standard
+formal language!
+
+(Note: We have not discussed this formal language in this course. I am discussing
+it here because some students have seen it in related courses.)
+
+Theorem: Not-extensible Twine is equivalent to deterministic finite automata (DFA)
+with the following modifications:
+1) DFAs have "accepting" and "non-accepting" states, which would correspond to 
+winning and losing states of a game.
+2) DFAs allow every move from every state, but Twine games need not do this.
+To make a DFA, create a new "stuck" state and have every undefined action go there.
+Proof: (Omitted)
+
+Corollary: The number of moves in the shortest winning play is at most the number
+of prompts in the game.
+Proof: By the Pumping Lemma.
+
+Corollary: If any winning play contains a cycle, then arbitrarily long winning plays
+are possible.
+Proof: By the Pumping Lemma.
+
+Corollary: The set of all winning plays forms a regular language, i.e., there exists
+a regular expression which detects all winning plays.
+Proof: By equivalence of DFAs and regular expressions.
+
+*** Extensible
+
+How should we formally define an extensible language? One of the easiest
+ways to do this is to treat the extensions as entirely abstract. All we know
+about extended Twine is that there exists some extra state (set ES) beyond
+the vertex names, and there exist some extended actions that can
+affect the extended state in arbitrary ways (write "action(s,l)" for the 
+state resulting from label l on state s).
+
+It now suffices to redefine the state s from a vertex n to a pair (n,es) 
+where es \in ES is extended state, and to redefine action sequences so that
+each l is an arbitrary string, not necessarily one that has an edge. We need
+only add one new stepping rule
+
+
+         G=(V,E) s=(n,es)   (n,n',l) \notin E (for all n' \in VN)
+StepExt ---------------------------- 
+          (G,s) |->_l (G, action(s,l))
+
+and slightly modify StepOne
+
+         G = (V,E) s=(n,es)  (n,n',l) \in E   s'=(n',es)
+StepOne ---------------------------- 
+          (G,s) |->_l (G, s')
+
+
+* The Paper
+
+Today's paper is thoroughly an HCI paper, but uses the PL Twine in
+a fundamental way. The core topic of the paper is: "How should an
+HCI researcher or practitioner conduct design workshops where the
+participants will explore their lived experiences of interpersonal
+racism?". The paper's proposed answer is "By Making Fiction in Twine."
+
+These worshops are one kind of participatory design, this new use
+of interfiction was dubbed "foundational fiction," and it stands in
+contrast to "Design Fiction." Let's explore each of those topics in turn.
+
+** Participatory Design
+
+In HCI research, Participatory Design (PD) refers to many design 
+approaches that seek to democratize the research participants by allowing 
+research  participants to play a role in the design of the design artifact.
+In the least radical forms of PD, participants provide formative input to
+the design team, who then use it in their design process. In more
+radical forms of PD, the participants typically play a direct role in
+design and have direct co-ownership of the design outputs. Even radical PD
+typically maintains a distinction between designer (or researcher) and the
+research participants. For approaches that blur that distinction by elevating
+the participant, see "Research-Practice Partnerships"; for an approach that 
+blurs the distinction by making the researcher the subject, see "Autoethnography".
+
+In today's paper, the role of PD is thus: the researchers' goal in running
+workshops about lived experiences of interpersonal racism is to ultimately design
+software tools that would be used to support victims of racism in its aftermath.
+The participants' participate in the design of those tools, particularly by 
+identifying what the function of that software should be in order to help them.
+The challenge is that to design technologies in response to any sort of 
+intepersonal trauma, one must first relive and explore that trauma, which poses
+high emotional cost and risk of retraumatization even in an optimal environment, 
+let alone a setting with strangers. The use of fiction is meant to provide mental
+distance from trauma and minimize re-exposure to trauma.
+
+** Design Fiction
+
+Foundational fiction stands in contrast to Design Fiction. Design Fiction is the
+use of fiction to explore future possibilities realities, typically to speculate
+on the role of the design artifact in those realities. Those realities could
+range from utopias to dystopias, and from social to technical. We could ask:
+
+- What phone apps would be important in a post-climate-catastrophe world?
+- What online democratic procedures would be best in a totally honest world?
+- How could use wearables in new ways if we had perfect Internet everywhere on Earth?
+- How should modern software be designed for communities that still have very limited
+  access to modern computing hardware?
+
+In Design Fiction, the role of the fiction in the design is quite direct. It creates
+a space for design exploration. It performs worldbuilding, then stops, leaving room
+for the designers to fill in new possibilities.
+
+** Foundational Fiction
+In contrast, Foundational Fiction is about participants who exist in the
+here and now, so named because it provides a new foundation for discussions
+between the participants. Its key feature is that it provides the participants
+with greater agency about how much personal information they reveal during the
+interactions. Fiction always contains an element of its author, and the power
+of fiction here is that the participants can choose how much of themselves to
+put into their stories; whether they write autobiography or fantasy, the other
+participants might never even know the difference.
+
+The goal of this foundational fiction is to improve sense of safety among
+participants, but sense of safety is difficult to measure directly. Instead,
+the researchers measured it indirectly, via another key objective. A major 
+practical end of increasing felt safety was to increase participant engagement
+and creativity in proposing technological solutions. On these metrics, the 
+authors deemed the work successful: the 26 participants  generated 122 ideas, 
+of which they produced storyboards of 20 (as a follow-up step). This metric 
+highlights that Foundational Fiction, like Design Fiction, still plays an 
+important role in generating design ideas, but its role is more indirect.
+
+* Discussion
+
+One of the main motivating observations in the paper is that many people do
+not feel comfortable discussing racism, especially around people they don't
+know well. So it's okay if we choose not to talk about it. But I do want to
+make some time for discussion, to the extent there is interest.
+
+QUESTION: Is this sort of agency something you'd care about? Why/why not?
+
+QUESTION: Can you think of a time that fiction helped you process a difficult
+emotional experience?
+
+QUESTION: Do you have any favorite media that address a topic that is
+personal for you?
+Example: Prof. Rose likes the indie game "One Night, Hot Springs"
+
+
+QUESTION: Can you think of a time that software helped you through a difficult
+emotional experience? It could be fiction *or not*.
+
+Instructor's lived experience: Unsurprisingly, I picked this paper because it
+resonated with me. Though I will never have lived experience of racism, I can
+relate to the desire for agency with one's own story. Whenever someone has to
+advocate for themself, there's a sense that it's mandatory to disclose 
+everything. Maybe that's a me thing (I'm pretty open), but this paper reminded
+me of the importance of story-tellinng for reducing the burden of sharing one's
+own story.
+
+** Why Twine?
+
+The choice of Twine is contingent; the authors could have chosen another tool to
+complete their study. But I believe the motivation for it is clear: only a 
+code-free tool is accessible to participants who have zero coding experience. This
+is not a small point, because it is a depressing reality that the CS world is
+far from racial equity. An approach that relied on coding would like restrict its
+attention to racial minorities in tech, who may have a unique set of shared experiences
+which, though worthy of study in its own right, does not capture the full range of
+lived experiences of racism.
+
+** Code-Free Content: For or Against?
+
+QUESTION: Have you ever had strong emotions about a program you wrote? Explain.
+
+I ask this question because the experiences of racial minorities in tech are no less
+important than anyone else, and Foundational Fiction is not the only potential role 
+for fiction in telling personal stories. The idea of Procedural Rhetoric (see: Ian Bogost)
+comes to mind: programs make arguments and try to us convince of things. Likewise, they
+can tell our stories and convey our emotions. This is particularly pronounced in the 
+world of video games. Many indie game developers use their own lived experience as the
+inspiration for the narrative of a game and thus as a route for emotional release. But
+I also think this could go for any programmer and any program, because PLs and programs are
+both ultimately acts of design, authorship, even storytelling.
+
+
+
+
+
+
+

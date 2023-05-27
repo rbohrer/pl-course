@@ -1,0 +1,306 @@
+Lecture 03: What is a Programming Language (PL)?
+
+Outline:
+- Everything is a programming language (PL)?
+- Schools of thought
+- Paradigms
+- The parts of a CS Theory project
+- Other projects
+- Conclusion: Not everything is a PL
+
+Discuss: For your projects, what languages
+do you consider using, why, and what weaknesses come with that choice?
+
+** Everything is a programming language (PL)?
+
+There's a reason that lots of people take PL classes: the ideas from
+PL classes come up in a lot of different places.
+
+Where could these ideas come up? They certainly come up if you write
+compilers for a living or if you do graduate-level research about PL
+theory for a living. I love those things, but a small number of people
+do this. So why the attention?
+
+Answer: Because "PL thinking" shows up everywhere. 
+We'll define that soon. Here are some examples first.
+
+- Domain-specific languages (DSLs) are programming languages 
+  optimized for a certain application domain.
+-- Shader languages like GLSL are designed for writing graphical
+   shaders, used in video games and other digital media
+-- Permission policy languages are used to let users define complex
+   policies for managing their own security and privacy
+-- Macro languages (e.g. AutoHotKey) are used by end-users to improve
+   productivity in diverse end-user computing tasks.
+   
+- Little languages and pseudo-languages: respectively, these are (1)
+  structured languages that lack much computing power and (2) programs
+  that, despite not looking like languages at all, have all the same
+  interesting structure that a language does.
+
+Little language examples:
+- Config files
+- Log files
+- Plain-text file formats for data
+
+Pseudo-language examples:
+- Spreadsheets
+- Email filters
+- Effects and filters in image/video/sound-editing programs
+
+Once you look at PL this way, you can see why PL is for everyone. Even
+if you never wrote a line of code in your life, you're still likely to
+engage with pseudo-languages. Everyone from office workers to
+creatives use these, not just compiler engineers. And most programmers
+will write code that deals with little languages or pseudo-languages
+at some point in their career.
+
+** Schools of Thought
+
+In this course, I often discuss how there are many "schools of
+thought" about PLs. What this means is that different communities of
+people think about programming languages in radically different
+ways. This course is not here to tell you which school of thought you
+should belong to. It's here to provide you breadth, and see which
+thoughts exist.
+
+Examples:
+- "The Type Theory School"
+
+This school says that PLs are formal languages that can be defined and
+analyzed mathematically. A "good PL" is a language that we can analyze
+in powerful ways. Typically, a "good PL" has a rich static type system
+that lets us prove a soundness theorem, which is something like:
+
+Theorem[Type Safety]:
+"Any time your compiler accepts a program from you without giving an
+error message, that program will satisfy
+<some specific notion of correctness, chosen by the designers>"
+
+What does correctness mean?
+-  If program has type t, then result has type t
+-  If program has a type, then no segfaults
+-  No data races and deadlocks
+-  No memory leaks
+
+I was trained in this school. Many of us joined this school because it
+appeals to our personal sense of mathematical beauty. That does not
+make it better nor worse than other schools!
+
+- "The Software Engineering School"
+This school says that researchers should study how professional
+programmers use programming languages. We should design languages and
+language tools based on how professional programmers are likely to use
+them. At the same time, we should use this knowledge to propose how
+programmers should work together and how their managers should do the
+job of management. Both the language and person can change.
+
+- "The Social Science School"
+This school overlaps highly with both Software Engineering and
+Critical Studies - these are not binary categories. This school
+emphasizes that researchers should study humans. Software Engineers
+will use social science to make better languages, tools, or management
+strategies. But social sciences could also study humans for humans'
+sakes. They often study social issues within communities of
+programmers and computer users. Who do these communities include or
+exclude? Why? What could be done about that? These questions are
+answered using scientific approaches, which are often but not always
+quantitative.
+
+- "The Critical Studies School"
+This school also studies social issues. It asks who communities
+include or exclude? Why? What could be done about that? The difference
+is that it uses methods from the humanities. Important books about
+computing could be read closely and their language analyzed. People
+look at rhetoric about languages and rhetorical structure present in
+code itself. People do theory-building, taking core ideas from social
+theorists and applying them to the specifics of PL communities.
+This school is relatively small, but exciting. 
+
+- "The Lay Practitioner School"
+This is the biggest school: people who code. The Type Theory school
+often mocks this group and the Software Engineering school might
+sometimes patronize it. This is not okay. Most of our students go on
+to this school.
+
+It's important to know that these different groups *exist* though,
+because it allows you to recognize that each of these groups uses
+different vocabulary to talk about programming languages, uses them in
+different ways, and has different conversations. When I use vocab from
+the Type Theory school, it is common for students to struggle with
+communication because they're only familiar with how those words are
+used in the Lay Practitioner school. My goal is not to convert you,
+but my goal *is* to make you bilingual or even a polyglot. In
+particular, a Lay Practitioner can learn a lot from the Type Theory
+school because it will help you make thoughtful choices about which
+tools you want to use in your career, when, and how.
+
+EXERCISE: Which schools of thought are most likely to influence your
+project, and how? Any school of thought that you’re specifically not
+interested in?
+
+Tourism:
+PL courses are often organized as tours. Many courses take a tour of
+different kinds of programming languages; others take an extended tour
+of the Type Theory school. In this course, the first half is a tour of
+skills for performing your course project and the second half is a
+tour of *the different schools of thought*. This is how I reconcile
+my love of the Type Theory school's mathematics with my love of the
+Critical Studies school's attention to humans.
+
+** Paradigms
+I left out one of the most common styles of PL courses. This arguably
+represents its own school of thought, but I think that school is
+fading in the research world.
+
+When you look up a PL on Wikipedia, it often comes with a 
+list of language paradigms, such as:
+- Imperative
+- Functional
+- Logical
+- Object-oriented
+
+I'm not criticizing Wikipedia. These are meaningful technical terms 
+that can be given meaningful definitions:
+
+"Imperative:" The programmer's core mental abstraction is program state
+
+"Functional:" The programmer's core mental abstraction is the input-output 
+behavior of mathematical functions
+
+"Logical:" The programmer's core mental abstraction is logical proof
+
+"Object-oriented:" The programmer's core mental abstraction is objects
+
+Lists of paradigms often include other terms like "scripting
+language", "high level language", or "declarative language". These
+terms do not have clear technical definitions, but they have
+sociological significance - they mean something to the Lay
+Practitioner school.
+
+Why then don't I give you a tour of these paradigms?
+
+Answer 1: I don't think you need a teacher for that.  I think
+this is the kind of knowledge that people tend to self-study or study
+from peers throughout their career.
+
+Answer 2: Modern programming languages mix these paradigms
+freely. As programmers, our abilities of self-expression have reached
+the level where we don't need these boxes anymore.
+
+Answer 3: I want to teach you lasting, generalizable knowledge, yet
+help you connect that knowledge to stuff that happens in your real
+life and career. The "Schools of Thought" approach gives you a broader
+mental map of generalizable knowledge, and the project approach lets
+you stay connected to your real life and career.
+
+
+** The parts of a CS Theory project
+
+On the project handout, "theory-heavy CS projects" align with the Type
+Theory school. Let's take a tour of what a Type Theorist will say the
+"parts" of a language are. We're taking this tour now because it's
+also a guide to the first part of the course - if you design and build
+a language, what are all the things you'll have to do?
+
+Mini-outline:
+- Syntax
+- Execution (dynamic semantics)
+- Types (static semantics)
+- Correctness (soundness+verification)
+
+**** Syntax (Is this a program? Which one?)
+We will learn how to specify the syntax of a PL. We will use regular
+expressions to describe the basic building blocks of a program and use
+context-free grammars to describe how the pieces fit together. If you
+took CS 3133 at WPI or similar courses, this section is likely review
+for you. However, this section is important, because our students come
+in all kinds.
+
+**** Execution (How do I run it? What happens then?)
+You will learn how a Type Theorist talks about running a program.
+Operational semantics give an exact definition of this.  Even for
+coding-heavy projects, it's great to outline the semantics first,
+because it serves as a guide for your implementation.
+
+PLs can be implemented with interpreters (another program, that runs
+it) or compilers (a program that transforms it into another language,
+which could be either high-level or low-level). You are welcome to do
+either, but because another course covers compilers, I will focus on
+interpreters, which are faster to implement but slower to run.
+
+
+**** Types (static semantics)
+Type Theorists care *a lot* about "What can I learn about your
+program, without running it?" because this question is closely related
+to "What can a PL designer do to put more correct code in the world?".
+
+The first step is typically a type system. This is a set of
+mathematical rules that assign types to programs and, importantly,
+tell you if a program is well-typed (has a type) vs. ill-typed
+(does not have a type at all). 
+
+**** Correctness (Soundness+Verification)
+The reason that catching well-typed and ill-typed programs is so
+important: the Type Theorist spends a lot of time proving correctness
+theorems such as Type Soundness: every well-typed program runs without
+certain kinds of errors, and if it terminates, it gives back an answer
+of the right type. Verification is an intimately-related school, but
+includes "What can I learn about correctness after I write the code
+and before I run it?".
+
+** PL Thinking
+After our mini-tour of the Type Theorist school, I can now tell you
+what I meant when I said this course will teach you "PL Thinking,"
+more properly called Type Theorist Thinking.
+
+PL Thinking is the mindset that PL design is about
+abstraction-building, PL discussion is abstraction-criticizing, and
+programming is abstraction-using.
+
+Exercise: Write some abstractions on board.
+
+Examples:
+
+Types:"I don’t care what x is, as long as it’s an integer"
+Semantics:"I don’t care about compiler implementation details"
+Correctness:"I don’t care what program you write, as long as it does X"
+
+In C: divide program into procedures (like functions, but have state)
+In Java: divide program into objects. Objects combine state and code,
+but hide some of it, making it abstract
+
+In Racket: divide main function into helper functions. In Racket/Lisp:
+all language features are nested lists with parentheses.  This enables
+*homoiconicity*, representing programs using the language's core
+datatypes.
+
+In this class, I don't care about being homoiconic.
+I'm just here to be an iconic homo.
+
+** Other projects
+
+I love abstraction-building because it's a great mental workout and
+lets us feel like mathematicians and artists at the same
+time. However, there are important and severe limitations if this is
+the only way we ever thinking. These limitations have been studied in
+the humanities for decades in the contexts of philosophy and logic,
+which are intimately connected to PLs.
+
+The risk of abstraction-building is that it is reductionist. In the
+humanities, this poses great dangers; we all know what happens when we
+reduce a person to a narrow aspect of their identity and declare them
+to be the Other, or when the people in power choose which aspects of
+your identity you're allowed to care about and how.
+
+Reductionist risks do transfer to PL world. PL-thinking courses have
+been rightly criticized for emphasizing mathematical competition and
+thus telling newcomers that they don't belong. They have also been
+rightly criticized for de-emphasizing practice and application so much
+that they end up significantly narrowing their audience.
+
+** Conclusion: Not everything is a PL
+My admittedly-ambitious dream is that my teaching approach can give
+PL thinking its due credit for the beauty and programming power it
+provides, while escaping the trap of reductionism and making this a
+classroom for everyone. Let me know how I do.

@@ -1,0 +1,193 @@
+Lecture 15: Operational Semantics, Part 1
+
+Recommendation: Today introduces a lot of new core notation. I recommend making a cheat sheet
+explaining each of these new pieces of notation.
+
+We will spend a few weeks in the Type Theory school of thought.
+Theorists care a lot about knowing what everything means in precise mathematical detail, because:
+
+A fundamental programming question is: “Does Code Do What I Want?”
+A fundamental interpreter question is: “Did I Run Code Correctly?”
+
+In programming language theory, the word for "formal mathematical meaning" is semantics.
+Defining and reason about these semantics are big parts of PL research, and there are
+several major paradigms for defining semantics:
+- Operational semantics = "How does the program run?"
+   Big step: "What's the final result?"
+   Small step: "What happens in the next step?"
+     (better for handling infinite loops)
+- Equational semantics = "When are two programs the same?"
+- Axiomatic semantics = "What can I prove about a program?"
+- Denotational semantics = "What mathematical object does each program denote?"
+
+Let's take a moment to put today's lecture in context. There's a hierarchy of
+programs:
+
+*** PROGRAM HIERARCHY ***
+Well-formed <-
+Executable <-
+Well-typed <-
+Correct <-
+Happy
+
+For example, every well-typed program is executable and syntactically well-formed,
+but not every syntactically well-formed program is executable, and not ever correct
+program is a program that makes us happy. Operational semantics talks about the "Executable"
+stage of the hierarchy.
+
+It's helpful to know these different stages exist, because different kinds of errors in a program
+correspond to different stages of the hierarchy:
+
+- Syntax error = not well-formed
+- Runtime error = not executable
+- Type error = not well-typed
+- Produces result, but wrong result = not correct
+
+So today we're not talking about syntax errors nor type errors, we're just talking about
+defining how a program runs.
+
+
+Recall Key Vocab: 
+An expression e is a program that we can try to evaluate.
+A value v is a program that is done evaluating.
+Values are a subset of expressions.
+In our simple language today, arbitrary-precision integers are the only values.
+
+EXERCISE: Write some expressions on the board
+EXERCISE: Circle the ones that are values
+
+Big-step operational semantics (evaluate to a value) and small-step operational semantics 
+  (step to next expression) are both useful
+In this course, we write e \Downarrow v  for big-step evaluation, spoken “e evaluates to v”
+In this course, we write e1 |-> e2 for small-step stepping, spoken “e1 steps to e2” (in one step).
+If you ever see e1 |->* e2, this means “e1 steps to e2” in any number of steps
+We occasionally write e1 = e2, meaning that e1 and e2 produce the same value or same behavior.
+
+EXERCISE: I write 3 expressions on different columns of the board, you use step notation to write
+the traces on the board.
+
+
+** Inference Rules
+
+Throughout CS 536, we use inference rule notation for semantics (and types)
+Vocab: Anything defined by inference rules (like “e1 |-> e2”) is a judgement.
+
+
+Every rule is written with a horizontal line.
+There is exactly one judgement, called the *conclusion*, below the horizontal line.
+There are zero or more judgements, called the *premises*, above the horizontal line.
+The name of the rule is written to the left of the horizontal line. Any extra information,
+called a "side condition," can optionally be written in parentheses to the right of the line.
+Thus the most general format for an inference rule is:
+
+     FirstPremise    ...           LastPremise
+Name ----------------------------------------  (optional side condition)
+           Conclusion
+
+The meaning of a rule is when all premises hold, then the conclusion holds.
+It is called an inference rule because it is the rule *by which* we infer the conclusion from
+the premises. In the general format, we would read the meanining of the rule as 
+"by rule Name, we infer that when FirstPremise and ... and LastPremise all hold, then
+ Conclusion holds"
+ 
+Most rules have at least one premise. When a rule has zero premises, we write a * above the
+line to indicate explicitly that there are zero premises.
+
+           *
+Name -------------  (optional side condition)
+       Conclusion
+
+** From Interpreter to Operational Semantics
+
+Big-step operational semantics follow a similar structure to intepreters, so let's
+read the interpreter to get inspiration for how to write the rules. Today we will
+*only* look at the cases that *do not* need the environment. Because we have already
+introduced lots of new notation today, we will leave the environment for next time.
+
+def apply(env: Environment, e: Expression): Value = {
+    e match {
+      case value: Value => value
+      case ApplyOp(op, left, right) => applyOp(op,apply(env,left),apply(env,right))
+    }
+  }
+
+The first case says if e is already a value, then it evaluates to itself.
+The second says if e is an operation applied to operands we recursively evaluate the
+operands, then apply the operation to the operands to get the result. Before writing
+down any rules, it's good that we skimmed the interpreter, because this tells us what
+the *key notions* are that we want to discuss while defining semantics. In the next
+section, we make each of those key notions into a *judgement*.
+
+**** [This will change next lecture!] Defining the operational semantics judgements
+The key notions we identified were:
+- Is e a value?
+- Does e evaluate to value v?
+- What value v results from applying operation op to values v1 and v2?
+
+The first two will be defined as judgments; the third definition is not a judgement.
+
+Definition: The judgement "e value" holds iff e is a value.
+
+Definition: The judgement "e \Downarrow v" holds iff e evaluates to the value v
+
+Definition: Let "op" be any of the operator symbols, e.g., the symbols "+,-,*,/".
+Then _op_ stands for the corresponding mathematical operation on numeric values.
+e.g.,   v1 _+_ v2 is the numeric value resulting from evaluating v1 + v2.
+If we wanted to be less precise, we could write "+" for both, but we prefer to
+keep these two ideas separate "a program that adds" vs. "the resulting sum".
+
+**** The Rules
+
+The first rule says that a value evaluates to itself:
+          v value
+EvalVal ------------
+          v \Downarrow v
+
+The second rule says that operations are evaluated by evaluating each argument,
+then applying the operation on the values:
+
+        e1 \Downarrow v1   e2 \Downarrow v2
+EvalOp  --------------------- 
+        e1 op e2 \Downarrow v1 _op_ v2
+where op is one of +,-,*, or /.
+
+Judgements like \Downarrow follow their own syntactic rules.
+It is essential that the "v" in e \Downarrow v  (i.e., the right-hand side) 
+is a value, otherwise the judgement is not syntactically well-formed.
+*This* is why we make a pedantic distinction between op and _op_: 
+v1 _op_ v2 is a value, the numeric value for the sum of v1 and v2,
+thus the rule's conclusion is syntactically well-formed.
+
+** Relating judgements
+To strengthen our knowledge of operational semantics, let's reflect
+on how the different judgements (\Downarrow,|->,|->*) relate to each other.
+
+Note that |->* is defined as repeated stepping (we have not defined the
+stepping judgement |-> today).
+
+I give an example that relates evaluation (\Downarrow) to the equality judgement (=)
+which means that two programs have the same value/behavior:
+Example:
+         e1 |->* e2
+StepsEq -----------
+          e1 = e2
+
+It says if e1 steps to e2 in any number of steps, then e1 and e2 have equivalent
+values.
+
+EXERCISE: Write a rule that relates at least two of the judgements \Downarrow,|->,|->*,=.
+
+** Closing thoughts
+The "Type Theorist" part of this course can feel overwhelmingly pedantic for
+people who aren't into formalism. But there are good reasons that we visit 
+type theory world on our tour:
+- Some people do enjoy this, and I want you to discover whether you enjoy it or not
+- If you want to read research papers in this area, you will *need* to practice reading
+  inference rules
+- Computers are pedantic, and we need to be just as pedantic if we want to describe computers
+  with full accuracy. For example, the simple topic of numbers today reveals a lot of complexity.
+  Computers have all different types of numbers: naturals, integers, floating-point numbers, 
+  rational numbers, and so on. We're not done defining a language until we have defined these details.
+
+
+

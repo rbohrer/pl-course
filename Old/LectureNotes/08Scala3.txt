@@ -1,0 +1,422 @@
+Lecture 08: Scala, Part III: Abstract Syntax Trees + Elaborators
+
+- Review: Fastparse parsers
+- Abstract syntax trees
+- case class
+- match
+- Identifiers
+- New parser
+- Elaborators
+
+* Review: Fastparse parsers
+
+Let's briefly review the parsing code from the Fastparse lecture.
+
+1 import fastparse._, NoWhitespace._
+2 def number[_: P]: P[Int] = P(CharIn("0-9").rep(1).!.map(_.toInt) )
+3 def parens[_: P]: P[Int] = P("(" ~/ addSub ~ ")" )
+4 def factor[_: P]: P[Int] = P( number | parens )
+5
+6 def divMul[_: P]: P[Int] = P( factor ~ (CharIn("*/").! ~/ factor).rep ).map(eval)
+7 def addSub[_: P]: P[Int] = P( divMul ~ (CharIn("+\\-").! ~/ divMul).rep ).map(eval)
+8 def expr[_: P]: P[Int]   = P( addSub ~ End )
+
+On each line, the type annotation P[Int] means that the parser returns
+a value of type "Int". This fact conflicts with our understanding of a
+parser's job.
+
+The parser's job is to convert a string into structured program
+representation. The above example "parser" does far more, it executes
+the program, and computes the value of its result. That second task is
+called interpretation. In real programming languages, parsing and
+interpretation are separate jobs handled by separate programs (a
+parser and an interpreter). The fastparse documentation just combined
+these two tasks for the sake of having a short, complete example.
+
+Today, we'll write an *actual* parser. We will introduce structured
+representations of programs (abstract syntax trees, ASTs for short) and
+introduce Scala features that work well for them (case class, match).
+We will add a new feature to our toy programming language (variable
+names/identifiers), then write a new, real parser for it.
+
+We will close by talking about optional steps ("elaborators") that could
+be performed between parsing and interpretation.
+
+
+* Abstract syntax trees
+
+The typical data structure for representing programs is called an abstract
+syntax tree (AST).
+
+The clearest ASTs are those for expressions. An AST is a tree-shaped
+data structure.  For expression ASTs, each leaf contains a terminal
+symbol and its data (e.g. a leaf corresponding to a literal number
+would contain the number as data). Each non-leaf node contains a variable
+symbol (such as + or -) and its child trees describe the operands.
+
+I'll draw an example on the board
+
+In class: I draw a pretty tree for (1+2)*5
+
+      *
+     / \
+     +  5
+    / \
+   1   2
+
+Exercise: Draw a pretty tree for 5-(3*(1+2))
+
+Recall that expressions are not the only kinds of program; we could
+also have statements, definitions, and so on.  Data structures for
+these programs are defined in the same way as ASTs, it's just that
+sometimes they will have a tree shape and sometimes they won't.
+Statements, like expressions, are usually tree-shaped.  Definitions
+are often less tree-shaped: we might have a flat list of all the
+definitions in a program, each of which pairs a name with a definition
+body.
+
+* Case class
+
+How do we define ASTs in Scala? Like most typed functional languages,
+the answer is a feature called "algebraic datatypes" (ADTs).
+
+*** Skip this if new to functional programming ***
+Context note: If you have used another typed functional language before,
+be aware that the keywords are different in each language:
+Haskell: data
+Standard ML: datatype
+OCaml: type
+Rust: enum
+Scala: *case class*
+*** end of skip ***
+
+In Scala, ADTs are implemented using a feature called "case classes".
+Scala prizes its ability to interact with Java, and case classes are
+actual classes, like you could use in Java. They're called "case"
+classes because they have strong support for case-analysis,
+a.k.a. pattern-matching. The Scala syntax for case classes is
+mysterious at first, but follows a consistent pattern.
+
+Suppose we want ASTs for the following polynomial language:
+
+E ::= E OP E | N
+OP ::= "+" | "-" | "*" | "/"
+where E is the start symbol and N means "numbers".
+
+Abstractly speaking, an algebraic data type is a type like:
+
+myType is inductively defined to be either:
+  variant1 (arguments)
+or ...
+or variantN (arguments)
+
+where the functions variant1 .. variantN are called constructors
+where E is the start symbol and N means "numbers" because they
+construct a value of myType, and where the arguments can contain
+more values of myType in addition to other types.
+
+For each variable symbol that has multiple rules, we make a new ADT.
+Each of those rules gets a variant. Each ADT turns into a Scala "trait"
+and each variant turns into a case class.
+
+Thus, here's the Scala code for defining expression ASTs:
+
+sealed trait Expression
+
+final case class ApplyOp(op : Operator, left: Expression, right: Expression) extends
+Expression
+
+final case class Number(value: Int) extends Expression
+
+sealed trait Operator
+final case object Plus
+final case object Minus
+final case object Times
+final case object Divide
+
+Though this code is systematically generated from the context-free
+grammar, it contains many new Scala keywords and subtleties. Let's
+discuss each, one-by-one.
+
+* case object
+A case *object* is like a case class, except there's only one of
+it. Actually, "object" is a keyword all its own, and should be used
+wherever you want a singleton object (singletons with data are often
+considered bad practice, but object is a very nice replacement for,
+e.g., static *methods* in Java)
+
+If you don't want to use case object, you could use case class for
+your whole life and suffer no consequences. Mainly you get to write
+fewer parentheses.
+
+* final
+Like in Java, "final" means "nobody can ever extend this class,
+ever". We usually want this when writing case classes, because they're
+supposed to be simple data. If you forget it, your code will still
+work, the compiler just won't warn you away from extending it.
+
+* sealed
+The Scala keyword "sealed" is a more specialized counterpart to
+"final", mostly used for case classes. A "sealed" class can be
+extended, but it can only be extended by other classes that are
+defined in the same file. I.e., the trait for a case class is extended
+only by its case classes.
+
+* trait
+Speaking of traits: traits in Scala are similar to (modern) Java interfaces.
+They're like classes where you don't implement everything.
+
+* class naming note
+There are a few subtleties to note about class names:
+
+1) You cannot have two classes with the same name within the same namespace
+(i.e., same file or same file directory).
+This is why I used the name "ApplyOp" for operator expressions, to distinguish
+them from the trait "Operator".
+
+
+2) Do not give two classes names that differ only by case, like HeLlO and Hello,
+if they are in the same file or directory. This is because Scala uses class names
+to generate names for files stored on disk. On typical Unix and Mac OS filesystems,
+which are case-sensitive, this code will work, but then it will mysteriously fail
+to compile on Windows and any other case-sensitive systems.  
+
+* constructors
+Once you define a case class, you can call its "constructor" function
+to create a value of that type, for example, Number(5) is a value of
+type Number. The keyword "new" is used for constructing all classes
+*except* case classes, which just use the constructor name.
+
+* match
+The big selling point of case classes is that they work well with pattern-matching.
+*This alone is enough reason to use a language with ADTs for your project*, because
+implementations of PLs make extensive use of pattern-matching.
+
+In Scala, pattern-matching uses the "match" keyword, whose basic syntax is
+
+expr match {
+ case pat1 => expr1
+ ...
+ case patN => exprN
+}
+
+where "expression" is an expression of any type, "patI" are patterns that match values
+of that type, and "exprN" are the expressions to use in each case.
+
+The if-then-else feature is actually a special case of "match" and the following are
+equivalent:
+
+if (P) expr1 else expr2
+
+or
+
+P match {
+  case true => expr1
+  case false => expr2
+}
+
+That is, we compute P (a true-or-false-value). If it's true, we
+evaluate expr1, else we evaluate expr2. Note that the entire "P match
+{ ... }" is itself an expression, and its value is the value of the
+matching expr1/expr2.
+
+*** Patterns
+Patterns are a little language all of their own, following this grammar:
+
+pat -->  caseObj 
+       | literal
+       | (pat1, ..., patN)
+       | caseClass(pat1,...,patN)
+       | id | _id | _
+       | pat if e
+       | <see docs for full info>
+
+- case object patterns match exactly that one value, and are written
+by writing the name of that value (e.g., true and false above)
+e match {
+  case pat1 => e1
+  ...
+  case patN => eN
+}
+
+e.g.
+e match {
+case Let(x,e1,e2) =>
+case ApplyOp(op, l,r) =>
+case () =>
+case () =>
+}
+
+- caseClass patterns consist of the name of the case class, followed
+  by patterns for each argument, similar to the syntax for calling
+  their constructor. For example, the pattern Number(5) only matches
+  the Expression AST for the number 5.
+
+- literal patterns do the same for built-in types such as numbers and
+  strings
+
+- (pat1, ..., patN) is a pattern for tuples with N elements, and it
+  matches each element against the corresponding pattern. For example
+  the pair (2-tuple) pattern ("hello", 2) matches only the pair
+  ("hello", 2).
+
+- Whenever you write a variable name (identifier) as a pattern, and
+  that name is not already defined as a case object/case
+  class/literal, then it is treated as a new variable. That is, this
+  pattern matches everything, and serves as a definition at the same
+  time, defining the new variable to be equal to the expression you
+  matched on.
+
+- When you write a variable name starting with an underscore _, it
+  means "don't actually define a new variable, I'm just writing a
+  variable name as documentation"
+
+- The wildcard pattern _, meaning "match anything, define no
+  variables", is a special case of it.
+
+There are a few others. I encourage you to learn them from the
+documentation once you've got some practice writing Scala code. The
+other patterns are useful! But I must pick and choose what goes in
+each lecture.
+
+* Identifiers
+
+Speaking of identifiers/variables, most programming languages have variables. Let's add variables
+to our polynomial language:
+
+E ::= E OP E | N | X | let X = E in E
+OP ::= "+" | "-" | "*" | "/"
+
+This leads to two new case classes for expressions:
+
+final case class Variable(name : String) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
+
+The expression "let X = E in E" introduces a local variable named X,
+defines it to be equal to the value of the first expression, and
+allows that definition to be referenced in the second expression by
+writing the variable name X again.
+
+
+Thus, our overall type definition is: 
+
+sealed trait Expression
+final case class ApplyOp(op : Operator, left: Expression, right: Expression)
+  extends Expression
+final case class Number(value: Int) extends Expression
+final case class Variable(name : String) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
+
+sealed trait Operator
+case object Plus extends Operator
+case object Minus extends Operator
+case object Times extends Operator
+case object Divide extends Operator
+
+* New parser
+
+We use these to write a new, proper parser.
+The full source code for it follows:
+
+package edu.wpi.rbohrer.plcourse
+import fastparse._, NoWhitespace._
+
+sealed trait Expression
+final case class ApplyOp(op : Operator, left: Expression, right: Expression)
+  extends Expression
+final case class Number(value: Int) extends Expression
+final case class Variable(name : String) extends Expression
+final case class Let(name : String, definition : Expression, body : Expression)
+  extends Expression
+
+sealed trait Operator
+case object Plus extends Operator
+case object Minus extends Operator
+case object Times extends Operator
+case object Divide extends Operator
+
+class FastparsePolynomialLet {
+  def number[_: P]: P[Expression] = P( CharIn("0-9").rep(1).!.map(_.toInt).map(Number) )
+  def parens[_: P]: P[Expression] = P( "(" ~/ addSub ~ ")" )
+  def ident[_: P]: P[String] = P (CharIn("a-z").rep(1).!)
+  def varExpr[_: P]: P[Expression] = P(ident.map(Variable))
+  def ws[_: P]: P[Unit] = P(" ".rep(0)) // whitespace
+  def factor[_: P]: P[Expression] = P( number | letExpr | varExpr | parens )
+
+
+  def letExpr[_ : P]: P[Expression] =
+    P(("let" ~ ws ~
+      ident ~ ws ~
+      "=" ~ ws ~
+      addSub ~ ws ~
+      "in" ~ ws ~ addSub).map(letHelper))
+
+  def divMul[_: P]: P[Expression] = P( factor ~ ws ~(CharIn("*/").! ~/ ws ~ factor).rep ).map(divMulHelper)
+  def addSub[_: P]: P[Expression] = P( divMul ~ ws ~ (CharIn("+\\-").! ~/ ws ~ divMul).rep ).map(addSubHelper)
+  def expr[_: P]: P[Expression]   = P( addSub ~ ws ~ End )
+
+  def letHelper(x : (String, Expression, Expression)): Expression = {
+    val (y, e1,e2) = x
+    Let(y,e1,e2)
+  }
+  def addSubHelper(x : (Expression, Seq[(String, Expression)])): Expression = {
+    val (b, xs) = x
+    // Anonymous function for combining elements
+    xs.foldLeft(b)((acc,next) =>
+      next match {
+        case  ("+", e) => ApplyOp(Plus, acc, e)
+        case  ("-", e) => ApplyOp(Minus, acc, e)
+      })
+  }
+  def divMulHelper(x : (Expression, Seq[(String, Expression)])): Expression = {
+    val (b, xs) = x
+    // Anonymous function for combining elements
+    xs.foldLeft(b)((acc,next) =>
+      next match {
+        case ("/", e) => ApplyOp(Divide, acc, e)
+        case ("*", e) => ApplyOp(Times, acc, e)
+      })
+  }
+}
+// End of source code
+
+Notable differences from previous code:
+- We implement whitespace manually as a parser "ws"
+
+- We use helper functions letHelper, addSubHelper, and divMulHelper to
+convert the raw results of parsing to the desired Expression type. The
+letHelper code is pure boilerplate, unpacking the arguments of a tuple
+to call a multi-argument function. The other two helpers additional
+use a fold to combine the parsed expressions. Note that associativity
+rules can be changed by changing the order of the fold
+
+- The latter two helper functions also make use of an anonymous
+function as the helper to the fold. Anonymous functions are functions
+that we don't give names to. The core syntax for anonymous functions
+is (argName : Type => body). Advanced use: Pattern-matching syntax can
+be used for pattern-matching on the arguments of an anonymous function
+
+- see documentation for further information.
+
+* Not covered: methods, elaborators
+
+There's much more to each of these features, e.g., case classes can do
+much more with methods and traits, and ASTs are useful for many parts
+of a compiler. Tune in next time(s) :)
+
+Conclusion: Today we learned how to represent programs as ASTs and how
+to write a parser that builds an AST from a string. Next time we will
+learn how to run those programs by writing an *interpreter*
+
+* Anonymous functions in Scala
+
+1) (x:t => e) is an anonymous function that takes x of type t and computes e.
+2) {case pattern => e}
+    e.g.  {case (x,e1,e2) => Let(x,e1,e2)}
+3) Let(_)  is the same as (x => Let(x))
+  more useful for like f(_.g)
+  Personal advice: mostly avoid, gets confusing
+  e.g. Let(_,_,_) never does what you want
+

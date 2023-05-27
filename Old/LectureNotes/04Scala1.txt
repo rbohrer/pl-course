@@ -1,0 +1,193 @@
+Lecture 04: Scala, Part 1
+
+Outline:
+- Why Scala
+- IntelliJ setup
+- Basic Scala Programs
+- Summary: Core PL Concepts
+- Toward Regular Expressions
+
+
+EXERCISE: This lecture introduces lots of new words.
+Make yourself a review sheet that defines the following:
+- Value, Expression, Statement, Definition
+- Syntax, Semantics
+and compares/contrasts:
+- Mutable vs. Immutable data
+- Static typing vs. dynamic typing
+- How type theorists vs. practitioners talk about types
+
+
+
+** Why Scala
+
+I promised that I would make you better at picking which programming
+languages to use in your work, so I should tell you why I chose to use
+Scala code in my lectures.
+
+The boring reason is that I'm a Lay Practitioner too, and that I'm an
+experienced Scala coder. I know good Scala libraries for all the
+things I want to do in lecture. I know that if you choose to use Scala
+for your course project, you will have good tools ready-to-go and I'll
+be able to do a good job of supporting you.
+
+I do have additional reasons.
+
+My Type Theorist side likes that Scala has great support for what are
+called algebraic data types. This language feature is great for
+defining PL syntax and writing programs that do things with PL
+syntax. It is one of the reasons we consider Scala a functional
+language, and it is why I recommend functional languages for
+implementing PLs. I like that it has advanced type system features like
+parametric polymorphism, which let me teach you PL theory.
+
+My Software Engineer side feels it's good for student motivation if I
+can tie my language choice in with industry programmer life. Scala is
+not in the top 5 most-used programming languages, but it is one of the
+most-used functional languages and Scala jobs often have great pay.
+Its big practical strengths include its ability to interact with Java
+code and its heavy emphasis on object-oriented code that fits together
+nicely with functional code. I think that a lot of students learn
+object oriented programming, and this will give you a common focus to
+ground yourself as you explore new stuff.
+
+As of this writing, two incompatible versions of Scala are in common
+use: Scala 2 and Scala 3. I use Scala 2 because some of the libraries
+used in the course were not fully ported to Scala 3 at the time of
+development.
+
+** Basic Scala Programs
+
+This section of lecture is derived from examples at tourofscala.com,
+but adds important discussion. I may work through the examples
+
+**** Values
+In programming, a value is a program that's done computing. It's an
+answer. For now, values in Scala are similar to any other programming
+language, so we quickly go over the most basic ones:
+
+Numbers can be integers like 12 or double-precision floating point
+numbers like 12.34 with a decimal.  Strings are in double quotes "hi".
+
+**** Expressions
+Every value is an expression, but an expression is something more
+general. If e is an expression, it means you can execute e. If it
+terminates, it will give you back a value.
+
+1 + 1 and "hi" + " " + "there" are expressions that are not values.
+Values 2 and "hi there" are (automatically) expressions.
+
+**** Statements
+In many languages, statements are a different category of programs
+other than expressions. A statement is a program that runs, but
+doesn't give back an answer; instead, it changes the state of a
+program or performs some other effect.
+
+In Scala, there is no need for a separate category called
+"statements," we instead think of statements as expressions with a
+boring value.
+
+The println function prints a string with a newline at the end.
+println("Some text") prints "Some text" on a line.
+println("Some text") is an expression; it is also a statement
+because it doesn't return any (interesting) value.
+
+**** Definitions
+Definitions are another major category of programs. When you run a
+definition, it does not (necessarily) change the state and does not
+give you back an answer. Instead, it defines something, e.g., a
+variable name.
+
+Definitions and expressions are related this way: if you define a
+variable name, you can use it in later expressions. Conversely, when
+you define a variable, you use an expression (called the
+right-hand-side of the definition) to say what the variable means.
+
+Scala has two different keywords for defining new variables: val and var.
+
+Toy Example:
+val x = 1 + 2
+var y = x * 7
+val z = x + y
+y = y - z
+
+The key difference between val and var: var defines a *mutable*
+variable, and val defines an *immutable* variable. A mutable variable
+can be updated later using an *assignment expression*, e.g., y = y - z
+on the line 4. When you want to change the value of an existing variable,
+don't use val or var again, use an assignment expression (no keyword).
+Immutable variables cannot be updated, i.e., you can use assignment
+expressions on them. On line 4, the first "y" could not be replaced with
+x nor z for this reason.
+
+Scala provides both val and var because it wishes to provide a reasonable
+compromise between functional and imperative programming.
+
+
+**** Types
+Types are often described like this:
+"In dynamically typed languages, values have types;
+ in statically typed languages, variables have types."
+ 
+The Type Theorist in me doesn't like that description. When a Type
+Theorist talks about types, we *always* mean static types. We would say:
+
+"The (static) type of a program is a prediction about the program:
+If the program runs to completion, it returns a value of this type.
+A dynamically typed language is a language where the (static) type
+system is trivial."
+
+Statically typed languages can have *type annotations* where the
+programmer writes the type of a variable (or any expression) by hand,
+or they can have a *type inference* feature built in, where the
+compiler figures out the (static) type of a program for you.  In
+practice, many languages mix both. Scala's type system is complicated,
+so sometimes you need to write types by hand. If you don't write the
+type annotation, it will try to guess, and sometimes succeed.
+
+In Scala, we use "var : type" to write the type of a variable. In
+general we can also do "expression : type," but usually don't.
+
+Example: 
+
+val str1 = "Hello"
+val str2 : String = "Hello"
+var x : Int = 5
+var y = x
+x = 7
+
+var z : Any = 5
+z = "My string"
+
+Scala is a statically typed language with type inference. Scala is
+also object-oriented, and it allows you to give a more specific type
+where a less specific one was expected (like subclasses in Java).
+Just like every object in Java has type "Object," every value in Scala
+has type "Any" - the key here is that a value can have multiple types,
+e.g., "Any" and "Int", at the same time.
+
+Thoughout the following lectures, we will learn about more advanced
+types in Scala. For now, here are some basic ones:
+- Any
+- Int
+- Double
+- String
+- Boolean
+
+Special note for Java programmers:
+You may remember that Java has special primitive types like boolean
+which work differently from Boolean (they're not objects).  For
+simplicity, Scala *does not* have those primitives. Even types like
+Int and Boolean are true objects in Scala.
+
+
+** Toward Regular Expressions
+Next, we will talk about regular expressions, one of the main tools
+for parsing programs and text in general.
+
+If you wish to explore in advance, the standard regex library in
+Scala is called "scala.util.matching.Regex", which enables a special
+syntax for writing regular expressions conveniently in Scala.
+If you import this library and write "myRegularExpression".r, Scala
+will interpret it as a regular expression rather than a normal string.
+

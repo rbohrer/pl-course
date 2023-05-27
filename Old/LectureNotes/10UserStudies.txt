@@ -1,0 +1,335 @@
+Lecture 08: User-Centered PL Design, Part 1
+
+This lecture is based on lectures by Jonathan Aldrich and Michael Coblenz and the following paper:
+https://faculty.washington.edu/ajko/papers/Myers2016ProgrammersAreUsers.pdf
+Course URLs:
+https://cseweb.ucsd.edu/~mcoblenz/teaching/291I_fall2022/Lecture3.pdf
+https://www.cs.cmu.edu/~aldrich/courses/17-396/
+
+Outline:
+- Intro: You're Already a User!
+- Who? Personas
+- What questions?
+- Quantitative
+- Qualitative
+- Studies for Class Projects
+
+
+* Intro: You're Already a User!
+
+As a programmer, you frequently interact with your programs by
+reading, writing, and running them. A programming language is an
+interface through which you, the user, interact with your code.
+
+You probably have some intuitive sense already that usability
+concerns exist when a programmer uses a programming language.
+You probably have a sense that some code is easier to read,
+understand, and edit than other code, and that programming
+language designers potentially have a role to play in this.
+
+
+** Example: Unreadable Code 
+(Source: Wikipedia, originally from Quake III Arena source code)
+
+As an example, read the following C code. Meditate on it. If
+you do not understand it - congrats, that's kinda the point.
+
+Rhetorical Question: What does this code do?
+
+float Q_rsqrt( float number )
+{
+ long i;
+ float x2, y;
+ const float threehalfs = 1.5F;
+
+ x2 = number * 0.5F;
+ y  = number;
+ i  = * ( long * ) &y;                       // evil floating point bit level hacking
+ i  = 0x5f3759df - ( i >> 1 );               // what the fuck? 
+ y  = * ( float * ) &i;
+ y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+//y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+
+ return y;
+}
+
+Answer: "Obviously" this computes an approximation of 1/sqrt(number).
+
+Discussion: How much of this is C's fault? How much is the programmer's fault?
+(Rose's thoughts: C lets you play with binary representation of floats)
+
+** HCI Perspectives on PL Design
+
+Human-Computer Interaction (HCI) is a major subfield of computing,
+focusing on human aspects of computing. Its most visible impact is the
+design of user interfaces and user experiences in software, but it is
+broad enough to include a wide range of social-science and humanistic
+methods applied to computing.
+
+Throughout this course, we will see a variety of HCI perspectives on
+PLs. Our first perspective will be to view a PL as an interface. We
+will go over key principles and methods for interface design, and
+apply these to PL design.
+
+** HCI Perspectives on PL Design
+
+To design a usable interface, we must recognize that there are many
+potential definitions of usability, and we must pick one of those
+definitions as our goal.
+
+Option 1: Ask an International Standard
+
+Definition (Usability):
+
+"The extent to which a product can be used by specified users to
+achieve specified goals with effectiveness, efficiency and
+satisfaction in a specified context of use."
+(ISO 9241-11, Ergonomics of human-system interaction)
+
+Thus, to even ask the usability question, we must answer:
+- Who are the users?
+- What are the users trying to do?
+- In what context are they doing it?
+
+And to answer the usability question, we must answer:
+- How well do they do it?
+- How much work does it take them to do it?
+- Do they like it?
+
+None of these questions are simple, and none should be studied without
+a critical eye. For example, different people might have very
+different notions of what it means do something well, or different
+notions of what constitutes a lot of work. Moreover, liking or
+disliking software belies any number of factors influencing one's
+opinion.
+
+* Who? Personas
+("Thou art I, I art thou" - Persona 5 Royal)
+
+A *persona* is a fictional person used to guide the design of software.
+In group discussions among designers, personas helps keep hypothetical
+discussions of user behavior more concrete by providing the designers
+with a clear image of their intended users. When personas are working
+as intended, they help designers roleplay as users and, by getting 
+into character, base their designs on empathy for their users. Even 
+the process of writing this fiction helps designers pause and consider 
+relevant aspects of their user audience, such as:
+
+- How educated are your users?
+- What do they know?
+- What skills do they have, e.g., what can they do?
+- What experience do they have, and how much?
+- In what context do they use your software?
+
+By looking at all your personas side-by-side, you can additionally answer:
+- How broad or narrow is your audience?
+
+Criticism of personas:
+A persona is a simplified generalization that stands in for a group of
+people. This definition is almost identical to the definition of a 
+stereotype, so it is unsurprising that persona-based design can reinforce
+stereotypes. There is a significant body of recent HCI research that 
+explores how to minimize the risk and impact of stereotype-related bias
+in design processes that use personas.
+
+
+** Examples: Microsoft Personas
+The Systematic Developer
+Writes code defensively. Does everything
+they can to protect their code from
+unstable and untrustworthy processes
+running in parallel with their code.
+Develops a deep understanding of a
+technology before using it.
+Prides themselves on building elegant
+solutions.
+
+The Pragmatic Developer
+Writes code methodically.
+Develops a sufficient understanding of a
+technology to enable them to use it. Prides
+themselves on building robust applications.
+
+The Opportunistic Developer
+Writes code in an exploratory fashion.
+Develops a sufficient understanding of a
+technology to understand how it can solve a
+business problem.
+Prides themselves on solving business problems.
+
+** More Example Personas from CMU course: 
+
+Charlie is in her late 20s to mid 30s.
+She has a Bachelor’s degree but not
+necessarily in IT. She’s a self-taught
+developer. Her coding is
+unconventional and she mixes genius
+lines with simple errors. She seeks to
+reinvent her software development
+career but the how is still unclear.
+Charlie has a family, which makes
+financial stability and work-life
+balance essential. She’s new to the
+industry and thus looks for a
+company that offers a supportive,
+people-oriented environment, where
+she can learn and improve her skills.
+
+Robin is in his mid 20s and has completed his formal education, such as a
+Bachelor’s degree in computer science. He is probably on his second or
+third job but has reached the ceiling in his current job, as in, he has learnt a
+lot and gained experience but would be keen on taking the next step to
+further his career. Even though he probably hasn’t taken any steps to find a
+new job (applied), he is on the lookout for something challenging as well as
+purposeful. In his current role, he can be found working in a specialized
+programming area (front-end/back-end/mobile). On a personal level, he is
+probably in a relationship, he is also quite introverted and self-aware. He
+enjoys working on complicated tasks and really wants to be involved and
+feel a part of the company. He values transparency and is happy working
+with inspiring leaders. He’s keen to know what is going on and where the
+company is headed. Salary isn’t his top priority (as long as it is not too far
+below average). Instead, Robin appreciates non-financial rewards, especially
+those that make him feel valued for his work.
+
+Exercise: If we used these personas badly, what false stereotypes might we propagate?
+(Rose's note: I really this conversation may be awkward for some students. I am 
+specifically asking you about stereotypes *you do not believe*. It's ok!)
+
+
+* What goals?
+
+One thing the personas do well is remind us that users have goals, and a designer
+must decide which goals she does (and does *not*) want to support the user in.
+
+I encourage you to take an iterative approach to identifying design goals. Start
+with something high-level, then iterate until you feel you've reached clarity.
+
+Example:
+Rose has a special interest in yuri manga. She wants a domain-specific language
+that supports this interest. She identifies this series of goals.
+
+GOAL v1: Yuri manga
+
+GOAL v2: Procederally generate yuri manga
+
+GOAL v3: Allow a user with a PhD in programming language theory to procedurally 
+generate yuri manga tailored to her own tastes, with a language syntax that 
+prioritizes expressing interests and not implementation details.
+
+
+Possible prompt: What does a C programmer want to achieve?
+
+Possible V1 goals:
+  -Learnability: it's easier/faster to learn
+  -Task performance: people finish tasks faster or more people finish tasks
+  -Audience: a new kind of person can do the task
+
+
+Exercise: Pick (or come up with) a V1 prompt and iterate with your classmates until
+you get near the level of thoroughness from my V3.
+
+
+* Should users like my language?
+
+In the introductory section of this lecture, we suggested that one aspects of
+usability is whether or not users like using a given system. This is not always
+wrong, but there are important limitations to assessments of user satisfaction.
+Notably, because HCI deals with humans in all our complexity, it must deal with
+our worst sides too, e.g., it must deal with human bias.
+
+Several forms of user bias in satisfaction ratings have been studied, we mention 2:
+
+1) "We find that respondents are about 2.5x more likely to prefer a
+technological artifact they believe to be developed by the interviewer,
+even when the alternative is identical. " [Dell et al., CHI 2012]
+2) "When the interviewer is a foreign researcher requiring a translator,
+the bias towards the interviewer’s artifact increases to 5x. 
+
+Though the foreign researcher with an interpreter receives a *higher* rating in
+this study, it still makes research harder for those who use interpreters, because
+it makes it harder for them to obtain high-quality data.
+
+Another fundamental limitation of satisfaction ratings is that, in isolation, they
+are not actionable. If a user likes a program, this does not tell the designer what
+to do. If a user does not like the program, that also does not tell the designer what
+to do. This does not mean that user satisfaction should not be studied at all, rather
+that more precise instruments should be used to provide satisfaction feedback that
+is insightful and actionable.
+
+Formative: inform future work
+Summative: evalutate prior work
+
+* Categories of Methods
+
+In other words: even when we've identified a question of interest (satisfaction), it
+is important to pick a *method* for studying that question which provides information
+that is truly useful for your needs. The two broadest categories of methods are
+"Quantitative Methods" and "Qualitative Methods"
+
+** Quantitative Methods
+- Emphasis on quantitative (e.g., numeric) data
+- Emphasis on statistical analysis of data
+- May desire large, diverse sample to ensure statistical significance
+
+** Qualitative methods
+- Data are often not quantitative, numerical (though some of them could be)
+- Emphasis on depth of data.
+
+Computer scientists often find quantitative data appealing - after all, computers are
+great at crunching large data sets. We will emphasize qualitative studies because they
+are good at addressing open-ended questions, e.g.:
+
+- What problems do factory workers have?
+- What is it like to write code for Indy 500 cars?
+- What usability problems do people have when my program?
+
+One style of usability study is to give a user a list of tasks with no prompting on
+how to complete them, then observe user behavor. Such studies are not controlled and
+not suitable for comparing competing tools, thus they are not classified as 
+"experiments" in the strict sense, rather they excel at detecting *new* problems. 
+
+** Generalizability
+
+Each study is performed on some *sample* of the human population. This leaves people out.
+There are several approaches to mitigating thus, but none are perfect:
+
+1) The people in your study should belong to the population you want to study.
+   Challenges: What if they're a tiny group? What if they're overburdened with lots of
+   other research studies?
+
+2) If your sample population is similar enough to the audience population, you can try
+   to argue that results generalize from one to the other.
+
+We should be aware that a lot of trouble comes if we attempt #2 when it's not actually true.
+Technologists from privileged social groups have frequently treated the condition of their
+group as the universal human condition, transferring solutions built for them to other 
+populations for which they were not built.
+
+
+* Studies for Class Projects
+
+You will do studies similar to the above in your own course projects. Let's start brainstorming:
+
+Exercise: With a group, brainstorm a usability question about some PL.
+Then share with the class.
+
+Recall textbook definition of Usability:
+"The extent to which a product can be used by specified users to achieve specified
+ goals with effectiveness, efficiency and satisfaction in a specified context of use."
+
+Things to think about for course project studies:
+- If you ask questions, are the answers actionable?
+- Do you *want* to act on those answers? We're human and sometimes we just want to do it a certain way.
+- Is the burden on your users reasonable?
+- Your classmates will be your test subjects. How well do they match your audience?
+
+Things to think about for *other* studies, if you ever do them:
+- Please be aware that research user studies typically require institutional approval (IRB approval). The
+  reason you do not need approval for the studies in this class is that you are not performing research.
+  The goal of the studies are simply to contribute to the education of you and your classmates. In the event 
+  that you extend your course project into a published research project, you would need to do a new, IRB-approved
+  study
+- How will you recruit people to take part in the study? How will you get users who match your audience? How will
+  you incentivize them, e.g., with money, food, or sense of satisfaction?
+- How do you do that ethically? e.g. Mechanical Turk is a common source of recruits, but is criticized for its
+  exploitative labor conditions. 

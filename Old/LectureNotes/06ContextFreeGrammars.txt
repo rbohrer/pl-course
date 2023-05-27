@@ -1,0 +1,222 @@
+Lecture 07: Context-Free Grammars
+
+* Intro
+Regular expressions brought up a deep new topic: "What languages
+should we use to define other languages?"  This is an essential
+question in a PL course because we wish to define and parse syntaxes
+for PLs.
+
+Though regexes are a core tool for parsing, they only parse a simple
+class of languages called regular languages. A good intuitive summary
+of regexes' limitations is that they can only parse flat structures.
+If I wish to parse polynomial expressions, a regex would let me parse
+the pattern x * y and it would let me parse x + y, but it will not let
+me parse the language of all polynomials; it is not sophisticated
+enough to say that x + y and ((a*b)+c)*(d-z) are two expressions from
+the same language.
+
+Context Free Grammars (CFGs) are the core tool for modeling recursive
+languages and they are the subject of today's lecture, with
+polynomials as a motivating example. In adding CFGs, we do not
+subtract regexes! As we use CFGs to express recursive structure, we
+will still use regexes for the "base cases" of that structure. For
+example, variable names, numbers, and mathematical operators are each
+recognized by regexes, then combined into polynomial expressions using
+CFGs.
+
+This topic has major applications:
+- Implement programming languages:
+  OUR FOCUS IN CS 536
+
+- Process recursive text: Human language is more complex, but this is
+good preparation
+
+- Model stateful systems with complex event structure
+
+CFGs are significantly more powerful than regex, but can still be
+implemented efficiently and automatically.
+
+* Mathematical foundations
+For a detailed mathematical treatment of CFGs, see Prof. Dougherty's
+notes. In this lecture, I aim to just scratch the surface, and will
+thus rely on higher-level or informal descriptions at times.
+
+In any parsing problem, there are typically many kinds of "parsed stuff,"
+e.g., "numbers," "operators", and "identifiers"[Note]. These different kinds of
+"parsed stuff" are called *symbols*, which are divided into terminal vs.
+variable (nonterminal) symbols.
+
+Note: An identifier is often called a variable. I say identifier
+because variable (symbol) will mean something else in this lecture.
+
+Terminal symbols are the base cases of a recursive language, and they
+are implemented using regexes. Variable symbols are the recursive cases and
+are specified as replacement rules of form
+X --> B
+where X is a variable symbol and B is a sequence of (any) symbols.
+
+One symbol is designated as the start symbol, then the string matching
+problem is framed as: the grammar accepts a string if and only if that
+string can be created from the start symbol using the replacement
+rules for variables and the regexes for terminals.
+
+An example is worth a thousand words in this instance.  Our example is
+a CFG for polynomial expressions. The symbol names have abbreviations
+in parentheses.
+
+Symbols: polynomial (P), Identifier (I), number (N), operator (O), left paren (LP), right paren (RP)
+Terminal: Identifier, Operator, Number
+Variable: Polynomial
+
+Regexes for terminals:
+I = ... (see regex lecture)
+N = ... (see regex lecture)
+O = [+-*/]
+LP = \(
+RP = \)
+
+Rules for the only variable symbol, polynomials:
+P --> N
+P --> I
+P --> LP P RP
+P --> P O P
+
+That is, numbers and identifiers are the base cases of polynomials,
+and compound polynomials are built by wrapping one polynomial in
+parentheses or conjoining two with an operator.
+
+* Example derivations
+We explain how a given CFG matches a given string by writing a
+step-by-step *derivation* of the string from the start symbol.
+I write _underscores_ around the rewritten symbol.
+
+Example derivation for 1+1*2
+_P_         --> P O P
+_P_ O P     --> P O P O P
+_P_ O P O P --> N O P O P
+_N_ O P O P --> 1 O P O P
+1 _O_ P O P --> 1 + P O P
+1 + _P_ O P --> 1 + N O P
+1 + _N_ O P --> 1 + 1 O P
+1 + 1 _O_ P --> 1 + 1 * P
+1 + 1 * _P_ --> 1 + 1 * _N_
+1 + 1 * _N_ --> 1 + 1 * 2
+
+Example derivation for 8-4-2 (I use -->* to combine steps for readability)
+_P_         --> P O P
+_P_ O P     --> P O P O P
+_P_ O P O P --> 8 O P O P
+8 _O_ P O P --> 8 - P O P
+8 - _P_ O P --> 8 - 4 O P
+8 - 4 _O_ P --> 8 - 4 - P
+8 - 4 - _P_ --> 8 - 4 - 2
+
+* Expressive power
+CFGs are strictly more powerful than regexes. Every regex can be
+written as a CFG, but most interesting CFGs cannot be written as
+regexes. How would we show this?
+
+We need to find an example language that cannot be represented as a
+regex but can be represented as a CFG.
+
+As our example, we will use the language of well-matched parentheses.
+This is well known not to be expressible with regex.  (For those of
+you have taken CS 3133: this is a consequence of the pumping lemma).
+Let's show that parentheses matching is solvable with a CFG,
+specifically this one. (Where S means "start symbol")
+
+S --> ""
+S --> LP S RP
+S --> S S
+
+where LP and RP match exactly ( and ). This is a context free grammar,
+and it represents exactly the language of all well-matched
+parentheses, for example:
+
+S -->* SS --> (S)S -->*(())S -->* (())() 
+
+This example gives a hint of how CFGs' power manifests in practice:
+they are good at dealing with delimiters and recursive structure.
+
+
+EXERCISE for polynomials:
+Write a polynomial and a derivation for it
+
+* Ambiguity
+What happens when there's more than one way to derive a given string?
+We have already encountered several examples of this, such as
+1+1*2 and 8-4-2.
+
+Does 1+1*2 parse as (1+1)*2 = 4 or 1+(1*2) = 3? 
+   
+  P -->* P*P  -->* (P+P)*P -->* (1+1)*2
+  P -->* P+P  -->* P+(P*P) -->* 1+(1*2)
+
+In our example derivation, we implicitly decided (1+1)*2 because we
+parsed the left operand before theright operand. Every well-accepted
+mathematical convention, however, accepts only the latter.
+Our grammar accepts both, and that's a problem, because these two
+versions have different meanings, i.e., our parser leaves us with
+ambiguous meaning.
+
+The same goes not just for expressions like 1+1*2 which mix operators,
+but also expressions like 8-4-2 which use a single operator repeatedly. 
+The former ambiguity is called ambiguous precedence, the latter ambiguity
+is called ambiguous associativity. The good news is that both problems are
+fixable by rewriting the CFG is a subtle, but systematic way.
+
+* Precedence and associativity
+
+** Fixing precedence ambiguity
+ The first problem with 1+1*2 is that the CFG does not know whether + vs * takes
+ priority, i.e. we know we want 1+(1*2) but the computer might pick (1+1)*2.
+  
+ We want to tell the computer that * has a higher precedence level
+ than +, and we represent these two precedence levels with 2 different
+ variables in the grammar. The new grammar has start symbol E and rules:
+   
+  N -> ... (see regex lecture)
+  E -> F | E+E
+  F -> F*F | N  
+
+This grammar requires that the rules in "E" are tried before the ones in "F",
+thus  + takes precedence.
+
+ EXERCISE: Suppose I add an exponentiation operator E^E with higher precedence
+ than both * and +. How would you write the new grammar with precedence?
+
+
+** Fixing associativity ambiguity
+ The second source of ambiguity is when an operator appears twice, e.g., 8-4-2.
+ Then we do not know which appearance we should prioritize.
+  
+ We must decide: is 8-4-2 the same as (8-4)-2 or 8-(4-2)?
+ These are respectively called left associative and right associative operators.
+ Their meanings are different: the first yields 2 and the second yields 6.
+ Mathematical convention declares that subtraction is left associative, so that
+ 8-4-2 = 2.
+
+ The following grammar enforces left-associativity. 
+ The trick is that we only allow full expressions on the left side, and require
+ the right side to go down a precedence level. This reduces the number of places
+ the - rule can be applied, so that the parse tree is made unique: 
+
+  N -> 0 | ... | 9
+  E -> F | E-F
+  F -> F*F | N  
+
+* Bonus material, if we have extra time in class.
+  This example produces some short English phrases with subject-verb-object
+  word order:
+  
+  S -> N Sp V Sp N
+  Sp > " "
+  N -> "cat" | "dog" | "lizard" | "friend" | "food"
+  V -> "eats" | "has" | "is" | "snuggles"
+  
+  and matches phrases like
+  "cat eats friends"
+  "lizard snuggles food"
+  "food is friend" *)
+(* EXERCISE: With your neighbors, come up with a grammar that generates funny
+  sentences. Every group share one funny sentence when you're done! *)

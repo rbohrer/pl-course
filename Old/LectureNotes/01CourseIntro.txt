@@ -1,0 +1,236 @@
+Lecture 01: Course Outline
+
+Welcome to CS 536!
+
+Today's Outline:
+- Schedule
+- Who are we
+- What is the course
+- Learning Objectives
+- Ungrading
+- Tools
+- Resources
+- Waitlists
+- Topics and Teams
+
+
+** Schedule
+We meet Tuesdays and Thursdays from 4:00-5:20pm, in Higgins 114.
+Attendance is not required, but I hope to make attendance desirable.
+Lectures are recorded on Echo360.
+
+** Office Hours
+For CS 536: Mondays, 4-5pm, in-person in FL 139
+I also have several other help hours each week for my other students. 
+They get priority at those times, but you are welcome to show up during those times if I’m free: 
+Wednesday 3pm-4pm (in-person in FL 139) and Thursdays, 3pm-3:50pm (on Zoom: https://wpi.zoom.us/j/4019031992)
+
+
+** Waitlists
+I recognize that it's incredibly difficult to get into CS courses at
+WPI right now. How it affects this course:
+
+- If we have a waitlist: I am happy to take on as many students as
+  asked of me; the deciding factor would be whether the department
+  can find a big enough room.
+
+- If we have a long waitlist and you are considering dropping this
+  class: As much as I love having you here, making your decision early
+  helps out your classmates who, like yourself, are struggling to
+  fill their schedule. If you do need to drop a course, for example,
+  for your mental well-being, please remember that there is never any
+  shame in that. This course is literally based in large part on a 
+  course that I personally dropped in order to keep my workload within
+  my own personal limits.
+
+- If we do not have a waitlist, and your friends are looking for a
+  course to add: go ahead and tell them to join our class. It is
+  friend-shaped.
+
+** Who are we
+I will introduce myself and go over the classroom climate section of
+the syllabus. This is a small class with a good amount of group
+discussion. You will all introduce yourself to each other. Share
+pronouns if you're comfortable doing so. There will not be any
+awkward icebreaker activities, just intros.
+
+** What is the course
+This is a course about programming language design, and I designed it
+based on stated student interests.
+
+The unifying thing in the course is "your self-directed team course
+project is to make your own language."  The first half of the course
+is focus on: let's learn concrete skills that could help you do that.
+The second half is focused on: let's expore broad perspectives on
+programming languages, ranging from fancy math to critical theory.
+The second half covers a lot of "research-level" material, but I
+promise it's (mostly) not scary.
+
+** Learning Objectives
+
+We have an incredibly diverse range of academic interests and
+backgrounds. I want you to choose your own objectives. Mine are just a
+starting point. My proposed list is:
+
+-Identify a clear problem where programming language design can be used
+-Communicate with clarity and technical depth about language design
+-Develop a mathematically-precise definition of your language’s syntax
+-Work effectively with your team to plan your project
+-Implement a well-scoped prototype in the language of your choice
+-Situate your project among the schools of thought discussed in class
+
+This gives a sense of the breadth of the course. We will cover bounce
+around everywhere from CS theory to CS practice to team management to
+humanities. You are not expected to be good at all of these things.
+You are expected to look at what you're good at, look at where you
+want to grow, and look at where you're not interested in growing right
+now.  Then set your goals.
+
+I want to be *entirely explicit*: You can 100% succeed in this class
+if you have zero programming background. This does not mean the
+programming material covered in class is particularly easy. It means
+you get to set your goals.
+
+
+** Ungrading
+
+This course uses ungrading, meaning that you self-evaluate your
+learning and assess your own grade based on that. At the end of the
+course, you submit a form where you tell me what your final grade will
+be. Though I retain the right to override your grade decision, I have
+never reduced a grade – the point is that I reserve the right to bump
+up your grade if you’re being unreasonably hard on yourself.
+
+We will spend time in class talking about ungrading, both today and in
+general. I am new to ungrading. I assume some of you are also new to
+ungrading, and some of you have taken at least one ungraded class
+before. Don't be shy. If you know how I could do better at teaching an
+ungraded course, tell me. The goal is to make this an open learning
+community, and that includes feeling comfortable giving me feedback.
+
+I'll talk about *why* it's so important to me as an instructor to make
+this kind of course ungraded.
+
+Key points:
+- I am not a cop
+- This is not a trick
+- Deadlines mean something very different now
+- Homework/project handouts mean something very different now
+- This is a trust-based community
+- You could literally throw out my entire course, do whatever, and get
+  an A and I'd be chill
+- When I give you homework handouts and deadlines, I am saying: I am
+  here to be your guide, I will give you a default path to follow
+  based on my own experience as a teacher, and when you do decide to
+  change the path, I'll still help
+
+** Study Resources
+
+The course schedule in the syllabus contains a suggested list of
+reading material:
+
+1) For Scala, feel extremely free to pick your own favorite resource
+2) For material that overlaps with previous courses you took, feel
+   free to skip or skim
+3) In the second half of the course, many lectures are about recent
+research papers. Feel free to read just the parts that are at a
+comfortable level for you. Feel free to instead look up related
+websites or look up things that the authors have written for a more
+casual audience. Compared to the first half, I expect skipping
+readings entirely would lead you to have less fulfilling in-class
+conversations in the second half.
+
+Student Help Hours / "Office Hours":
+
+My office hours will be posted in the syllabus, if I have not already.
+The important thing to know: to come to these help hours, you do not
+need to be "behind" in the course, and you don't even need to have a
+specific question. All you need is a vague vibe that coming might be
+helpful in any way.
+
+Because this course is so student-directed, I encourage you to come at
+least once in the semester, even if you're not sure why.
+
+I owe it to you to let me know my work schedule and how to get the
+most out of me. The syllabus talks about that.
+
+Highlights: (1) I hold several different kinds of office hours each
+week, e.g., for each of my courses and for my research students. One
+of these times is "for you" - i.e., it is dedicated primarily to this
+course. During the other weekly slots, you're welcome to stop by and
+see if I have time to help you in between helping my other students.
+(2) In C term'23, I am teaching a second course; in D term, I am not.
+My availability likely goes up in the second half of this course.
+
+This is a grad course with no TA, so efficiency is important. I find
+Slack very efficient for me. Please join the course Slack and feel
+free to ask me questions there any time. Just understand that I will
+enforce work-life boundaries when I wish to do so. Mainly, I sleep at
+night. You're not bothering me if you message at a weird time, I might
+just wait to answer.
+
+
+** Life Resources
+
+I care infinitely more about you as a person than your academic
+achievement. My syllabus contains some various life resources.  Feel
+free to tell me to add ones that you've found helpful in your life.
+Please know that my classroom and office are places where it's ok to
+ask for life help, if that's what you need right now. If you're
+someone who prefers to keep that stuff seperate from academics, that's
+also fine.
+
+
+** Topics and Teams
+Next class, we will talk in depth about project ideas and picking
+teams. For now, the key points are (1) the sky's the limit, and
+(2) do the TODOs
+
+** Tools
+
+Your classwork is very self-directed, so you should pick whichever
+tools you want. As you look for teammates, discuss which tools you
+each feel comfortable. This applies to choice of programming
+languages, code editing software, source control, etc.
+
+In my lectures, I personally use:
+- Scala as my programming language
+- IntelliJ as my editor/IDE
+- the "fastparse" library for Scala in one lecture
+
+You are *not* required to use Scala. We spend a good amount of lecture
+time on it because I want to teach you enough that you can follow my
+lectures. I use Scala because it's a good platform for talking about
+various language design and implementation problems that come up in
+class. That's what we use it for - talking about ideas that generalize
+beyond Scala.
+
+
+
+** IntelliJ
+JetBrains IntelliJ is one of the most common IDEs for Scala and it's
+the one I use. You should be able to download a student version for
+free. It is not mandatory.
+
+If I have time at the end of class, I will show you the download page,
+and show you how to open it, configure plugins, make and run a
+project. If you would like to follow along in class, make sure to
+download and run the installer in advance because those take time -
+but we can go over the other steps in class.
+
+After installing it, I'll make a new project and do two Tour of Scala
+exercises: 
+https://tourofscala.com/scala/values
+https://tourofscala.com/scala/main
+
+** TODOs For You
+
+(1) Join the course Slack so you can find teammates and they can find
+you
+
+(2) On Canvas, do "Project Checkpoint 0," which is the first
+submission for your projects, and is due in a week.
+
+(3) Time-permitting, it is also helpful to read the main "Final
+Project" handout and the process you'll use for submitting your final
+self-grade to me.
