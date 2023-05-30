@@ -1,68 +1,53 @@
-Lecture 03: What is a Programming Language (PL)?
-
 Outline:
-- Everything is a programming language (PL)?
+- Toward a definition of programming languages
 - Schools of thought
 - Paradigms
-- The parts of a CS Theory project
-- Other projects
-- Conclusion: Not everything is a PL
 
-Discuss: For your projects, what languages
-do you consider using, why, and what weaknesses come with that choice?
+As we undertake the study of programming languages, it is only fair that we begin with defining our object of study. We ask ourselves earnestly: "What is a Programming Language?" At first glance, this question may seem simple to answer, but the closer we look, the harder it becomes to arrive at a universal definition. If you are reading this book,  you can most likely name some examples of programming languages: procedural languages like C, object-oriented languages like Java, or dynamically-typed languages like Python. If you have branched out and explored the diversity of programming languages, you might recognize functional programming languages like Lisp or Haskell. Each of these is a valid example of a programming language, and you would be correct to call them as such. However, examples alone are not enough to define the category of programming languages, because they do not reflect the full breadth of the topic, especially when we wish to approach the study of programming languages in an interdisciplinary fashion. Instead, we will work toward a definition of a programming language in an iterative way, proposing definitions and then challenging them. We begin with a simple definition.
 
-** Everything is a programming language (PL)?
+Potential Definition: A programming language is a formal notation for specifying instructions executed on the central processing unit (CPU) of a computer.
+Challenge: We have already encountered an example of a language that does not meet this definition: Python. Python programs are most often executed in an *interpreter*, i.e., a program which runs other programs. As such, it would be inaccurate to define the meaning of a Python program by defining a set of CPU instructions, because Python does not define itself this way, but rather defines itself primarily via interpretation. Though there exist compilers which transform Python programs into CPU instructions, they are not the primary route through which Python programs are understood. The closer we look at this definition, the more it falls apart. Though Java is compiled in typical usage, it is not compiled to CPU instructions, but to an abstract low-level language called the Java Virtual Machine (JVM). Java is not typically interpreted, yet the definition does not apply. Even C, which is most often compiled, does not meet this definition because the language standard does not specify the exact instructions corresponding to each program, nor could it, because all three of these languages are intended to be platform-independent and to support execution on a wide array of CPU types. Even notwithstanding the diversity of CPUs, this definition emphasizes the implementation choice between an interpreter (Python), traditional compiler (C), or bytecode compiler (Java), which belies the reality that a single programming language often has multiple implementations which employ competing approaches: there are interpreters for C and there are compilers for Python. Confronted with this contradiction, we will attempt to redefine programming languages using an abstract model of computation, which is machine-independent. There are many such equivalent models, such as Turing machines and lambda-calculi; we define programming languages in terms of Turing machines because they are widely-taught.
 
-There's a reason that lots of people take PL classes: the ideas from
-PL classes come up in a lot of different places.
+Potential Definition: A programming language is a formal notation wherein every notationally-valid string of text corresponds to some Turing machine.
+Challenge: Turing machines formalize a limited notion of computation. Turing machines can account for input-output behavior (which input string corresponds to which output string) and termination (whether or not a program runs forever), but even the core concept of program state is addressed in a limited way, using a tape, which is a modeling abstraction that rarely corresponds to real programs nor real computers in the modern era. This discrepancy means that other core concepts like execution time (how long a program takes to compute its output) cannot be modeled in a way that reflects modern reality. Other aspects of program behavior such as communication between concurrent programs, back-and-forth interactions with a user, and power usage are completely unaccounted-for. The more broadly we cast our net, the more thoroughly the Turing machine metaphor breaks down. If we wish to study at all how a user engages with the notation of a programming language, e.g., which aspects they find usable and which aspects they find confusing, then a computational model such as a Turing machine is of little use. We now revise our definition to account for this challenge by refusing to commit to a specific model of computation.
 
-Where could these ideas come up? They certainly come up if you write
-compilers for a living or if you do graduate-level research about PL
-theory for a living. I love those things, but a small number of people
-do this. So why the attention?
+Potential Definition: A programming language is a formal notation wherein every notationally-valid string of text corresponds to some computation.
+Challenge: Though this definition has improved to the point where it encompasses all our example languages thus far (C, Java, Python, Lisp, Haskell), it does not capture the discipline of Programming Languages as a whole, nor does it capture the subject matter of this book. We challenge the definition by presenting a wide range of objects-of-study. The skills we study when we study programming languages are applicable to all the following things, so it stands to reason that a definition of programming languages should encompass them:
 
-Answer: Because "PL thinking" shows up everywhere. 
-We'll define that soon. Here are some examples first.
+- Declarative programming languages are programming languages that operate by defining a problem, rather than defining its solution. As such, they do not define computations, per se:
+-- Logic programming languages such as Prolog define sets of rules, from which computations can be performed, but which do not describe a computation directly.
+-- Markup languages such as HTML (Hyper-Text Markup Language) or XML (eXtensible Markup Language) define data, but not computation. They are often excluded from definitions of programming languages because they are not programmatic, 
 
-- Domain-specific languages (DSLs) are programming languages 
-  optimized for a certain application domain.
--- Shader languages like GLSL are designed for writing graphical
-   shaders, used in video games and other digital media
--- Permission policy languages are used to let users define complex
-   policies for managing their own security and privacy
--- Macro languages (e.g. AutoHotKey) are used by end-users to improve
-   productivity in diverse end-user computing tasks.
+- Domain-specific languages (DSLs) are programming languages optimized for a certain application domain. Many DSLs meet the definition of programming language as a computational language, but others do not.
+-- The GL Shader Language (GLSL)  and other shader languages are used to program shaders, specialized programs used for computing on a Graphical Processing Unit (GPU). Shader programs originate in graphically-intensive applications such as video games and digital animation, but have found use in diverse parallel computing tasks including scientific computing and machine learning.
+-- Permission policy languages are used to let users define complex policies for managing their own security and privacy.
+-- Macro languages (e.g. AutoHotKey) are used by end-users to improve productivity in diverse end-user computing tasks.
    
-- Little languages and pseudo-languages: respectively, these are (1)
-  structured languages that lack much computing power and (2) programs
-  that, despite not looking like languages at all, have all the same
-  interesting structure that a language does.
+- The term "little languages" denotes particularly specialized DSLs. In contrast to other DSLs, the development of a little language is usually emergent from the development of a larger software project, where the need for a programming language, or something like one, is discovered over time.
+-- Many software applications employ custom textual languages for *configuration files*. These languages are potentially as complex as the configuration of the program itself.
+-- It is a common practice to maintain plain-text *logs* of events that occur during the lifetime of an application. *Log formats* are little languages in their own right, and logging applications may contain *query languages*, little languages used to search through log data.
+-- Beyond log languages, plain-text and binary data formats used by any application can be understood as little languages.
 
-Little language examples:
-- Config files
-- Log files
-- Plain-text file formats for data
-
+- Pseudo-languages are programs which, despite not looking like languages at all, have all the same interesting structure that a language does.
 Pseudo-language examples:
 - Spreadsheets
 - Email filters
 - Effects and filters in image/video/sound-editing programs
 
-Once you look at PL this way, you can see why PL is for everyone. Even
-if you never wrote a line of code in your life, you're still likely to
-engage with pseudo-languages. Everyone from office workers to
-creatives use these, not just compiler engineers. And most programmers
-will write code that deals with little languages or pseudo-languages
-at some point in their career.
+Once you look at PL this way, you can see why PL is for everyone. Even if you never wrote a line of code in your life, you're still likely to engage with pseudo-languages. Everyone from office workers to creatives use these, not just compiler engineers. And most programmers will write code that deals with little languages or pseudo-languages at some point in their career. 
+
+
+There's a reason that lots of people take PL classes: the ideas from
+PL classes come up in a lot of different places.
+
+Where could these ideas come up? They certainly come up if you write compilers for a living or if you do graduate-level research about PL theory for a living. I love those things, but a small number of people do this. So why the attention?
+
+Answer: Because "PL thinking" shows up everywhere. 
+We'll define that soon. Here are some examples first.
 
 ** Schools of Thought
 
-In this course, I often discuss how there are many "schools of
-thought" about PLs. What this means is that different communities of
-people think about programming languages in radically different
-ways. This course is not here to tell you which school of thought you
-should belong to. It's here to provide you breadth, and see which
-thoughts exist.
+In this course, I often discuss how there are many "schools of thought" about PLs. What this means is that different communities of people think about programming languages in radically different ways. This  course is not here to tell you which school of thought you should belong to. It's here to provide you breadth, and see which thoughts exist.
 
 Examples:
 - "The Type Theory School"
@@ -73,9 +58,7 @@ in powerful ways. Typically, a "good PL" has a rich static type system
 that lets us prove a soundness theorem, which is something like:
 
 Theorem[Type Safety]:
-"Any time your compiler accepts a program from you without giving an
-error message, that program will satisfy
-<some specific notion of correctness, chosen by the designers>"
+"Any time your compiler accepts a program from you without giving an error message, that program will satisfy <some specific notion of correctness, chosen by the designers>"
 
 What does correctness mean?
 -  If program has type t, then result has type t
@@ -83,48 +66,23 @@ What does correctness mean?
 -  No data races and deadlocks
 -  No memory leaks
 
-I was trained in this school. Many of us joined this school because it
-appeals to our personal sense of mathematical beauty. That does not
-make it better nor worse than other schools!
+I was trained in this school. Many of us joined this school because it appeals to our personal sense of mathematical beauty. That does not make it better nor worse than other schools!
 
 - "The Software Engineering School"
-This school says that researchers should study how professional
-programmers use programming languages. We should design languages and
-language tools based on how professional programmers are likely to use
-them. At the same time, we should use this knowledge to propose how
-programmers should work together and how their managers should do the
-job of management. Both the language and person can change.
+This school says that researchers should study how professional programmers use programming languages. We should design languages and language tools based on how professional programmers are likely to use them. At the same time, we should use this knowledge to propose how programmers should work together and how their managers should do the job of management. Both the language and person can change.
 
 - "The Social Science School"
-This school overlaps highly with both Software Engineering and
-Critical Studies - these are not binary categories. This school
-emphasizes that researchers should study humans. Software Engineers
-will use social science to make better languages, tools, or management
-strategies. But social sciences could also study humans for humans'
-sakes. They often study social issues within communities of
-programmers and computer users. Who do these communities include or
-exclude? Why? What could be done about that? These questions are
-answered using scientific approaches, which are often but not always
-quantitative.
+This school overlaps highly with both Software Engineering and Critical Studies - these are not binary categories. This school emphasizes that researchers should study humans. Software Engineers will use  social science to make better languages, tools, or management strategies. But social sciences could also study humans for humans' sakes. They often study social issues within communities of programmers and computer users. Who do these communities include or exclude? Why? What could be done about that? These questions are answered using scientific approaches, which are often but not always quantitative.
 
 - "The Critical Studies School"
-This school also studies social issues. It asks who communities
-include or exclude? Why? What could be done about that? The difference
-is that it uses methods from the humanities. Important books about
-computing could be read closely and their language analyzed. People
-look at rhetoric about languages and rhetorical structure present in
-code itself. People do theory-building, taking core ideas from social
-theorists and applying them to the specifics of PL communities.
-This school is relatively small, but exciting. 
+This school also studies social issues. It asks who communities include or exclude? Why? What could be done about that? The difference is that it uses methods from the humanities. Important books about computing could be read closely and their language analyzed. People look at rhetoric about languages and rhetorical structure present in code itself. People do theory-building, taking core ideas from social theorists and applying them to the specifics of PL communities. This school is relatively small, but exciting. 
+
+Model: Yunus Telliel (he/him)
 
 - "The Lay Practitioner School"
-This is the biggest school: people who code. The Type Theory school
-often mocks this group and the Software Engineering school might
-sometimes patronize it. This is not okay. Most of our students go on
-to this school.
+This is the biggest school: people who code. The Type Theory school often mocks this group and the Software Engineering school might sometimes patronize it. This is not okay. Most of our students go on to this school.
 
-It's important to know that these different groups *exist* though,
-because it allows you to recognize that each of these groups uses
+It's important to know that these different groups *exist* though, because it allows you to recognize that each of these groups uses 
 different vocabulary to talk about programming languages, uses them in
 different ways, and has different conversations. When I use vocab from
 the Type Theory school, it is common for students to struggle with
@@ -140,13 +98,7 @@ project, and how? Any school of thought that you’re specifically not
 interested in?
 
 Tourism:
-PL courses are often organized as tours. Many courses take a tour of
-different kinds of programming languages; others take an extended tour
-of the Type Theory school. In this course, the first half is a tour of
-skills for performing your course project and the second half is a
-tour of *the different schools of thought*. This is how I reconcile
-my love of the Type Theory school's mathematics with my love of the
-Critical Studies school's attention to humans.
+PL courses are often organized as tours. Many courses take a tour of different kinds of programming languages; others take an extended tour of the Type Theory school. In this course, the first half is a tour of skills for performing your course project and the second half is a tour of *the different schools of thought*. This is how I reconcile my love of the Type Theory school's mathematics with my love of the Critical Studies school's attention to humans.
 
 ** Paradigms
 I left out one of the most common styles of PL courses. This arguably
@@ -262,18 +214,6 @@ Exercise: Write some abstractions on board.
 
 Examples:
 
-Types:"I don’t care what x is, as long as it’s an integer"
-Semantics:"I don’t care about compiler implementation details"
-Correctness:"I don’t care what program you write, as long as it does X"
-
-In C: divide program into procedures (like functions, but have state)
-In Java: divide program into objects. Objects combine state and code,
-but hide some of it, making it abstract
-
-In Racket: divide main function into helper functions. In Racket/Lisp:
-all language features are nested lists with parentheses.  This enables
-*homoiconicity*, representing programs using the language's core
-datatypes.
 
 In this class, I don't care about being homoiconic.
 I'm just here to be an iconic homo.
@@ -304,3 +244,27 @@ My admittedly-ambitious dream is that my teaching approach can give
 PL thinking its due credit for the beauty and programming power it
 provides, while escaping the trap of reductionism and making this a
 classroom for everyone. Let me know how I do.
+
+
+Classroom Activities
+* Have the students work together to reach a working definition of what a programming language is.
+Discuss: For your projects, what languages
+do you consider using, why, and what weaknesses come with that choice?
+
+Exercises
+* Go to a website where people discuss programming languages. Record some of the questions they ask each other. Which schools of thought could address these questions, and how?
+Exercise: Write some abstractions on board.
+
+
+Types:"I don’t care what x is, as long as it’s an integer"
+Semantics:"I don’t care about compiler implementation details"
+Correctness:"I don’t care what program you write, as long as it does X"
+
+In C: divide program into procedures (like functions, but have state)
+In Java: divide program into objects. Objects combine state and code,
+but hide some of it, making it abstract
+
+In Racket: divide main function into helper functions. In Racket/Lisp:
+all language features are nested lists with parentheses.  This enables
+*homoiconicity*, representing programs using the language's core
+datatypes.
