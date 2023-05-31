@@ -1,0 +1,51 @@
+Why Rust
+Tool Setup
+Basic Rust Programs
+Summary: Core PL Concepts
+Toward Regular Expressions
+This chapter serves as a primer for the programming language Rust. It assumes that the reader has prior experience in several different programming languages, but no prior experience in Rust. The intent is to provide enough knowledge to perform coursework in Rust while simultaneously introducing core vocabulary for the discussion of programming languages.
+Why Rust
+Every programming language has a reason it was created, a selling point promoted by its advocates. The reason Rust exists is to overcome the tradeoff between speed and safety. We discuss that tradeoff in order to explain the design of Rust.
+Speed vs. Safety
+The programming languages best-known for their speed are simultaneously known to be unsafe, particularly the languages C and C++. Why are C and C++ unsafe, why are they fast, and how does a language achieve speed without sacrificing safety? When we say C and C++ are unsafe, we specifically mean they are memory-unsafe, which means that it is possible for data values in memory to be corrupted, used after resources are freed, and double-freed, and that it is possible for a program to crash with a segmentation fault, which is an attempt to access data at an invalid memory location. Memory-unsafety also goes hand-in-hand with the potential for memory leaks, bugs where resources are not freed after use, typically causing long-running programs to exhaust their resources and ultimately crash. Memory safety has a clear cause: the reliance on manual schemes for memory allocation, where the programming calls a function malloc (resp. the new operator in C++) to allocate new memory and free (resp. the delete operator in C++) to deallocate memory after it is no longer needed. These classes of errors are simply impossible in languages that use a technique called garbage collection to provide automated memory management; garbage-collected languages are memory-safe.
+The relationship between garbage collection and speed has historically been a complicated one. Early garbage collectors were slow, but throughput improved over time to the extent that extreme cases could be engineered in which the amortized throughput (i.e., the average performance across a large number of operations) of garbage collectors exceeded the performance of manual allocators. As throughout increased, latency often remained an issue: otherwise efficient collectors may exhibit rare but long pauses in application code as collection is performed, posing a usability problem in software containing graphical user interfaces and a safety issue in control software for physical systems. Over the years, garbage collection techniques with latency guarantees emerged, amelioriating this problem. Though garbage-collected languages do not have a monopoly in the contemporary programming landscape, their usage is far more widespread than in past decades, and many application-level programmers never encounter a programming task where garbage collection poses an insurmountable performance barrier.
+Rust is a recent invention compared to both C and garbage-collected languages, and its invention is motivated by the view that performance will always be driving concern in systems-level programming. Systems-level programming serves to create infrastructure on which third-party code will execute, such as an operating system or web browser rendering engine, the latter of which was the first major successful application of Rust. Because there is no limit to the potential complexity of future third-party code, it is a priority to provide high performance and minimize barriers imposed on code written by others. In order to distinguish itself from both the thoroughly established usage of C and C++ and the high-quality garbage collectors available in application-level programming languages, Rust needed a distinct approach: use a static (i.e., compile-time) type system to rule out memory safety errors instead of garbage collection. This line of thinking fits neatly into the Theorist's worldview: an unending array of programming language research projects have used advanced static type systems to guarantee that complex correctness properties will hold for programs at runtime. Where Rust has distinguished itself however, is by breaking out of the research sphere into the applied sphere, with robust community, libraries, and tooling.
+Rust makes an interesting case study for the transfer of programming language theory to practice because its type system has a clear theoretical basis: substructural type systems. Substructural type systems are type systems which give up one or all of the following so-called structural principles:
+Contraction: Variables can be duplicated freely
+Weakening: Unused variables are acceptable
+Exchange: The order in which variables are declared does not affect the order in which they are used
+Every potential combination of these rules leads to a distinct type system. Linear types, which permit Exchange but neither Contraction nor Weakening, have long been used to model resource (e.g. memory) management. Rust uses an affine type system, which permits both Exchange and Weakening but not Contraction. Compared to linear types, affine types only add a modest assumption: affine types assume that all data values are capable of being deleted.
+By removing the Contraction principle, affine types provide a major advantage: variables correspond directly to the ownership of memory, thus it is easy to automate memory management without relying on garbage collection: resources are freed when the corresponding variable goes out of scope. No advantage comes for free, however: affine typing means that shared references to the same piece of data are significantly more complex and that the need to copy data manually is increased. Nor is the payoff for affine typing restricted to management: the reliance on copying over sharing also greatly simplifies the development of correct parallel programs, i.e., programs which run across multiple processors at the same time.
+Beyond Speed and Safety
+Though overcoming the speed-safety tradeoff is a major motivation for the use of Rust, it is not the sole motivation. As of this writing, Rust has grown quickly in popularity over recent years, which has been cited in the research literature as a motivation for increasing the availability of Rust educational materials. The fact that Rust has achieved increasing popularity while incorporating advanced type system features sends a valuable message in and of itself, that the theory of programming languages can create real-world impact on the practice of programming.
+Rust is also chosen for its inclusion in this book because of its community. The Rust community has had no shortage of its flaws and controversies, such as resignations of moderators and resignation of senior community members over incidences of disrespect toward speakers of color around RustConf'23. Without minimizing the significance of these incidents, the author argues that Rust community dynamics actually reflect a higher degree of accountability than is typically observed in programming language communities; bad actors in the Rust community have often faced public repercussion for mistreatment of others, as opposed to mistreatment being swept under the rug. Though much work remains to be done, Rust is chosen in part because the author deems its community capable of growing into a welcoming space for students with time.
+Basic Rust Programs
+We begin the Rust primer proper by exploring the basic building blocks of a program. The vocabulary for these building blocks is consistent across a wide range of programming languages: values are the results of computations, expressions are computations which potentially evaluate into results, definitions are parts of a program which introduce names as opposed to just performing a computation, and statements are programs which are executed for side effects such as changing program state instead of just evaluating to a value.
+Values
+Basic values include integer literals such as 0, -1, and 3000.
+References
+Expressions
+Definitions
+Deriving
+Statements
+Types
+Basic Types
+Compound Types
+Complete Rust Programs
+Tooling
+Summary: Core PL Concepts
+Toward Regular Expressions
+
+
+Exercises: 
+This lecture introduces lots of new words. Make yourself a review sheet that defines the following:
+- Value, Expression, Statement, Definition
+- Syntax, Semantics
+and compares/contrasts:
+- Mutable vs. Immutable data
+- Static typing vs. dynamic typing
+- How type theorists vs. practitioners talk about types
+Which features are safe, which are speedy?
+References:
+Rust book
+Imagining Introductory Rust
