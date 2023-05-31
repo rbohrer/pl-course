@@ -1,7 +1,7 @@
 Outline:
-- Toward a definition of programming languages
-- Schools of thought
-- Paradigms
+* We will explore what the term "Programming Languages" should mean and why an all-encompassing definition is challenging to find
+* We will frame the scope of the book through competing schools of thought representing the different humans on which on which the study of programming languages is centered
+* We will compare this approach to an alternate organizing principle for the study of languages - organization around programming language paradigms
 
 As we undertake the study of programming languages, it is only fair that we begin with defining our object of study. We ask ourselves earnestly: "What is a Programming Language?" At first glance, this question may seem simple to answer, but the closer we look, the harder it becomes to arrive at a universal definition. If you are reading this book,  you can most likely name some examples of programming languages: procedural languages like C, object-oriented languages like Java, or dynamically-typed languages like Python. If you have branched out and explored the diversity of programming languages, you might recognize functional programming languages like Lisp or Haskell. Each of these is a valid example of a programming language, and you would be correct to call them as such. However, examples alone are not enough to define the category of programming languages, because they do not reflect the full breadth of the topic, especially when we wish to approach the study of programming languages in an interdisciplinary fashion. Instead, we will work toward a definition of a programming language in an iterative way, proposing definitions and then challenging them. We begin with a simple definition.
 
@@ -14,257 +14,137 @@ Challenge: Turing machines formalize a limited notion of computation. Turing mac
 Potential Definition: A programming language is a formal notation wherein every notationally-valid string of text corresponds to some computation.
 Challenge: Though this definition has improved to the point where it encompasses all our example languages thus far (C, Java, Python, Lisp, Haskell), it does not capture the discipline of Programming Languages as a whole, nor does it capture the subject matter of this book. We challenge the definition by presenting a wide range of objects-of-study. The skills we study when we study programming languages are applicable to all the following things, so it stands to reason that a definition of programming languages should encompass them:
 
-- Declarative programming languages are programming languages that operate by defining a problem, rather than defining its solution. As such, they do not define computations, per se:
--- Logic programming languages such as Prolog define sets of rules, from which computations can be performed, but which do not describe a computation directly.
--- Markup languages such as HTML (Hyper-Text Markup Language) or XML (eXtensible Markup Language) define data, but not computation. They are often excluded from definitions of programming languages because they are not programmatic, 
+* Declarative programming languages are programming languages that operate by defining a problem, rather than defining its solution. As such, they do not define computations, per se:
+** Logic programming languages such as Prolog define sets of rules, from which computations can be performed, but which do not describe a computation directly.
+** Markup languages such as HTML (Hyper-Text Markup Language) or XML (eXtensible Markup Language) define data, but not computation. They are often excluded from definitions of programming languages because they are not programmatic, 
 
-- Domain-specific languages (DSLs) are programming languages optimized for a certain application domain. Many DSLs meet the definition of programming language as a computational language, but others do not.
--- The GL Shader Language (GLSL)  and other shader languages are used to program shaders, specialized programs used for computing on a Graphical Processing Unit (GPU). Shader programs originate in graphically-intensive applications such as video games and digital animation, but have found use in diverse parallel computing tasks including scientific computing and machine learning.
--- Permission policy languages are used to let users define complex policies for managing their own security and privacy.
--- Macro languages (e.g. AutoHotKey) are used by end-users to improve productivity in diverse end-user computing tasks.
+* Domain-specific languages (DSLs) are programming languages optimized for a certain application domain. Many DSLs meet the definition of programming language as a computational language, but others do not.
+** The GL Shader Language (GLSL)  and other shader languages are used to program shaders, specialized programs used for computing on a Graphical Processing Unit (GPU). Shader programs originate in graphically-intensive applications such as video games and digital animation, but have found use in diverse parallel computing tasks including scientific computing and machine learning.
+** Permission policy languages are used to let users define complex policies for managing their own security and privacy.
+** Macro languages (e.g. AutoHotKey) are used by end-users to improve productivity in diverse end-user computing tasks.
    
-- The term "little languages" denotes particularly specialized DSLs. In contrast to other DSLs, the development of a little language is usually emergent from the development of a larger software project, where the need for a programming language, or something like one, is discovered over time.
--- Many software applications employ custom textual languages for *configuration files*. These languages are potentially as complex as the configuration of the program itself.
--- It is a common practice to maintain plain-text *logs* of events that occur during the lifetime of an application. *Log formats* are little languages in their own right, and logging applications may contain *query languages*, little languages used to search through log data.
--- Beyond log languages, plain-text and binary data formats used by any application can be understood as little languages.
+* The term "little languages" denotes particularly specialized DSLs. In contrast to other DSLs, the development of a little language is usually emergent from the development of a larger software project, where the need for a programming language, or something like one, is discovered over time.
+** Many software applications employ custom textual languages for *configuration files*. These languages are potentially as complex as the configuration of the program itself.
+** It is a common practice to maintain plain-text *logs* of events that occur during the lifetime of an application. *Log formats* are little languages in their own right, and logging applications may contain *query languages*, little languages used to search through log data.
+** Beyond log languages, plain-text and binary data formats used by any application can be understood as little languages.
 
-- Pseudo-languages are programs which, despite not looking like languages at all, have all the same interesting structure that a language does.
-Pseudo-language examples:
-- Spreadsheets
-- Email filters
-- Effects and filters in image/video/sound-editing programs
+* Pseudo-languages are programs which are *not* programming languages, but can be studied using the same approaches we use to study programming languages, because they work in a similar way to programming languages.
+** Spreadsheet software such as Microsoft Excel and Apple Numbers are similar to programming languages because spreadsheet formulas express computations. By understanding spreadsheets through the lens of programming language semantics, one can elucidate how formula computations work and why; see Self-Adjusting Computation for a programming foundation with similar dynamics to a spreadsheet. Conversely, spreadsheets have something to teach programming language scholars: spreadsheets are used sucessfully on a daily basis by a large number of users who have never been trained in programming, and thus might provide insights on how to make programing accessible to broad audiences.
+** Email filtering rules, such as "if the sender's address contains 'wpi.edu', then move the email to the spam folder" have a conditional "if-then" structure, familiar to many programming languages. Beyond this superficial similarity, the "if" conditions of an email filter constitute a form of pattern-matching, a programming language feature that allows programmers to express rich conditional branching based on the structure of data values. Research on pattern-matching, such as research on efficient compilation techniques, could shed light on how to efficiently process large sets of email filters.
+** Effects in media (i.e., image, audio, and video) editing programs have the structure of a program. The audiovisual media are the inputs and outputs of the program, and each effect is an operation within the program. Examples of effects are scaling, rotating, and translating images, slowing down or speeding up a video, or applying a compressor to reduce the dynamic range of an audio track. Programming language techniques could be used to reduce the incidence of errors in video effects that might take hours to render, simplify maintenance of complex effects, or optimize execution.
 
-Once you look at PL this way, you can see why PL is for everyone. Even if you never wrote a line of code in your life, you're still likely to engage with pseudo-languages. Everyone from office workers to creatives use these, not just compiler engineers. And most programmers will write code that deals with little languages or pseudo-languages at some point in their career. 
+Through this lens, it becomes apparent that programming languages are all around us. To care about programming languages, you do not need to design new programming languages, do mathematical proofs about language semantics, or implement new compilers and interpreters for a living. At some point in their career, most programmers will not do those things, but *will* write little languages or pseudo languages, because most major software applications have data and configuration, and many provide users to give rich, structured, computational inputs. For that matter, you do not even have to be a programmer, because everyone from office workers to content creators engages with software that reflect the ideas we encounter in the study of programming languages. Once you look at PL this way, you can see why PL is for everyone. Therefore, this book chooses to define the field of programming languages by looking at the people who study them:
+
+Our Definition: A programming language is anything that is studied by people who "study programming languages".
+Challenge: This definition is frustratingly circular. It tells you nothing about what this book studies. This frustration is intentional, however. Different people think about programming languages in such profoundly different ways that it could be difficult to converse with one another if we do not take this moment to present the diversity of approaches with which languages are studied. Throughout this book, we frame the diversity of the field by dividing the study of programming languages into different "schools of thought;" these categories are not meant to be rigid, but to loosely define how different academic disciplines and groups outside academia engage with the field. The title of this book, "Human-Centered Programming Languages" does not simply mean that we look at the humans who use programming languages as programmers, but that we look at the humans who study languages and their breadth of motivations, both human-centered motivations and others.
+
+* Schools of Thought
+
+This book emphasizes competing schools of thought because, in so doing, we can explore the different modes of thinking and ways of knowing that appear in different communities, thus enriching our own understanding of the field.  This book is not here to tell you which school of thought you should belong to. It's here to provide you breadth so that you may decide for yourself where you would like to situate yourself in the field. In this book, we explore the following schools of thought: "Practitioner," "Implementer," "Software Engineer," "Social Scientist," "Humanist," and "Theorist". We summarize each school of thought in turn. Each school of thought is accompanied by a cartoon which will appear throughout the book when we practice the given school of thought. These cartoons are modeled on real people who engage in the given school of thought.
+
+- "The Practitioner"
+This is the biggest school of thought: people who code. If you are in this school of thought, you are the largest audience for this book! To characterize the perspectives of the Practitioner, one can look at social spaces where programmers gather, such as StackOverflow, GitHub, and social media. Practitioners are often goal-directed: they have specific programming tasks they wish to complete as part of their job or hobby, and their interest in programming languages relates to helping them complete their specific goals. Just because the Practitioner is goal-directed, does not mean they are any less passionate. Practitioners often have strongly-held beliefs about programming languages which are drawn from their extensive lived experience. They might extensively discuss user-facing aspects of languages such as their surface syntax, error messages, compile times, tooling, and standard libraries. Because of the focus on user-facing behavior, their explanations of their positions may be particularly accessible to other programmers. On the flip-side, the personal focus is sometimes accompanied by interpersonal hostility in social spaces, with negative implications for inclusivity. In this book, we seek to respect the lived experience of practitioners while keeping discourse to a professional, impersonal, and all-inclusive level.
+
+Examples of books the Practitioner might read are "The Practice of Programming, The Pragmatic Programmer" and programming language-specific books like "The C++ Programming Language" or "The Rust Book." The Practitioner's fundamental question is "How do I write this program?" 
+
+"The Implementer"
+An Implementer is anyone who implements a programming language, typically as a compiler or interpreter. By definition, they are simultaneously a Practitioner, but they have an additional set of needs and concerns. The Implementer is heavily concerned with tools for building languages. The implementer might use regular expressions, context-free grammars, and parsing expression grammars to implement a parser and abstract syntax trees to represent parsed programs. In a compiler, intermediate representations such as the Low-Level Virtual Machine (LLVM) may be used for optimization and code generation, while an interpreter may simply recurse over the structure of a program to compute a direct result. The Implementer needs a strong understanding of a program's meaning (semantics) insofar as they need to faithfully capture a program's meaning in the implementation.
+
+Examples of books the Implementer might read are "Introduction to Compilers and Language Design" by Douglas Thain or "Compiler Construction" by William M. Waite and Gerhard Goos. The Implementer's fundamental question is "How do I implement this programming language?"
 
 
-There's a reason that lots of people take PL classes: the ideas from
-PL classes come up in a lot of different places.
+"The Software Engineer"
+The Software Engineer is the first of our human-focused schools of thought. Software Engineering concerns itself with a specific set of humans, typically professional programmers working in large teams or organizations. Of all the schools of thought, Software Engineers are the most concerned with scale, collaboration, management, and process. Because Software Engineers target professionals as their object of study, they have a flexible range of solutions at their disposal. When met with a problem in software development, the solution could lie with software (new languages, new tools), with people (new training, management processes, or quality assurance processes), or both (training developers to use a new tool or language). Both the language and person can change. Therefore, the Software Engineer school cares to study how professional programmers use programming languages and to design languages and language tools based on how professional programmers are likely to use them, but does not treat current practice as fixed and unchangeable.
 
-Where could these ideas come up? They certainly come up if you write compilers for a living or if you do graduate-level research about PL theory for a living. I love those things, but a small number of people do this. So why the attention?
+Examples of books the Software Engineer might read are  "The Clean Coder" by Robert C. Martin, "Essentials of Software Engineering" by Frank Tsui, Orlando Karam,  and  Barbara Bernal, or "The Mythical Man-Month" by FP Brooks Jr. The Software Engineer's fundamental question regarding programming languages is "How can professional software developers, programming languages, and software development tools best work together to create quality software?"
 
-Answer: Because "PL thinking" shows up everywhere. 
-We'll define that soon. Here are some examples first.
+Model: Michael Coblenz (he/him) is faculty in Computer Science & Engineering at University of California San Diego.
 
-** Schools of Thought
+"The Social Scientist"
+Social Science overlaps significant with Software Engineering, but is a much broader term. The Social Scientist's emphasis is on the rigorous academic study study of humans. Compared to the Software Engineer, a Social Scientist may place less focus on immediate technical solutions; whereas a Software Engineers might employ social science methods to make better languages or tools, the Social Scientist may  also study humans for humans' sakes. They often study social issues within communities of programmers and computer users. Who do these communities include or exclude? Why? What could be done about that? These questions are answered using scientific approaches, which can encompass both quantitative or qualitative approaches.
 
-In this course, I often discuss how there are many "schools of thought" about PLs. What this means is that different communities of people think about programming languages in radically different ways. This  course is not here to tell you which school of thought you should belong to. It's here to provide you breadth, and see which thoughts exist.
+Examples of books the Social Scientist might read include "Working in Public: The Making and Maintenance of Open Source Software" by Nadia Eghbalee. The Social Scientist's fundamental question about programming languages is "How can the impacts of programming languages on  communities of people be measured?"
 
-Examples:
-- "The Type Theory School"
-
-This school says that PLs are formal languages that can be defined and
-analyzed mathematically. A "good PL" is a language that we can analyze
-in powerful ways. Typically, a "good PL" has a rich static type system
-that lets us prove a soundness theorem, which is something like:
-
-Theorem[Type Safety]:
-"Any time your compiler accepts a program from you without giving an error message, that program will satisfy <some specific notion of correctness, chosen by the designers>"
-
-What does correctness mean?
--  If program has type t, then result has type t
--  If program has a type, then no segfaults
--  No data races and deadlocks
--  No memory leaks
-
-I was trained in this school. Many of us joined this school because it appeals to our personal sense of mathematical beauty. That does not make it better nor worse than other schools!
-
-- "The Software Engineering School"
-This school says that researchers should study how professional programmers use programming languages. We should design languages and language tools based on how professional programmers are likely to use them. At the same time, we should use this knowledge to propose how programmers should work together and how their managers should do the job of management. Both the language and person can change.
-
-- "The Social Science School"
-This school overlaps highly with both Software Engineering and Critical Studies - these are not binary categories. This school emphasizes that researchers should study humans. Software Engineers will use  social science to make better languages, tools, or management strategies. But social sciences could also study humans for humans' sakes. They often study social issues within communities of programmers and computer users. Who do these communities include or exclude? Why? What could be done about that? These questions are answered using scientific approaches, which are often but not always quantitative.
-
-- "The Critical Studies School"
+"The Humanist"
 This school also studies social issues. It asks who communities include or exclude? Why? What could be done about that? The difference is that it uses methods from the humanities. Important books about computing could be read closely and their language analyzed. People look at rhetoric about languages and rhetorical structure present in code itself. People do theory-building, taking core ideas from social theorists and applying them to the specifics of PL communities. This school is relatively small, but exciting. 
 
-Model: Yunus Telliel (he/him)
+Examples of books the Humanist might read are "Persuasive Games: The Expressive Power of Videogames" by Ian Bogost and "Rhetorical Code Studies" by Kevin Brock. A fundamental question for the Humanist about programming languages is "How can our understanding of how social structures operate and our understandings how programming languages operate inform one another?"
 
-- "The Lay Practitioner School"
-This is the biggest school: people who code. The Type Theory school often mocks this group and the Software Engineering school might sometimes patronize it. This is not okay. Most of our students go on to this school.
+Model: Yunus Telliel (he/him) is an anthropologist at Worcester Polytechnic Institute and an expert in computing ethics. He has collaborated with the author on a rhetorical approach to programming language design.
 
-It's important to know that these different groups *exist* though, because it allows you to recognize that each of these groups uses 
-different vocabulary to talk about programming languages, uses them in
-different ways, and has different conversations. When I use vocab from
-the Type Theory school, it is common for students to struggle with
-communication because they're only familiar with how those words are
-used in the Lay Practitioner school. My goal is not to convert you,
-but my goal *is* to make you bilingual or even a polyglot. In
-particular, a Lay Practitioner can learn a lot from the Type Theory
-school because it will help you make thoughtful choices about which
-tools you want to use in your career, when, and how.
+"The Theorist"
 
-EXERCISE: Which schools of thought are most likely to influence your
-project, and how? Any school of thought that you’re specifically not
-interested in?
+This school says that PLs are formal languages that can be defined and analyzed mathematically. A "good PL" is a language that we can analyze in powerful ways. A Type Theorist is a Theorist who believes  a "good PL" has a rich static type system that lets us prove a soundness theorem, which is something like:
 
-Tourism:
-PL courses are often organized as tours. Many courses take a tour of different kinds of programming languages; others take an extended tour of the Type Theory school. In this course, the first half is a tour of skills for performing your course project and the second half is a tour of *the different schools of thought*. This is how I reconcile my love of the Type Theory school's mathematics with my love of the Critical Studies school's attention to humans.
+Theorem[Type Safety]: "Any time your compiler accepts a program from you without giving an error message, that program will satisfy <some specific notion of correctness, chosen by the designers>," which may include:
+*  If program has type t, then result has type t
+*  If program has a type, then no segfaults
+*  No data races and deadlocks
+*  No memory leaks
 
-** Paradigms
-I left out one of the most common styles of PL courses. This arguably
-represents its own school of thought, but I think that school is
-fading in the research world.
-
-When you look up a PL on Wikipedia, it often comes with a 
-list of language paradigms, such as:
-- Imperative
-- Functional
-- Logical
-- Object-oriented
-
-I'm not criticizing Wikipedia. These are meaningful technical terms 
-that can be given meaningful definitions:
-
-"Imperative:" The programmer's core mental abstraction is program state
-
-"Functional:" The programmer's core mental abstraction is the input-output 
-behavior of mathematical functions
-
-"Logical:" The programmer's core mental abstraction is logical proof
-
-"Object-oriented:" The programmer's core mental abstraction is objects
-
-Lists of paradigms often include other terms like "scripting
-language", "high level language", or "declarative language". These
-terms do not have clear technical definitions, but they have
-sociological significance - they mean something to the Lay
-Practitioner school.
-
-Why then don't I give you a tour of these paradigms?
-
-Answer 1: I don't think you need a teacher for that.  I think
-this is the kind of knowledge that people tend to self-study or study
-from peers throughout their career.
-
-Answer 2: Modern programming languages mix these paradigms
-freely. As programmers, our abilities of self-expression have reached
-the level where we don't need these boxes anymore.
-
-Answer 3: I want to teach you lasting, generalizable knowledge, yet
-help you connect that knowledge to stuff that happens in your real
-life and career. The "Schools of Thought" approach gives you a broader
-mental map of generalizable knowledge, and the project approach lets
-you stay connected to your real life and career.
-
-
-** The parts of a CS Theory project
-
-On the project handout, "theory-heavy CS projects" align with the Type
-Theory school. Let's take a tour of what a Type Theorist will say the
-"parts" of a language are. We're taking this tour now because it's
-also a guide to the first part of the course - if you design and build
-a language, what are all the things you'll have to do?
-
-Mini-outline:
-- Syntax
-- Execution (dynamic semantics)
-- Types (static semantics)
-- Correctness (soundness+verification)
-
-**** Syntax (Is this a program? Which one?)
-We will learn how to specify the syntax of a PL. We will use regular
-expressions to describe the basic building blocks of a program and use
-context-free grammars to describe how the pieces fit together. If you
-took CS 3133 at WPI or similar courses, this section is likely review
-for you. However, this section is important, because our students come
-in all kinds.
-
-**** Execution (How do I run it? What happens then?)
-You will learn how a Type Theorist talks about running a program.
-Operational semantics give an exact definition of this.  Even for
-coding-heavy projects, it's great to outline the semantics first,
-because it serves as a guide for your implementation.
-
-PLs can be implemented with interpreters (another program, that runs
-it) or compilers (a program that transforms it into another language,
-which could be either high-level or low-level). You are welcome to do
-either, but because another course covers compilers, I will focus on
-interpreters, which are faster to implement but slower to run.
-
-
-**** Types (static semantics)
-Type Theorists care *a lot* about "What can I learn about your
-program, without running it?" because this question is closely related
-to "What can a PL designer do to put more correct code in the world?".
-
-The first step is typically a type system. This is a set of
-mathematical rules that assign types to programs and, importantly,
-tell you if a program is well-typed (has a type) vs. ill-typed
-(does not have a type at all). 
-
-**** Correctness (Soundness+Verification)
-The reason that catching well-typed and ill-typed programs is so
-important: the Type Theorist spends a lot of time proving correctness
-theorems such as Type Soundness: every well-typed program runs without
-certain kinds of errors, and if it terminates, it gives back an answer
-of the right type. Verification is an intimately-related school, but
-includes "What can I learn about correctness after I write the code
-and before I run it?".
-
-** PL Thinking
-After our mini-tour of the Type Theorist school, I can now tell you
-what I meant when I said this course will teach you "PL Thinking,"
-more properly called Type Theorist Thinking.
-
-PL Thinking is the mindset that PL design is about
-abstraction-building, PL discussion is abstraction-criticizing, and
-programming is abstraction-using.
-
-Exercise: Write some abstractions on board.
+The Theorist understands programming language design as the task of abstraction-building, the discussion of programming languages  as abstraction-criticizing, and programming as the use of abstractions.
 
 Examples:
-
-
-In this class, I don't care about being homoiconic.
-I'm just here to be an iconic homo.
-
-** Other projects
-
-I love abstraction-building because it's a great mental workout and
-lets us feel like mathematicians and artists at the same
-time. However, there are important and severe limitations if this is
-the only way we ever thinking. These limitations have been studied in
-the humanities for decades in the contexts of philosophy and logic,
-which are intimately connected to PLs.
-
-The risk of abstraction-building is that it is reductionist. In the
-humanities, this poses great dangers; we all know what happens when we
-reduce a person to a narrow aspect of their identity and declare them
-to be the Other, or when the people in power choose which aspects of
-your identity you're allowed to care about and how.
-
-Reductionist risks do transfer to PL world. PL-thinking courses have
-been rightly criticized for emphasizing mathematical competition and
-thus telling newcomers that they don't belong. They have also been
-rightly criticized for de-emphasizing practice and application so much
-that they end up significantly narrowing their audience.
-
-** Conclusion: Not everything is a PL
-My admittedly-ambitious dream is that my teaching approach can give
-PL thinking its due credit for the beauty and programming power it
-provides, while escaping the trap of reductionism and making this a
-classroom for everyone. Let me know how I do.
-
-
-Classroom Activities
-* Have the students work together to reach a working definition of what a programming language is.
-Discuss: For your projects, what languages
-do you consider using, why, and what weaknesses come with that choice?
-
-Exercises
-* Go to a website where people discuss programming languages. Record some of the questions they ask each other. Which schools of thought could address these questions, and how?
-Exercise: Write some abstractions on board.
-
-
 Types:"I don’t care what x is, as long as it’s an integer"
 Semantics:"I don’t care about compiler implementation details"
 Correctness:"I don’t care what program you write, as long as it does X"
 
 In C: divide program into procedures (like functions, but have state)
-In Java: divide program into objects. Objects combine state and code,
-but hide some of it, making it abstract
+In Java: divide program into objects. Objects combine state and code, but hide some of it, making it abstract
+In Racket: divide main function into helper functions. In Racket/Lisp: all language features are nested lists with parentheses.  This enables *homoiconicity*,  representing programs using the language's core datatypes.
 
-In Racket: divide main function into helper functions. In Racket/Lisp:
-all language features are nested lists with parentheses.  This enables
-*homoiconicity*, representing programs using the language's core
-datatypes.
+Theorists may appreciate abstraction-building as a  mental workout that combines rigor and creativity. However, there are important  and severe limitations if this is the only way we ever think. These limitations have been studied in the humanities for decades in the contexts of philosophy and logic, which are intimately connected to PLs.  The risk of abstraction-building is that it is reductionist. In the humanities, this poses great dangers; we all know what happens when we reduce a person to a  narrow aspect of their identity and declare them to be the Other, or when the people in power choose which aspects of your identity you're allowed to care about and how. Reductionist risks do transfer to programming languages world. Theory culture could be rightly criticized that it not merely emphasizes mathematical rigor but often mathematical competition in a fashion that risks telling newcomers that they don't belong. They have also been rightly criticized for de-emphasizing practice and application so much that they end up significantly narrowing their audience.
+
+Examples of books the Theorist might read are "Types and Programming Languages" by Benjamin Pierce and Concrete Semantics by Gerwin Klein and Tobias Nipkow.
+
+It's important to know that these different schools of thought exist, because it allows you to recognize that each of these groups uses different vocabulary to  talk about programming languages, uses them in different ways, and has different conversations. A speaker who  uses vocabulary from the Theory school, might struggle to communicate with an audience which primarily uses those words as they are used in  the Practitioner school. If each school has its own language or dialect of speaking,  the goal of this book is to make the reader bilingual or even a polyglot.
+
+* Programminng Language Tourism:
+The study of programming languages can often be  organized as a tour. This book is a tour of *the different schools of thought*. Other ways to study programming languages include touring a single school of study in depth, touring programming languages, or touring programming language paradigms. We discuss how programming languages could be studied through the lens of paradigms, mainly to justify why this book is not organized in such a way.
+
+When you search for basic information about a programming language, it often comes with a  list of language paradigms, such as:
+* Imperative
+* Functional
+* Logical
+* Object-oriented
+
+These are meaningful technical terms that can be given meaningful definitions:
+"Imperative:" The programmer's core mental abstraction is program state
+"Functional:" The programmer's core mental abstraction is the input-output behavior of mathematical functions
+"Logical:" The programmer's core mental abstraction is logical proof
+"Object-oriented:" The programmer's core mental abstraction is objects
+
+Lists of paradigms often include other terms like "scripting language", "high level language", or "declarative language". These terms do not have clear technical definitions, but they have cultural significance to Practitioners who use them: a "scripting language" may describe a language which is often used for short one-off programs that do not require maintenance, a "high level language" may describe a language where the Practitioner experienced little need to think of system-level implementation details, and a "declarative language" may describe a language where the Practitioner experienced a focus on defining problems over defining computations. If these paradigms are meaningful, why are they not the basis for organizing this book?
+
+Answer 1: In the modern age, learning about paradigms no longer requires a guided teaching experience. Programmers can learn about paradigms throughout their career by self-study or peer-learning.
+
+Answer 2: Modern programming languages mix these paradigms freely. As programmers, our abilities of self-expression have reached the level where we do not need these boxes anymore.
+
+Answer 3: This book seeks to provide lasting, generalizable knowledge, yet help you connect that knowledge to what that happens in your real life and career. The  Schools of Thought" approach gives you a broader mental map of generalizable knowledge.
+
+Classroom Activities
+* Have the students work together to reach a working definition of what a programming language is.
+Discuss: For your projects, what languages do you consider using, why, and what weaknesses come with that choice?
+
+Exercises
+* Which schools of thought are most likely to influence your project, and how? Any school of thought that you’re specifically not interested in?
+
+* Go to a website where people discuss programming languages. Record some of the questions they ask each other. Which schools of thought could address these questions, and how?
+* Write a list of programming abstractions you have used before.
+* Little-language hunt: Take a software application you use frequently and explore its functionalities, trying to identify little languages and pseudo-languages within it.
+* Research project: Typed Video Editing. Propose a new design for a video editing effect system which satisfies a Type Safety theorem where all valid effects can be rendered without error, e.g., without missing data or invalid arguments.
+* Research project: Design and implement a term project. This book is suitable for use in a project-based curriculum. The following section provides advice on how a "build-your-own-language" project could be structured with an emphasis on the Implementer and Theorist. From the perspective of the Implementer, the key parts of a language are its syntax and meaning (dynamic semantics), in addition to which the Theorist is also concerned with type systems and correctness.
+
+** Syntax (Is this a program? Which one?)
+For the first stage of a term project,  specify the syntax of your programming language. Use regular expressions to describe the basic building blocks of a program and use context-free grammars to describe how the pieces fit together.
+
+** Execution (How do I run it? What happens then?)
+Study the chapter on operational semantics to learn how to give precise specifications of program behavior. Even for coding-heavy projects, it's  great to outline the semantics first, because it serves as a guide for your implementation. Programming languages can be implemented with interpreters (another program, that runs it) or compilers (a program that transforms it into another language, which could be either  high-level or low-level). You are welcome to do either, but this book emphasizes interpreters over compilers for reasons of scope.
+
+** Types (static semantics)
+Type Theorists care *a lot* about "What can I learn about your program, without running it?" because this question is closely related to "What can a programming language designer do to put more correct code in the world?".
+
+The first step is typically to develop a type system. This is a set of mathematical rules that assign types to programs and, importantly, tell you if a program is well-typed (has a type) vs. ill-typed (does not have a type at all). 
+
+** Correctness (Soundness+Verification)
+State and prove a correctness theorem such as Type Soundness: every well-typed program runs without certain kinds of errors, and if it terminates, it gives back an answer of the right type. 
