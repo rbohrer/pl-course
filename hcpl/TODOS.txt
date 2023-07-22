@@ -1,0 +1,55 @@
+Not associated to any chapter:
+* Check margins on long code samples
+
+
+Chapter 5 Context Free Grammars:
+* Introduce the pumping lemma in a compelling way
+
+Chapter 6 PEGs:
+* Discuss Common Confusions
+
+Chapter 8 Operational Semantics:
+* Make sure to include a trace example 
+* Define small-step semantics too (maybe use it to start talking about treeeees)
+* Compare interpreter code across chapters for consistency
+* More exercises
+
+Chapter 9 Types:
+* Proofs go in separate chapter, just for phd students
+* Give more examples of typing derivations of concrete examples
+* Should add proper mutable state.
+* Should add conditionals
+
+
+Chapter 10: Programmers as Users (and following chapters):
+* Discuss inclusive Design for Cognition and Respecting Focus by Microsoft
+* Add more discussion about the relationship between academic archetypes and user personas
+* Discuss measures such as green's cognitive dimensions, cognitive walkthroughs, and  10 design heuristics
+* Consider discussion about the rhetoric of angry code comments.
+* Consider discussing comic generation
+
+Chapter 11: Surveys
+* Needs more backing from academic literature
+* Needs more exercises
+* Needs more relevant examples from relevant research
+
+Chapter 12: Qualitative Methods
+* Incorporate works specific to programming language qualitative research, both specific examples such as Coblenz’ and Chrichton’s work, and any works with more general principles 
+* Talk participatory design if it fits
+* More exercises and activities
+
+Chapter 13: Gender
+* explain why I didn’t say which facets are associated with which genders 
+* Perhaps in another chapter: introduce facets of personas and introduce cognitive walkthroughs, including a homework exercise
+
+Chapter 17: Natural Language
+* Create nice figure for typing tree
+
+Chapter 19: Process Calculus
+* Talk about free and bound names much earlier on
+* More pretty pictures
+* more better examples before technical details.
+* link passing example is not compelling
+* more better integration with other chapters of book
+* Look for an implementation
+* consider starting with an operational (labeled transition) semantics

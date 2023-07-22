@@ -1,0 +1,359 @@
+Chapter 20 Cost Semantics
+
+
+
+@phdthesis{DBLP:phd/us/Muller21,
+  author       = {Stefan K. Muller},
+  title        = {Responsive Parallel Computation},
+  school       = {Carnegie Mellon University, {USA}},
+  year         = {2021},
+  url          = {https://doi.org/10.1184/r1/16826782.v1},
+  doi          = {10.1184/r1/16826782.v1},
+  timestamp    = {Wed, 13 Jul 2022 11:43:19 +0200},
+  biburl       = {https://dblp.org/rec/phd/us/Muller21.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+@article{fluet2010programming,
+  title={Programming in Manticore, a heterogenous parallel functional language},
+  author={Fluet, Matthew and Bergstrom, Lars and Ford, Nic and Rainey, Mike and Reppy, John and Shaw, Adam and Xiao, Yingqi},
+  journal={Central European Functional Programming School: Third Summer School, CEFP 2009, Budapest, Hungary, May 21-23, 2009 and Kom{\'a}rno, Slovakia, May 25-30, 2009, Revised Selected Lectures 3},
+  pages={94--145},
+  year={2010},
+  publisher={Springer}
+}
+@inproceedings{hoffmann2012resource,
+  title={Resource aware ML},
+  author={Hoffmann, Jan and Aehlig, Klaus and Hofmann, Martin},
+  booktitle={Computer Aided Verification: 24th International Conference, CAV 2012, Berkeley, CA, USA, July 7-13, 2012 Proceedings 24},
+  pages={781--786},
+  year={2012},
+  organization={Springer}
+}
+
+
+@book{harper2016practical,
+  title={Practical foundations for programming languages},
+  author={Harper, Robert},
+  year={2016},
+  publisher={Cambridge University Press}
+}
+
+@inproceedings{blelloch1995parallelism,
+  title={Parallelism in sequential functional languages},
+  author={Blelloch, Guy and Greiner, John},
+  booktitle={Proceedings of the seventh international conference on Functional programming languages and computer architecture},
+  pages={226--237},
+  year={1995}
+}
+
+Chapter 19 Pi
+@article{milner1992calculus,
+  title={A calculus of mobile processes, I},
+  author={Milner, Robin and Parrow, Joachim and Walker, David},
+  journal={Information and computation},
+  volume={100},
+  number={1},
+  pages={1--40},
+  year={1992},
+  publisher={Elsevier}
+}
+
+
+Chapter 18 Diagramming
+https://penrose.cs.cmu.edu/docs/tutorial/welcome
+https://penrose.cs.cmu.edu/try/
+
+
+Penrose: From Mathematical Notation to Beautiful Diagrams
+ACM Trans. Graph. 2020
+KATHERINE YE,  WODE NI,  MAX KRIEGER,  DOR MA’AYAN,  JENNA WISE,  JONATHAN ALDRICH, JOSHUA SUNSHINE,  KEENAN CRANE, 
+
+@article{aycock2003brief,
+  title={A brief history of just-in-time},
+  author={Aycock, John},
+  journal={ACM Computing Surveys (CSUR)},
+  volume={35},
+  number={2},
+  pages={97--113},
+  year={2003},
+  publisher={ACM New York, NY, USA}
+}
+
+@book{gough2001compiling,
+  title={Compiling for the. Net Common Language Runtime},
+  author={Gough, John John and Gough, K John},
+  year={2001},
+  publisher={Prentice Hall PTR}
+}
+
+@inproceedings{crary1999talx86,
+  title={TALx86: A realistic typed assembly language},
+  author={Crary, K and Glew, Neal and Grossman, Dan and Samuels, Richard and Smith, F and Walker, D and Weirich, S and Zdancewic, S},
+  booktitle={1999 ACM SIGPLAN Workshop on Compiler Support for System Software Atlanta, GA, USA},
+  pages={25--35},
+  year={1999}
+}
+
+@book{lloyd2012foundations,
+  title={Foundations of logic programming},
+  author={Lloyd, John W},
+  year={2012},
+  publisher={Springer Science \& Business Media}
+}
+
+@article{benichou1971experiments,
+  title={Experiments in mixed-integer linear programming},
+  author={B{\'e}nichou, Michel and Gauthier, Jean-Michel and Girodet, Paul and Hentges, Gerard and Ribi{\`e}re, Gerard and Vincent, Olivier},
+  journal={Mathematical Programming},
+  volume={1},
+  pages={76--94},
+  year={1971},
+  publisher={Springer}
+}
+@article{dantzig2002linear,
+  title={Linear programming},
+  author={Dantzig, George B},
+  journal={Operations research},
+  volume={50},
+  number={1},
+  pages={42--47},
+  year={2002},
+  publisher={INFORMS}
+}
+
+@article{nocedal2006quadratic,
+  title={Quadratic programming},
+  author={Nocedal, Jorge and Wright, Stephen J},
+  journal={Numerical optimization},
+  pages={448--492},
+  year={2006},
+  publisher={Springer}
+}
+
+@book{van1989constraint,
+  title={Constraint satisfaction in logic programming},
+  author={Van Hentenryck, Pascal},
+  year={1989},
+  publisher={MIT press}
+}
+
+
+@book{lie1997cascading,
+  title={Cascading style sheets: designing for the Web},
+  author={Lie, H{\aa}kon Wium and Bos, Bert},
+  year={1997},
+  publisher={Addison-Wesley Longman Publishing Co., Inc.}
+}
+
+
+Natural language
+
+@article{knuth1984literate,
+  title={Literate programming},
+  author={Knuth, Donald Ervin},
+  journal={The computer journal},
+  volume={27},
+  number={2},
+  pages={97--111},
+  year={1984},
+  publisher={Oxford University Press}
+}
+
+@article{medhat2014sentiment,
+  title={Sentiment analysis algorithms and applications: A survey},
+  author={Medhat, Walaa and Hassan, Ahmed and Korashy, Hoda},
+  journal={Ain Shams engineering journal},
+  volume={5},
+  number={4},
+  pages={1093--1113},
+  year={2014},
+  publisher={Elsevier}
+}
+
+@article{bhirud2017grammar,
+  title={Grammar checkers for natural languages: a review},
+  author={Bhirud, Nivedita S},
+  journal={International Journal on Natural Language Computing (IJNLC) Vol},
+  volume={6},
+  year={2017}
+}
+
+@article{strowel2023chatgpt,
+  title={ChatGPT and Generative AI Tools: Theft of Intellectual Labor?},
+  author={Strowel, Alain},
+  journal={IIC-International Review of Intellectual Property and Competition Law},
+  volume={54},
+  number={4},
+  pages={491--494},
+  year={2023},
+  publisher={Springer}
+}
+
+f ChatGPT (in late 2022) and other large language models (LLMs). GitHub Copilot (released in late 2021) 
+
+@article{kasneci2023chatgpt,
+  title={ChatGPT for good? On opportunities and challenges of large language models for education},
+  author={Kasneci, Enkelejda and Se{\ss}ler, Kathrin and K{\"u}chemann, Stefan and Bannert, Maria and Dementieva, Daryna and Fischer, Frank and Gasser, Urs and Groh, Georg and G{\"u}nnemann, Stephan and H{\"u}llermeier, Eyke and others},
+  journal={Learning and Individual Differences},
+  volume={103},
+  pages={102274},
+  year={2023},
+  publisher={Elsevier}
+}
+
+@article{brants2007large,
+  title={Large language models in machine translation},
+  author={Brants, Thorsten and Popat, Ashok C and Xu, Peng and Och, Franz J and Dean, Jeffrey},
+  year={2007}
+}
+
+@article{chowdhary2020natural,
+  title={Natural language processing},
+  author={Chowdhary, KR1442 and Chowdhary, KR},
+  journal={Fundamentals of artificial intelligence},
+  pages={603--649},
+  year={2020},
+  publisher={Springer}
+}
+
+@article{surameery2023use,
+  title={Use chat gpt to solve programming bugs},
+  author={Surameery, Nigar M Shafiq and Shakor, Mohammed Y},
+  journal={International Journal of Information Technology \& Computer Engineering (IJITC) ISSN: 2455-5290},
+  volume={3},
+  number={01},
+  pages={17--22},
+  year={2023}
+}
+
+Disenchantment Bay
+https://ganelson.github.io/inform-website/book/RB_1_3.html
+Graham Nelson et. al.
+2023
+
+
+@article{nelson2006natural,
+  title={Natural language, semantic analysis, and interactive fiction},
+  author={Nelson, Graham},
+  journal={IF Theory Reader},
+  volume={141},
+  number={99},
+  pages={104},
+  year={2006}
+}
+
+Example program:
+Sperry Rand Corporation (1957) Introducing a New Language for Automatic Programming: Univac Flow-Matic
+
+
+Quote:
+Hopper, Grace (1959). “Automatic programming: Present status and future trends”, Mechanisation of Thought Processes, National Physical Laboratory Symposium 10. Her Majesty's Stationery Office. pp 155–200, cited in Knuth, Donald; Trabb Pardo, Luis (August 1976). The Early Development of Programming Languages (Technical report). Computer Science Department, School of Humanities and Sciences, Stanford University. Retrieved 2016-03-19.
+
+
+
+
+
+
+
+
+@article{spinuzzi2005methodology,
+  title={The methodology of participatory design},
+  author={Spinuzzi, Clay},
+  journal={Technical communication},
+  volume={52},
+  number={2},
+  pages={163--174},
+  year={2005},
+  publisher={Society for Technical Communication}
+}
+Twine Interactive Fiction Technology Foundation  Twinery.org. 2.6.2. 2023.
+
+Alexandra To foundational fiction
+Design fiction
+participatory design
+
+https://scholar.googleusercontent.com/scholar.bib?q=info:in3I80dtbBQJ:scholar.google.com/&output=citation&scisdr=ChUvCKiGEJeirlOj3NU:ABFrs3wAAAAAZKCmxNUKokA5_FgQE6Vj2XRD1p4&scisig=ABFrs3wAAAAAZKCmxKUSO_O8HYiRtFzl6NxqLw8&scisf=4&ct=citation&cd=-1&hl=en#:~:text=%40article%7Bspinuzzi2005methodology%2C%0A%20%20title%3D%7BThe%20methodology%20of%20participatory%20design%7D%2C%0A%20%20author%3D%7BSpinuzzi%2C%20Clay%7D%2C%0A%20%20journal%3D%7BTechnical%20communication%7D%2C%0A%20%20volume%3D%7B52%7D%2C%0A%20%20number%3D%7B2%7D%2C%0A%20%20pages%3D%7B163%2D%2D174%7D%2C%0A%20%20year%3D%7B2005%7D%2C%0A%20%20publisher%3D%7BSociety%20for%20Technical%20Communication%7D%0A%7D
+
+@article{tanenbaum2014design,
+  title={Design fictional interactions: why HCI should care about stories},
+  author={Tanenbaum, Theresa Jean},
+  journal={interactions},
+  volume={21},
+  number={5},
+  pages={22--23},
+  year={2014},
+  publisher={ACM New York, NY, USA}
+}
+
+@inproceedings{to2022interactive,
+  title={Interactive fiction provotypes for coping with interpersonal racism},
+  author={To, Alexandra and Carey, Hillary and Shrivastava, Riya and Hammer, Jessica and Kaufman, Geoff},
+  booktitle={Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems},
+  pages={1--14},
+  year={2022}
+}
+
+
+
+
+Saturation example
+Casey Reas, Ben Fry. 2006. Processing: programming fro the media arts. AI & Society.
+Processing.https://processing.org/. 2023. Processing Foundation. site
+Racket
+Hello world (newbie). RosettaCode. https://rosettacode.org/wiki/Hello_world/Newbie 2023
+
+
+Processing Foundation. 2023. Saturation. https://processing.org/examples/saturation.html
+
+@inproceedings{felleisen2015racket,
+  title={The racket manifesto},
+  author={Felleisen, Matthias and Findler, Robert Bruce and Flatt, Matthew and Krishnamurthi, Shriram and Barzilay, Eli and McCarthy, Jay and Tobin-Hochstadt, Sam},
+  booktitle={1st Summit on Advances in Programming Languages (SNAPL 2015)},
+  year={2015},
+  organization={Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik}
+}
+
+
+
+
+Torino: A Tangible Programming Language Inclusive of Children with Visual Disabilities. 2018. Human-Computer Interaction https://www.tandfonline.com/doi/pdf/10.1080/07370024.2018.1512413
+Cecily MorrisonORCID Icon,Nicolas Villar,Anja Thieme,Zahra Ashktorab,Eloise Taysom,Oscar Salandin,Daniel Cletheroe,Greg Saul,Alan F Blackwell,Darren Edge,Martin Grayson &Haiyan Zhang 
+
+
+Individuality over function: the role of technology in disability identity.
+Giulia Barbareschi,Dafne Zuleima Morgado Ramirez. CHI 2020 extended abstracts.
+http://katta.mere.st/wp-content/uploads/2020/03/Individuality-over-function_revised.pdf
+ 
+ 
+Nothing about us without us: Investigating the role of critical disability studies in HCI.
+2020. Spiel, Katta, Kathrin Gerling, Cynthia L. Bennett, Emeline Brulé, Rua M. Williams, Jennifer Rode, and Jennifer Mankoff..
+ Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems,.
+ 
+
+
+Disability: The Basics, Thomas Shakespeare. 2017. Routledge
+
+
+Crip technoscience manifesto https://catalystjournal.org/index.php/catalyst/article/view/29607/24771 
+Aimi Hamraie Vanderbilt University aimi.hamraie@vanderbilt.eduKelly Fritsch
+Catalyst: feminism, theory, technoscience
+2019.
+
+
+Adding Interactive Visual Syntax to Textual Code.
+LEIF ANDERSEN, PLT and Northeastern University, United States of America
+MICHAEL BALLANTYNE, PLT and Northeastern University, United States of America
+MATTHIAS FELLEISEN.
+2020. OOPSLA.
+
+@book{davis2006disability,
+  title={The disability studies reader},
+  author={Davis, Lennard J},
+  year={2006},
+  publisher={Taylor \& Francis}
+}
+
+
+
+
+Voice programming

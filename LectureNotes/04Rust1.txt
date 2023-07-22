@@ -22,20 +22,32 @@ Rust is also chosen for its inclusion in this book because of its community. The
 Basic Rust Programs
 We begin the Rust primer proper by exploring the basic building blocks of a program. The vocabulary for these building blocks is consistent across a wide range of programming languages: values are the results of computations, expressions are computations which potentially evaluate into results, definitions are parts of a program which introduce names as opposed to just performing a computation, and statements are programs which are executed for side effects such as changing program state instead of just evaluating to a value.
 Values
-Basic values include integer literals such as 0, -1, and 3000.
+A value is the most basic building block of a program. A value represents pure data and thus does not need to be executed any further. If we think of a program as instructions for answering some question, then a value is an answer. The notations for basic values tend to be similar across most programming languages, but it is important to discuss values explicitly because the word "value" is essential technical vocubulary which occurs frequently. In Rust, basic values include Boolean literals true and false, integer literals such as 0, -1, and 3000, string literals like "my string", and  floating point literals like 0., 303.12, or -101.0. Note that Rust allows floating-point literals which end in a period, with no fractional part following them. As we introduce new types such as structures and enums, we will introduce new values for those types. Variables such as x are not values, but they do stand in for their values, making them closely related. When we wish to discuss an arbitrary value in the text, we will use the letter v. This letter v should be understood as a mathematical variable that ranges over different programs, not the specific Rust program v, which is a Rust variable.
 References
+References are how Rust implements the core idea of indirection, which appears in most programming languages in several different forms: pointers in C and C++, objects in Java and C#, or references in Rust, the ML family of languages, and elsewhere. To explain references, we explain their  core operations: reference creation and dereferencing. If x is (for example) a variable, then &v is a reference to that variable; this is reference creation. If r is a reference to some value v, then *r computes the value v; this is dereferencing. To understand references, we also wish to understand whether &x is a value and, if not, what value it computes. It is not correct to call &x a value, because a value should be the same in all conditions: the number 5 is always the number 5, unchanging. A reference, however, indicates the location at which a value is stored in a computer's memory, so it typically changes every time a program is run. In essence, the value of &x is an integer representing the memory location where x is stored. Yet, if x is located at address 123,456,789,then the value of &x (let's call that value r) is not the same as the integer literal 123,456,789. References in Rust are safe, and it is essential to safety that references can not be interchanged with numbers and do not allow the same operations as numbers do, such as addition or multiplication. This is the fundamental difference between safe references in languages like Rust and pointers in C and C++: a pointer supports pointer arithmetic, which enables unsafe attempts to access memory locations that do not contain the intended data or do not even exist. In support of safety, there is also no way to write down a reference value directly in Rust source code. Because there is no direct notation for reference values, we will typically denote reference values by drawing boxes around the values they contain or by writing addresses in braces {123,456,789} to indicate that they are distinct from integer literals.
+
+Across programming languages, references serve several key functions such as being a key building block of data structures and allowing structures to be passed efficiently without copying. Though Rust does use references and similar constructs for these purposes, there is an additional key purpose in Rust: references are a major tool for making it simpler to write code that obeys Rust's requirement that each variable is used at most once. A proper discussion of that usage can only be undertaken after introducing more features of Rust, and is thus deferred to the section on Ownership, Borrowing, and Scope.
+
+TODO: lvalues
+
 Expressions
-Definitions
-Deriving
+An expression is any program that can be evaluated. To evaluate a program is to execute 
 Statements
+Definitions
 Types
+Deriving
 Basic Types
 Compound Types
+Slices
+Ownership, Borrowing, and Scope
 Complete Rust Programs
 Tooling
 Summary: Core PL Concepts
 Toward Regular Expressions
 
+
+Classroom advice:
+- Help your students scaffold how they should organize information in their notes and mind: let them know that to learn a new type, the key aspects are learning the operations on that type, the values on that type, and the typing rules. Syntax, while also important, is also a means to the end of understanding how the type operates. 
 
 Exercises: 
 This lecture introduces lots of new words. Make yourself a review sheet that defines the following:
