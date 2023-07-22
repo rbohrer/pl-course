@@ -1,0 +1,47 @@
+SPLASH-E
+
+bridge of HCI-meets-non-HCI sections 
+
+- Feedback from Molly's Students:
+-- Runestone Academy (CS1/CS2) online textbooks
+   -- Integrating code into e-textbook, interactive stuff
+-- Students are very 20. Very age-sensitive, recent matters.
+---- Make sure to keep recent papers in there.
+
+Depth vs. breadth tradeoffs:
+- In first chapter:~
+--- Course outlines
+Parallelism + Process Calculus => Grabbaggy, don't fit class structure as clearly.
+
+
+Learning goals:
+- How to explain the meaning and purpose of types to someone who's not going to use the types?
+
+- Bilingualism
+- Implementation
+- Math
+
+- Document the process of learning
+
+- Steve Czechowiech - Systems in Rust
+
+--- Python 2 -> 3 took 15 years
+
+- How to Pick a Programming Language
+- (Why do you hate Racket)?
+
+- Lambda Calculus?
+
+- History of programming languages and contingent truth
+
+Extra notes
+
+Chapter 2:
+Because there is no direct notation for reference values, we will typically denote reference values by drawing boxes around the values they contain or by writing addresses in braces {123,456,789} to indicate that they are distinct from integer literals.
+
+TODO dialog about naming and types between the characters
+TODO Comic: T saves P from the borrow checker
+
+TODO Write about regex golf
+
+Auteur theory
