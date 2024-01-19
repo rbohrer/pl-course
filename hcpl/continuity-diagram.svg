@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   sodipodi:docname="continuity-diagram.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.1893044"
+     inkscape:cx="401.49519"
+     inkscape:cy="269.06484"
+     inkscape:window-width="1680"
+     inkscape:window-height="987"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="166.06346"
+       y="343.26788"
+       width="163.12056"
+       height="61.17021"
+       id="rect2584" />
+    <rect
+       x="166.06346"
+       y="343.26788"
+       width="163.12056"
+       height="61.170212"
+       id="rect2584-5" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#ff0c0c;stroke-width:1;stroke-linejoin:round;paint-order:fill markers stroke;stroke-opacity:1"
+       d="M 53.642479,46.56356 C 76.45233,64.811441 104.76801,68.586862 104.76801,68.586862"
+       id="path797" />
+    <circle
+       style="fill:#ff0000;stroke:#ff0c0c;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke;fill-opacity:1"
+       id="path2255"
+       cx="104.72726"
+       cy="68.353592"
+       r="2.725245" />
+    <circle
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       id="path2255-3"
+       cx="104.76801"
+       cy="58.361755"
+       r="2.725245" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 107.75688,58.833686 c 31.30456,-5.191207 48.9232,2.359639 48.9232,2.359639 0,0 19.50636,9.28125 26.58528,10.382416"
+       id="path2437" />
+    <path
+       style="fill:none;stroke:#ff0c0c;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 53.602917,75.84994 c 22.809851,18.24788 51.125533,22.0233 51.125533,22.0233"
+       id="path797-5" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       id="path2255-6"
+       cx="104.96578"
+       cy="88.351883"
+       r="2.725245" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:#ff0c0c;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       id="path2255-3-4"
+       cx="104.67284"
+       cy="97.82608"
+       r="2.725245" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 107.71732,88.12006 c 31.30456,-5.1912 48.9232,2.35964 48.9232,2.35964 0,0 19.50636,9.28125 26.58528,10.38242"
+       id="path2437-7" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.5861px;line-height:0;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle;white-space:pre;inline-size:21.9607;fill:none;fill-opacity:1;stroke:#ff0c0c;stroke-width:1;stroke-linejoin:round;stroke-opacity:1;paint-order:fill markers stroke"
+       x="43.102753"
+       y="87.149361"
+       id="text2530" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-18.665316,5.4749994)"
+       id="text2582"
+       style="font-size:17.3333px;line-height:0;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;white-space:pre;shape-inside:url(#rect2584);fill:none;fill-opacity:1;stroke:#ff0c0c;stroke-width:0.377953;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"><tspan
+         x="235.96877"
+         y="347.6009"
+         id="tspan3351"><tspan
+           style="fill:#000000;stroke:#000000"
+           id="tspan3349">f(x)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-2.4845951,16.360752)"
+       id="text2582-3"
+       style="font-size:17.3333px;line-height:0;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;white-space:pre;shape-inside:url(#rect2584-5);fill:none;fill-opacity:1;stroke:#ff0c0c;stroke-width:0.377953;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"><tspan
+         x="243.86947"
+         y="347.6009"
+         id="tspan3355"><tspan
+           style="fill:#000000;stroke:#000000"
+           id="tspan3353">x</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.5861px;line-height:0;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       x="155.28334"
+       y="52.725147"
+       id="text2834"><tspan
+         sodipodi:role="line"
+         id="tspan2832"
+         style="stroke-width:0.1"
+         x="155.28334"
+         y="52.725147">Continuous from the Left</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.5861px;line-height:0;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       x="157.0631"
+       y="84.093269"
+       id="text2838"><tspan
+         sodipodi:role="line"
+         id="tspan2836"
+         style="stroke-width:0.1"
+         x="157.0631"
+         y="84.093269">Continuous from the Right</tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.505068;stroke-linejoin:round;stroke-dasharray:1.5152, 1.5152;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M 185.09419,103.44807 H 51.163235"
+       id="path2840" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.505068;stroke-linejoin:round;stroke-dasharray:1.5152, 1.5152;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 51.487073,103.44813 c 0,0 -0.01745,-1.86945 0.205021,-58.264674"
+       id="path2840-3"
+       sodipodi:nodetypes="cc" />
+  </g>
+</svg>
